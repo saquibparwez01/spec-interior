@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spec Interior — Handcrafted Lamps & Wall Decor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F7F3ED;
+      --warm-white: #FDFAF6;
+      --sand: #E8DDD0;
+      --terracotta: #C4714A;
+      --terracotta-light: #D98B67;
+      --dark: #1A1410;
+      --brown: #3D2B1F;
+      --brown-light: #6B4C38;
+      --gold: #B8972A;
+      --gold-light: #D4AF5A;
+      --text-muted: #8C7B6E;
+      --border: rgba(61,43,31,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ── ANNOUNCEMENT BAR ── */
+    .announcement {
+      background: var(--brown);
+      color: var(--sand);
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+    .announcement span { color: var(--gold-light); font-weight: 500; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(253,250,246,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--brown);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--terracotta); }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--brown-light);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--terracotta); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-icon {
+      width: 22px; height: 22px;
+      stroke: var(--brown-light);
+      fill: none;
+      cursor: pointer;
+      transition: stroke 0.2s;
+    }
+    .nav-icon:hover { stroke: var(--terracotta); }
+
+    .cart-btn {
+      background: var(--terracotta);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cart-btn:hover { background: var(--brown); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px 80px 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--terracotta);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 6vw, 84px);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--brown);
+      margin-bottom: 28px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      max-width: 420px;
+      margin-bottom: 44px;
+      font-weight: 300;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--brown);
+      color: var(--cream);
+      padding: 16px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: background 0.25s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--terracotta); transform: translateY(-2px); }
+
+    .btn-outline {
+      color: var(--brown);
+      padding: 16px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      border: 1.5px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: 100%;
+      gap: 0;
+    }
+
+    .hero-img {
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .hero-img:hover img { transform: scale(1.05); }
+
+    .hero-img.tall {
+      grid-row: span 2;
+    }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      background: var(--sand);
+      padding: 22px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .trust-icon {
+      width: 36px; height: 36px;
+      background: var(--cream);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .trust-icon svg {
+      width: 18px; height: 18px;
+      stroke: var(--terracotta);
+      fill: none;
+    }
+    .trust-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--brown);
+      letter-spacing: 0.02em;
+    }
+    .trust-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .section-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 400;
+      color: var(--brown);
+      line-height: 1.15;
+    }
+    .section-title em { font-style: italic; }
+    .section-sub {
+      margin-top: 16px;
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    /* ── CATEGORIES ── */
+    .categories {
+      padding: 100px 80px;
+      background: var(--warm-white);
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .cat-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+    .cat-card:nth-child(1) { grid-row: span 2; aspect-ratio: auto; min-height: 520px; }
+
+    .cat-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .cat-card:hover .cat-img { transform: scale(1.06); }
+
+    .cat-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,20,16,0.75) 0%, rgba(26,20,16,0.1) 60%);
+    }
+
+    .cat-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 28px;
+      color: white;
+    }
+    .cat-tag {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+    .cat-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .cat-count {
+      font-size: 13px;
+      opacity: 0.65;
+      margin-top: 4px;
+    }
+
+    /* ── PRODUCTS ── */
+    .products {
+      padding: 100px 80px;
+      background: var(--cream);
+    }
+
+    .product-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 50px;
+    }
+    .tab-btn {
+      padding: 10px 26px;
+      border-radius: 50px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--brown);
+      color: white;
+      border-color: var(--brown);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+
+    .product-card {
+      background: var(--warm-white);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(61,43,31,0.12);
+    }
+
+    .product-img-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .product-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.08); }
+
+    .product-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--terracotta);
+      color: white;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 50px;
+      letter-spacing: 0.04em;
+    }
+    .product-badge.new { background: var(--gold); }
+
+    .wishlist-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px; height: 36px;
+      background: white;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .wishlist-btn:hover { transform: scale(1.1); }
+    .wishlist-btn svg { width: 16px; height: 16px; stroke: var(--terracotta); fill: none; }
+
+    .product-info {
+      padding: 18px 20px 20px;
+    }
+    .product-cat {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--brown);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .stars { color: var(--gold); font-size: 13px; }
+    .rating-count { font-size: 12px; color: var(--text-muted); }
+
+    .product-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .price-group { display: flex; align-items: baseline; gap: 8px; }
+    .price-sale {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--brown);
+    }
+    .price-original {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+    .add-btn {
+      width: 38px; height: 38px;
+      background: var(--terracotta);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .add-btn:hover { background: var(--brown); transform: scale(1.1); }
+
+    /* ── STORY SECTION ── */
+    .story {
+      padding: 120px 80px;
+      background: var(--warm-white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+
+    .story-images {
+      position: relative;
+      height: 560px;
+    }
+    .story-img-main {
+      width: 72%;
+      height: 85%;
+      object-fit: cover;
+      border-radius: 16px;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .story-img-accent {
+      width: 50%;
+      height: 55%;
+      object-fit: cover;
+      border-radius: 16px;
+      position: absolute;
+      bottom: 0; right: 0;
+      border: 6px solid var(--warm-white);
+      box-shadow: 0 12px 40px rgba(61,43,31,0.15);
+    }
+    .story-badge {
+      position: absolute;
+      top: 50%;
+      left: 55%;
+      transform: translate(-50%, -50%);
+      width: 90px; height: 90px;
+      background: var(--terracotta);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(196,113,74,0.4);
+    }
+    .story-badge .num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1;
+    }
+    .story-badge .label { font-size: 10px; letter-spacing: 0.06em; opacity: 0.85; }
+
+    .story-content {}
+    .story-content .section-header { text-align: left; }
+
+    .story-text {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .story-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 40px 0;
+      padding: 32px;
+      background: var(--cream);
+      border-radius: 16px;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--terracotta);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 12px; color: var(--text-muted); letter-spacing: 0.04em; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials {
+      padding: 100px 80px;
+      background: var(--brown);
+      color: white;
+    }
+    .testimonials .section-title { color: var(--sand); }
+    .testimonials .section-eyebrow { color: var(--gold-light); }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .testi-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .testi-stars { color: var(--gold-light); font-size: 16px; margin-bottom: 16px; }
+    .testi-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--sand);
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testi-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: white;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .testi-name { font-size: 14px; font-weight: 500; color: var(--cream); }
+    .testi-loc { font-size: 12px; color: rgba(255,255,255,0.45); }
+
+    /* ── NEWSLETTER ── */
+    .newsletter {
+      padding: 100px 80px;
+      background: var(--cream);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .newsletter-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--brown);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .newsletter-title em { font-style: italic; color: var(--terracotta); }
+    .newsletter-sub { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+
+    .nl-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .nl-input-row {
+      display: flex;
+      gap: 12px;
+    }
+    .nl-input {
+      flex: 1;
+      padding: 16px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--warm-white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .nl-input:focus { border-color: var(--terracotta); }
+    .nl-input::placeholder { color: var(--text-muted); }
+    .nl-btn {
+      padding: 16px 32px;
+      background: var(--terracotta);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .nl-btn:hover { background: var(--brown); }
+    .nl-note { font-size: 12px; color: var(--text-muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.55);
+      padding: 80px 80px 40px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-brand .nav-logo { color: var(--sand); margin-bottom: 18px; display: block; }
+    .footer-desc { font-size: 14px; line-height: 1.8; max-width: 280px; margin-bottom: 28px; }
+    .footer-socials { display: flex; gap: 12px; }
+    .social-btn {
+      width: 40px; height: 40px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+    .social-btn:hover { border-color: var(--terracotta); background: var(--terracotta); }
+    .social-btn svg { width: 16px; height: 16px; fill: rgba(255,255,255,0.7); }
+
+    .footer-col h4 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sand);
+      margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col a {
+      text-decoration: none;
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--terracotta-light); }
+
+    .footer-contact {
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 40px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+    }
+    .contact-item svg { flex-shrink: 0; stroke: rgba(255,255,255,0.5); }
+    .contact-item a:hover { color: var(--terracotta-light) !important; }
+
+    .footer-bottom {
+      padding-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-payments { display: flex; gap: 8px; align-items: center; }
+    .pay-badge {
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── PLACEHOLDER IMAGES USING CSS ── */
+    .img-placeholder {
+      background: var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Lamp image using CSS art */
+    .lamp-art {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 860px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 60px 24px; }
+      .hero-right { height: 50vw; }
+      .categories, .products, .story, .testimonials, .newsletter { padding: 60px 24px; }
+      .cat-grid { grid-template-columns: repeat(2, 1fr); }
+      .cat-card:nth-child(1) { grid-row: span 1; min-height: auto; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .story { grid-template-columns: 1fr; gap: 40px; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .newsletter { grid-template-columns: 1fr; gap: 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .trust-bar { padding: 20px 24px; }
+      footer { padding: 60px 24px 32px; }
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow { animation: fadeUp 0.6s ease 0.1s both; }
+    .hero-title { animation: fadeUp 0.7s ease 0.25s both; }
+    .hero-subtitle { animation: fadeUp 0.7s ease 0.4s both; }
+    .hero-ctas { animation: fadeUp 0.7s ease 0.55s both; }
+  </style>
+</head>
+<body>
+
+  <!-- Announcement -->
+  <div class="announcement">
+    🎁 Free shipping on orders above ₹999 &nbsp;|&nbsp; <span>Use code LUMERA10</span> for 10% off your first order
+  </div>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="#" class="nav-logo">Spec <span>Interior</span></a>
+    <ul class="nav-links">
+      <li><a href="#categories">Shop</a></li>
+      <li><a href="#products">New Arrivals</a></li>
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#">Gifting</a></li>
+      <li><a href="https://wa.me/919654535236?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" target="_blank">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <button class="cart-btn">Cart (0)</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Handcrafted in India</div>
+      <h1 class="hero-title">
+        Illuminate<br/>your space with<br/><em>artisan light</em>
+      </h1>
+      <p class="hero-subtitle">
+        Discover our curated collection of handcrafted cane lamps, woven pendants, and sculptural wall décor — each piece a celebration of traditional craft reimagined for modern living.
+      </p>
+      <div class="hero-ctas">
+        <a href="#products" class="btn-primary">Shop Collection</a>
+        <a href="#categories" class="btn-outline">View Lookbook →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-image-grid">
+        <div class="hero-img tall" style="background: linear-gradient(135deg, #C4927A 0%, #8B5E3C 100%); display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 200 350" width="160" xmlns="http://www.w3.org/2000/svg" opacity="0.35">
+            <ellipse cx="100" cy="50" rx="40" ry="12" fill="#F7F3ED"/>
+            <polygon points="60,50 140,50 160,200 40,200" fill="#F7F3ED" opacity="0.6"/>
+            <ellipse cx="100" cy="200" rx="60" ry="16" fill="#F7F3ED" opacity="0.4"/>
+            <rect x="94" y="20" width="12" height="30" rx="6" fill="#F7F3ED"/>
+            <ellipse cx="100" cy="220" rx="20" ry="6" fill="#D4AF5A" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="hero-img" style="background: linear-gradient(135deg, #E8DDD0 0%, #C4714A 100%); display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 160 180" width="100" xmlns="http://www.w3.org/2000/svg" opacity="0.4">
+            <rect x="20" y="20" width="120" height="100" rx="12" fill="#F7F3ED"/>
+            <rect x="30" y="30" width="100" height="80" rx="8" fill="none" stroke="#D4AF5A" stroke-width="3"/>
+            <circle cx="80" cy="70" r="20" fill="#D4AF5A" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="hero-img" style="background: linear-gradient(135deg, #3D2B1F 0%, #6B4C38 100%); display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 160 160" width="100" xmlns="http://www.w3.org/2000/svg" opacity="0.4">
+            <circle cx="80" cy="80" r="55" fill="none" stroke="#D4AF5A" stroke-width="3"/>
+            <circle cx="80" cy="80" r="35" fill="#C4714A" opacity="0.5"/>
+            <path d="M80 25 L80 135 M25 80 L135 80 M42 42 L118 118 M42 118 L118 42" stroke="#F7F3ED" stroke-width="2" opacity="0.5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <div class="trust-bar">
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M5 12l5 5L20 7"/></svg>
+      </div>
+      <div>
+        <div class="trust-label">7-Day Easy Returns</div>
+        <div class="trust-sub">Hassle-free return policy</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div>
+        <div class="trust-label">Pan-India Delivery</div>
+        <div class="trust-sub">Ships within 2–5 business days</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div class="trust-label">Artisan Crafted</div>
+        <div class="trust-sub">100% handmade quality</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div>
+        <div class="trust-label">4.9★ Rated</div>
+        <div class="trust-sub">2,500+ happy customers</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <div>
+        <div class="trust-label">Secure Payments</div>
+        <div class="trust-sub">UPI, Cards, COD accepted</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <section class="categories" id="categories">
+    <div class="section-header">
+      <div class="section-eyebrow">Shop by Category</div>
+      <h2 class="section-title">Curated for every <em>corner</em></h2>
+      <p class="section-sub">From statement pendants to delicate wall hangings — find the piece that speaks to your space.</p>
+    </div>
+    <div class="cat-grid">
+      <a href="#" class="cat-card" style="background: linear-gradient(135deg, #8B5E3C, #C4714A);">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <div class="cat-tag">Bestseller</div>
+          <div class="cat-name">Cane &amp; Tin<br/>Lamps</div>
+          <div class="cat-count">48 designs</div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background: linear-gradient(135deg, #C4927A, #E8DDD0);">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <div class="cat-tag">New</div>
+          <div class="cat-name">Wall Hangings</div>
+          <div class="cat-count">32 designs</div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background: linear-gradient(135deg, #3D2B1F, #6B4C38);">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <div class="cat-tag">Trending</div>
+          <div class="cat-name">Pendant Lights</div>
+          <div class="cat-count">24 designs</div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background: linear-gradient(135deg, #B8972A, #6B4C38);">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <div class="cat-tag">Gift Ready</div>
+          <div class="cat-name">Macramé Decor</div>
+          <div class="cat-count">19 designs</div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background: linear-gradient(135deg, #C4714A, #3D2B1F);">
+        <div class="cat-overlay"></div>
+        <div class="cat-info">
+          <div class="cat-tag">Popular</div>
+          <div class="cat-name">Table Lamps</div>
+          <div class="cat-count">15 designs</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="products" id="products">
+    <div class="section-header">
+      <div class="section-eyebrow">New Arrivals</div>
+      <h2 class="section-title">Fresh from the <em>studio</em></h2>
+    </div>
+    <div class="product-tabs">
+      <button class="tab-btn active">All</button>
+      <button class="tab-btn">Lamps</button>
+      <button class="tab-btn">Wall Decor</button>
+      <button class="tab-btn">Pendants</button>
+      <button class="tab-btn">Gifting</button>
+    </div>
+    <div class="product-grid">
+
+      <!-- Product 1 -->
+      <div class="product-card">
+        <div class="product-img-wrap" style="background: linear-gradient(145deg, #C4927A, #8B5E3C);">
+          <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.3;" viewBox="0 0 160 200" width="120" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="80" cy="35" rx="30" ry="8" fill="#F7F3ED"/>
+            <polygon points="50,35 110,35 125,140 35,140" fill="#F7F3ED" opacity="0.7"/>
+            <ellipse cx="80" cy="140" rx="45" ry="12" fill="#F7F3ED" opacity="0.4"/>
+            <rect x="75" y="10" width="10" height="25" rx="5" fill="#F7F3ED"/>
+          </svg>
+          <span class="product-badge">−40%</span>
+          <button class="wishlist-btn"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="product-info">
+          <div class="product-cat">Cane Lamp</div>
+          <div class="product-name">Rustic Tin Pendant Lamp</div>
+          <div class="product-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-count">(124)</span>
+          </div>
+          <div class="product-price-row">
+            <div class="price-group">
+              <span class="price-sale">₹1,299</span>
+              <span class="price-original">₹2,199</span>
+            </div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card">
+        <div class="product-img-wrap" style="background: linear-gradient(145deg, #E8DDD0, #C4714A);">
+          <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.3;" viewBox="0 0 160 160" width="120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="120" height="100" rx="14" fill="#F7F3ED"/>
+            <circle cx="80" cy="70" r="24" fill="none" stroke="#3D2B1F" stroke-width="3"/>
+            <path d="M60 50 L100 50 L100 90 L60 90 Z" fill="#D4AF5A" opacity="0.5"/>
+          </svg>
+          <span class="product-badge new">New</span>
+          <button class="wishlist-btn"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="product-info">
+          <div class="product-cat">Wall Decor</div>
+          <div class="product-name">Geometric Boho Wall Panel</div>
+          <div class="product-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-count">(87)</span>
+          </div>
+          <div class="product-price-row">
+            <div class="price-group">
+              <span class="price-sale">₹899</span>
+              <span class="price-original">₹1,499</span>
+            </div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-card">
+        <div class="product-img-wrap" style="background: linear-gradient(145deg, #3D2B1F, #6B4C38);">
+          <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.3;" viewBox="0 0 160 200" width="120" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="80" cy="60" r="45" fill="#F7F3ED" opacity="0.5"/>
+            <path d="M55 105 L80 180 L105 105" fill="#D4AF5A" opacity="0.6"/>
+            <circle cx="80" cy="60" r="20" fill="#C4714A" opacity="0.6"/>
+          </svg>
+          <span class="product-badge">−35%</span>
+          <button class="wishlist-btn"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="product-info">
+          <div class="product-cat">Pendant Lamp</div>
+          <div class="product-name">Woven Rattan Pendant Light</div>
+          <div class="product-rating">
+            <span class="stars">★★★★☆</span>
+            <span class="rating-count">(63)</span>
+          </div>
+          <div class="product-price-row">
+            <div class="price-group">
+              <span class="price-sale">₹1,599</span>
+              <span class="price-original">₹2,499</span>
+            </div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="product-card">
+        <div class="product-img-wrap" style="background: linear-gradient(145deg, #B8972A, #8B5E3C);">
+          <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.3;" viewBox="0 0 160 160" width="120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M80 20 L140 60 L140 120 L80 140 L20 120 L20 60 Z" fill="#F7F3ED" opacity="0.5"/>
+            <circle cx="80" cy="80" r="25" fill="#C4714A" opacity="0.6"/>
+          </svg>
+          <span class="product-badge new">New</span>
+          <button class="wishlist-btn"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="product-info">
+          <div class="product-cat">Wall Art</div>
+          <div class="product-name">Macramé Mandala Tapestry</div>
+          <div class="product-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-count">(211)</span>
+          </div>
+          <div class="product-price-row">
+            <div class="price-group">
+              <span class="price-sale">₹749</span>
+              <span class="price-original">₹1,299</span>
+            </div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Story Section -->
+  <section class="story" id="story">
+    <div class="story-images">
+      <div style="width:72%;height:85%;background:linear-gradient(135deg,#C4714A,#8B5E3C);border-radius:16px;position:absolute;top:0;left:0;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 200 280" width="160" xmlns="http://www.w3.org/2000/svg" opacity="0.25">
+          <ellipse cx="100" cy="50" rx="40" ry="12" fill="#F7F3ED"/>
+          <polygon points="60,50 140,50 165,200 35,200" fill="#F7F3ED"/>
+          <ellipse cx="100" cy="200" rx="65" ry="16" fill="#F7F3ED" opacity="0.4"/>
+          <rect x="94" y="15" width="12" height="35" rx="6" fill="#F7F3ED"/>
+          <circle cx="100" cy="220" r="8" fill="#D4AF5A"/>
+        </svg>
+      </div>
+      <div style="width:50%;height:55%;background:linear-gradient(135deg,#E8DDD0,#B8972A);border-radius:16px;position:absolute;bottom:0;right:0;border:6px solid var(--warm-white);box-shadow:0 12px 40px rgba(61,43,31,0.15);display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 160 160" width="100" xmlns="http://www.w3.org/2000/svg" opacity="0.3">
+          <circle cx="80" cy="80" r="60" fill="none" stroke="#3D2B1F" stroke-width="3"/>
+          <path d="M80 20 L80 140 M20 80 L140 80 M38 38 L122 122 M38 122 L122 38" stroke="#3D2B1F" stroke-width="2"/>
+          <circle cx="80" cy="80" r="20" fill="#C4714A" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="story-badge">
+        <span class="num">5+</span>
+        <span class="label">Years of<br/>Craft</span>
+      </div>
+    </div>
+    <div class="story-content">
+      <div class="section-header" style="text-align:left;margin-bottom:32px;">
+        <div class="section-eyebrow">Our Story</div>
+        <h2 class="section-title">Every lamp tells a <em>story</em></h2>
+      </div>
+      <p class="story-text">Born from a love of traditional Indian craftsmanship and contemporary design, Spec Interior brings together artisans from across the country to create lighting and décor that transforms ordinary spaces into sanctuaries of warmth.</p>
+      <p class="story-text">Each cane lamp is hand-cut, hand-painted, and assembled by skilled craftspeople who've spent generations perfecting their art. When you bring a Spec Interior piece home, you carry a piece of that heritage with you.</p>
+      <div class="story-stats">
+        <div class="stat-item">
+          <div class="stat-num">2,500+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Unique Designs</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">18+</div>
+          <div class="stat-label">Artisan Partners</div>
+        </div>
+      </div>
+      <a href="#" class="btn-primary">Read Our Story →</a>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="section-header">
+      <div class="section-eyebrow">Customer Love</div>
+      <h2 class="section-title">What our community <em>says</em></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The tin pendant lamp I ordered completely transformed my dining room. The quality is exceptional and the warm glow it casts is exactly what I was looking for."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">P</div>
+          <div>
+            <div class="testi-name">Priya Sharma</div>
+            <div class="testi-loc">Mumbai, Maharashtra</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I ordered 3 wall panels for my living room and they look absolutely stunning. Packaging was perfect, delivery was quick, and the craftsmanship is outstanding."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div>
+            <div class="testi-name">Arjun Mehta</div>
+            <div class="testi-loc">Bengaluru, Karnataka</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Gifted a set of cane lamps to my sister for her housewarming. She was absolutely in love. The packaging itself felt premium — made the gifting experience extra special."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div>
+            <div class="testi-name">Ritu Nair</div>
+            <div class="testi-loc">Kochi, Kerala</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="newsletter">
+    <div>
+      <h2 class="newsletter-title">Light up your<br/><em>inbox</em> too</h2>
+      <p class="newsletter-sub">Subscribe to receive new arrivals, design inspiration, exclusive discounts, and stories from our artisan community.</p>
+    </div>
+    <div>
+      <div class="nl-form">
+        <div class="nl-input-row">
+          <input type="text" class="nl-input" placeholder="Your name" />
+          <input type="email" class="nl-input" placeholder="Email address" />
+        </div>
+        <button class="nl-btn">Subscribe &amp; Save 10%</button>
+        <p class="nl-note">No spam, ever. Unsubscribe at any time. 🌿</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">Spec <span style="color:var(--terracotta);">Interior</span></a>
+        <p class="footer-desc">Handcrafted cane lamps and wall décor celebrating the richness of Indian artisanship. Every piece made with love, light, and intention.</p>
+        <div class="footer-socials">
+          <div class="social-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </div>
+          <div class="social-btn">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div class="social-btn">
+            <svg viewBox="0 0 24 24"><path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#">Cane Lamps</a></li>
+          <li><a href="#">Wall Hangings</a></li>
+          <li><a href="#">Pendant Lights</a></li>
+          <li><a href="#">Table Lamps</a></li>
+          <li><a href="#">Gifting Sets</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Artisans</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Press &amp; Media</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Contact Info Bar -->
+    <div class="footer-contact">
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Shop No. 03, Swami Vivekanand Rd, opp. Saayba Hotel, B Block BKC, Bandra West, Mumbai, Maharashtra 400050</span>
+      </div>
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        <a href="tel:+919654535236" style="color:rgba(255,255,255,0.7);text-decoration:none;">+91 96545 35236</a>
+      </div>
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <a href="mailto:saquibparwez18@gmail.com" style="color:rgba(255,255,255,0.7);text-decoration:none;">saquibparwez18@gmail.com</a>
+      </div>
+      <div class="contact-item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <a href="https://wa.me/919654535236?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" target="_blank" style="color:#25D366;text-decoration:none;font-weight:500;">Chat on WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Spec Interior. All rights reserved. Made with ❤️ in India.</p>
+      <div class="footer-payments">
+        <span class="pay-badge">UPI</span>
+        <span class="pay-badge">Visa</span>
+        <span class="pay-badge">Mastercard</span>
+        <span class="pay-badge">Razorpay</span>
+        <span class="pay-badge">COD</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp & Call Buttons -->
+  <div class="floating-btns">
+    <a href="https://wa.me/919654535236?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" target="_blank" class="float-btn whatsapp-btn" aria-label="Chat on WhatsApp">
+      <svg viewBox="0 0 24 24" fill="white" width="26" height="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+    <a href="tel:+919654535236" class="float-btn call-btn" aria-label="Call us">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="24" height="24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+    </a>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+  <style>
+    /* ── FLOATING BUTTONS ── */
+    .floating-btns {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 200;
+    }
+    .float-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .float-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+    }
+    .whatsapp-btn { background: #25D366; }
+    .call-btn { background: var(--terracotta); }
+
+    /* ── BACK TO TOP ── */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--brown);
+      color: white;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+      z-index: 200;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .back-to-top:hover {
+      background: var(--terracotta);
+      transform: translateY(-3px);
+    }
+  </style>
+
+  <script type="module">
+    import { getProducts, onProductsChange } from './js/products.js';
+    import { addToCart, getCartCount, updateCartBadge } from './js/cart.js';
+
+    // Initialize cart badge
+    updateCartBadge();
+
+    // Back to top button
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Cart button → checkout
+    document.querySelector('.cart-btn').addEventListener('click', () => {
+      window.location.href = 'checkout.html';
+    });
+
+    // Load products from Firebase and render dynamically
+    const productGrid = document.querySelector('.product-grid');
+
+    function renderProducts(products) {
+      if (!products || products.length === 0) return; // Keep static products if Firebase is empty
+
+      productGrid.innerHTML = products.map(p => {
+        const discount = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
+        const badgeHtml = p.badge === 'new'
+          ? '<span class="product-badge new">New</span>'
+          : discount > 0 ? `<span class="product-badge">−${discount}%</span>` : '';
+        const stars = '★'.repeat(Math.round(p.rating || 5)) + '☆'.repeat(5 - Math.round(p.rating || 5));
+        const imgStyle = p.image
+          ? `background-image:url('${p.image}');background-size:cover;background-position:center;`
+          : `background:linear-gradient(145deg, ${p.color1 || '#8B5E3C'}, ${p.color2 || '#C4714A'});`;
+
+        return `
+          <div class="product-card" data-id="${p.id}">
+            <div class="product-img-wrap" style="${imgStyle}">
+              ${badgeHtml}
+              <button class="wishlist-btn"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-cat">${p.category === 'lamp' ? 'Cane Lamp' : p.category === 'wall' ? 'Wall Decor' : 'Pendant'}</div>
+              <div class="product-name">${p.name}</div>
+              <div class="product-rating">
+                <span class="stars">${stars}</span>
+                <span class="rating-count">(${p.reviews || 0})</span>
+              </div>
+              <div class="product-price-row">
+                <div class="price-group">
+                  <span class="price-sale">₹${p.price.toLocaleString()}</span>
+                  ${p.originalPrice ? `<span class="price-original">₹${p.originalPrice.toLocaleString()}</span>` : ''}
+                </div>
+                <button class="add-btn" data-product='${JSON.stringify({id:p.id,name:p.name,price:p.price,image:p.image||'',color1:p.color1,color2:p.color2})}'>+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      attachProductListeners();
+    }
+
+    function attachProductListeners() {
+      // Add to cart
+      document.querySelectorAll('.add-btn').forEach(btn => {
+        // Skip if already has listener
+        if (btn.dataset.listening) return;
+        btn.dataset.listening = 'true';
+
+        btn.addEventListener('click', function() {
+          let product;
+          if (this.dataset.product) {
+            // Dynamic product from Firebase
+            product = JSON.parse(this.dataset.product);
+          } else {
+            // Static product — extract info from the card
+            const card = this.closest('.product-card');
+            const name = card.querySelector('.product-name')?.textContent || 'Product';
+            const priceText = card.querySelector('.price-sale')?.textContent || '0';
+            const price = parseInt(priceText.replace(/[^\d]/g, '')) || 0;
+            product = { id: 'static-' + name.replace(/\s+/g, '-').toLowerCase(), name, price, image: '', color1: '#8B5E3C', color2: '#C4714A' };
+          }
+          addToCart(product);
+          this.textContent = '✓';
+          this.style.background = 'var(--gold)';
+          setTimeout(() => {
+            this.textContent = '+';
+            this.style.background = 'var(--terracotta)';
+          }, 1200);
+        });
+      });
+
+      // Wishlist toggle
+      document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        if (btn.dataset.listening) return;
+        btn.dataset.listening = 'true';
+        btn.addEventListener('click', function() {
+          const svg = this.querySelector('svg');
+          const filled = svg.getAttribute('fill') === 'var(--terracotta)';
+          svg.setAttribute('fill', filled ? 'none' : 'var(--terracotta)');
+        });
+      });
+    }
+
+    // Listen for real-time product updates from Firebase
+    onProductsChange((products) => {
+      if (products.length > 0) {
+        renderProducts(products);
+      }
+    });
+
+    // Also attach listeners to static products (fallback)
+    attachProductListeners();
+  </script>
+
+</body>
+</html>

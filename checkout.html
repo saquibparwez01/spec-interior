@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout — Spec Interior</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
+      --terracotta: #C4714A; --dark: #1A1410; --brown: #3D2B1F;
+      --brown-light: #6B4C38; --gold: #B8972A; --text-muted: #8C7B6E;
+      --border: rgba(61,43,31,0.12); --green: #3CB371; --red: #E05252;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); min-height: 100vh; }
+
+    /* Header */
+    .checkout-header {
+      background: var(--brown); padding: 20px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .checkout-header a { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--sand); text-decoration: none; }
+    .checkout-header a span { color: var(--terracotta); }
+    .checkout-header .secure { font-size: 13px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 6px; }
+    .checkout-header .secure svg { width: 16px; height: 16px; stroke: var(--gold); fill: none; }
+
+    /* Layout */
+    .checkout-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; }
+
+    /* Form */
+    .form-section { margin-bottom: 32px; }
+    .form-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: var(--brown); margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 10px;
+      background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--dark);
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--terracotta); }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-muted); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+
+    /* Order Summary */
+    .order-summary { background: var(--cream); border-radius: 16px; padding: 28px; position: sticky; top: 24px; }
+    .order-summary h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--brown); margin-bottom: 20px; }
+    .summary-item { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .summary-item:last-of-type { border-bottom: none; }
+    .summary-thumb { width: 56px; height: 56px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+    .summary-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .summary-thumb-placeholder { width: 100%; height: 100%; border-radius: 10px; }
+    .summary-details { flex: 1; }
+    .summary-name { font-size: 14px; font-weight: 500; color: var(--brown); }
+    .summary-qty { font-size: 12px; color: var(--text-muted); }
+    .summary-price { font-size: 14px; font-weight: 600; color: var(--brown); }
+
+    .summary-totals { margin-top: 20px; padding-top: 16px; border-top: 1.5px solid var(--border); }
+    .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; color: var(--text-muted); }
+    .total-row.grand { font-size: 18px; font-weight: 600; color: var(--brown); padding-top: 12px; border-top: 1.5px solid var(--border); margin-top: 8px; }
+    .total-row .free { color: var(--green); font-weight: 500; }
+
+    /* Payment Options */
+    .payment-options { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .pay-option { display: flex; align-items: center; gap: 12px; padding: 16px; border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+    .pay-option:hover { border-color: var(--terracotta); }
+    .pay-option.selected { border-color: var(--terracotta); background: rgba(196,113,74,0.05); }
+    .pay-option input[type="radio"] { accent-color: var(--terracotta); width: 18px; height: 18px; }
+    .pay-option-label { font-size: 14px; font-weight: 500; color: var(--brown); }
+    .pay-option-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* Buttons */
+    .place-order-btn {
+      width: 100%; padding: 18px; margin-top: 24px; background: var(--brown); color: white;
+      border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px;
+      font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.15s;
+    }
+    .place-order-btn:hover { background: var(--terracotta); transform: translateY(-2px); }
+    .place-order-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Empty Cart */
+    .empty-cart { text-align: center; padding: 80px 20px; grid-column: span 2; }
+    .empty-cart h2 { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--brown); margin-bottom: 12px; }
+    .empty-cart p { color: var(--text-muted); margin-bottom: 24px; }
+    .empty-cart a { display: inline-block; padding: 14px 32px; background: var(--terracotta); color: white; text-decoration: none; border-radius: 50px; font-weight: 500; }
+
+    /* Success */
+    .order-success { text-align: center; padding: 80px 20px; grid-column: span 2; }
+    .order-success .check { width: 80px; height: 80px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    .order-success .check svg { width: 40px; height: 40px; stroke: white; fill: none; }
+    .order-success h2 { font-family: 'Cormorant Garamond', serif; font-size: 36px; color: var(--brown); margin-bottom: 12px; }
+    .order-success p { color: var(--text-muted); font-size: 16px; margin-bottom: 8px; }
+    .order-success .order-id { font-size: 18px; font-weight: 600; color: var(--terracotta); margin: 16px 0; }
+    .order-success a { display: inline-block; margin-top: 20px; padding: 14px 32px; background: var(--brown); color: white; text-decoration: none; border-radius: 50px; font-weight: 500; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 28px; right: 28px; background: var(--red); color: white; padding: 14px 22px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 768px) {
+      .checkout-wrap { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+      .checkout-header { padding: 16px 20px; }
+      .empty-cart, .order-success { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="checkout-header">
+  <a href="index.html">Spec <span>Interior</span></a>
+  <div class="secure">
+    <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Secure Checkout
+  </div>
+</header>
+
+<div class="checkout-wrap" id="checkoutContent">
+  <!-- Content loaded by JS -->
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { getCart, getCartTotal, getCartCount, clearCart } from './js/cart.js';
+import { initiatePayment, createCODOrder } from './js/checkout.js';
+
+const content = document.getElementById('checkoutContent');
+const cart = getCart();
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function renderCheckout() {
+  if (cart.length === 0) {
+    content.innerHTML = `
+      <div class="empty-cart">
+        <h2>Your cart is empty</h2>
+        <p>Add some beautiful handcrafted pieces to your cart first.</p>
+        <a href="index.html">← Continue Shopping</a>
+      </div>`;
+    return;
+  }
+
+  const total = getCartTotal();
+  const shipping = total >= 999 ? 0 : 99;
+  const grandTotal = total + shipping;
+
+  content.innerHTML = `
+    <div class="form-area">
+      <div class="form-section">
+        <h2>Delivery Details</h2>
+        <div class="form-group"><label>Full Name</label><input type="text" id="custName" placeholder="Your full name" required/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input type="email" id="custEmail" placeholder="email@example.com" required/></div>
+          <div class="form-group"><label>Phone</label><input type="tel" id="custPhone" placeholder="10-digit mobile number" required/></div>
+        </div>
+        <div class="form-group"><label>Address</label><textarea id="custAddress" placeholder="House/Flat No., Street, Landmark" required></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input type="text" id="custCity" placeholder="City" required/></div>
+          <div class="form-group"><label>State</label><input type="text" id="custState" placeholder="State" required/></div>
+        </div>
+        <div class="form-group"><label>Pincode</label><input type="text" id="custPincode" placeholder="6-digit pincode" required maxlength="6"/></div>
+        <div class="form-group"><label>Order Notes (optional)</label><textarea id="custNotes" placeholder="Any special instructions..."></textarea></div>
+      </div>
+
+      <div class="form-section">
+        <h2>Payment Method</h2>
+        <div class="payment-options">
+          <label class="pay-option selected" id="payOnline">
+            <input type="radio" name="payment" value="online" checked/>
+            <div>
+              <div class="pay-option-label">Pay Online (UPI / Card / Wallet)</div>
+              <div class="pay-option-desc">Secure payment via Razorpay</div>
+            </div>
+          </label>
+          <label class="pay-option" id="payCOD">
+            <input type="radio" name="payment" value="cod"/>
+            <div>
+              <div class="pay-option-label">Cash on Delivery</div>
+              <div class="pay-option-desc">Pay when your order arrives</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <button class="place-order-btn" id="placeOrderBtn">Place Order — ₹${grandTotal.toLocaleString()}</button>
+    </div>
+
+    <div class="order-summary">
+      <h3>Order Summary (${getCartCount()} items)</h3>
+      ${cart.map(item => `
+        <div class="summary-item">
+          <div class="summary-thumb">
+            ${item.image
+              ? `<img src="${item.image}" alt="${item.name}"/>`
+              : `<div class="summary-thumb-placeholder" style="background:linear-gradient(135deg,${item.color1||'#8B5E3C'},${item.color2||'#C4714A'})"></div>`
+            }
+          </div>
+          <div class="summary-details">
+            <div class="summary-name">${item.name}</div>
+            <div class="summary-qty">Qty: ${item.qty}</div>
+          </div>
+          <div class="summary-price">₹${(item.price * item.qty).toLocaleString()}</div>
+        </div>
+      `).join('')}
+      <div class="summary-totals">
+        <div class="total-row"><span>Subtotal</span><span>₹${total.toLocaleString()}</span></div>
+        <div class="total-row"><span>Shipping</span><span class="${shipping === 0 ? 'free' : ''}">${shipping === 0 ? 'FREE' : '₹' + shipping}</span></div>
+        <div class="total-row grand"><span>Total</span><span>₹${grandTotal.toLocaleString()}</span></div>
+      </div>
+    </div>
+  `;
+
+  // Payment option toggle
+  document.querySelectorAll('.pay-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+
+  // Place order
+  document.getElementById('placeOrderBtn').addEventListener('click', handlePlaceOrder);
+}
+
+async function handlePlaceOrder() {
+  const btn = document.getElementById('placeOrderBtn');
+  const name = document.getElementById('custName').value.trim();
+  const email = document.getElementById('custEmail').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const city = document.getElementById('custCity').value.trim();
+  const state = document.getElementById('custState').value.trim();
+  const pincode = document.getElementById('custPincode').value.trim();
+  const notes = document.getElementById('custNotes').value.trim();
+
+  // Validation
+  if (!name || !email || !phone || !address || !city || !state || !pincode) {
+    showToast('Please fill all required fields');
+    return;
+  }
+  if (phone.length !== 10 || !/^\d+$/.test(phone)) {
+    showToast('Please enter a valid 10-digit phone number');
+    return;
+  }
+  if (pincode.length !== 6 || !/^\d+$/.test(pincode)) {
+    showToast('Please enter a valid 6-digit pincode');
+    return;
+  }
+
+  const customerInfo = { name, email, phone, address, city, state, pincode, notes };
+  const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    let order;
+    if (paymentMethod === 'online') {
+      order = await initiatePayment(customerInfo);
+    } else {
+      order = await createCODOrder(customerInfo);
+    }
+    showSuccess(order);
+  } catch (err) {
+    if (err.message !== 'Payment cancelled by user') {
+      showToast(err.message || 'Something went wrong. Please try again.');
+    }
+    btn.disabled = false;
+    btn.textContent = `Place Order — ₹${(getCartTotal() + (getCartTotal() >= 999 ? 0 : 99)).toLocaleString()}`;
+  }
+}
+
+function showSuccess(order) {
+  content.innerHTML = `
+    <div class="order-success">
+      <div class="check"><svg viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></div>
+      <h2>Order Placed Successfully!</h2>
+      <p>Thank you for shopping with Spec Interior.</p>
+      <div class="order-id">Order ID: #${order.orderId || order.id}</div>
+      <p>We'll send you a confirmation on WhatsApp/Email shortly.</p>
+      <p style="margin-top:12px;font-size:14px;">Expected delivery: 3–5 business days</p>
+      <a href="index.html">← Continue Shopping</a>
+    </div>
+  `;
+}
+
+renderCheckout();
+</script>
+</body>
+</html>
