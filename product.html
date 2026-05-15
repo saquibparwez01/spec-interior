@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product — Spec Interior</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
+      --terracotta: #C4714A; --terracotta-light: #D98B67;
+      --dark: #1A1410; --brown: #3D2B1F; --brown-light: #6B4C38;
+      --gold: #B8972A; --gold-light: #D4AF5A; --text-muted: #8C7B6E;
+      --border: rgba(61,43,31,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(253,250,246,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown); text-decoration: none; }
+    .nav-logo span { color: var(--terracotta); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--brown-light); font-size: 14px; letter-spacing: 0.04em; font-weight: 400; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--terracotta); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .cart-btn { background: var(--terracotta); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .cart-btn:hover { background: var(--brown); }
+
+    /* BREADCRUMB */
+    .breadcrumb { padding: 20px 80px; font-size: 13px; color: var(--text-muted); }
+    .breadcrumb a { color: var(--brown-light); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--terracotta); }
+
+    /* PRODUCT DETAIL */
+    .product-detail { padding: 0 80px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+
+    .product-image { aspect-ratio: 1; border-radius: 20px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    .product-meta { padding: 20px 0; }
+    .product-meta .category-label { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 12px; }
+    .product-meta h1 { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 400; color: var(--brown); line-height: 1.15; margin-bottom: 16px; }
+    .product-meta .rating-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .product-meta .stars { color: var(--gold); font-size: 18px; }
+    .product-meta .rating-text { font-size: 14px; color: var(--text-muted); }
+
+    .price-section { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+    .price-section .current-price { font-size: 32px; font-weight: 600; color: var(--brown); }
+    .price-section .original-price { font-size: 18px; color: var(--text-muted); text-decoration: line-through; }
+    .price-section .discount-badge { background: var(--terracotta); color: white; font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 50px; }
+
+    .product-description { font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 32px; }
+
+    .product-features { margin-bottom: 32px; }
+    .product-features h3 { font-size: 14px; font-weight: 500; color: var(--brown); margin-bottom: 12px; letter-spacing: 0.04em; }
+    .product-features ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .product-features li { font-size: 14px; color: var(--text-muted); padding-left: 20px; position: relative; }
+    .product-features li::before { content: '✓'; position: absolute; left: 0; color: var(--terracotta); font-weight: 600; }
+
+    .qty-row { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .qty-control { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 50px; overflow: hidden; }
+    .qty-control button { width: 40px; height: 40px; border: none; background: transparent; font-size: 18px; cursor: pointer; color: var(--brown); transition: background 0.2s; }
+    .qty-control button:hover { background: var(--sand); }
+    .qty-control .qty-value { width: 40px; text-align: center; font-size: 15px; font-weight: 500; color: var(--brown); }
+
+    .action-buttons { display: flex; gap: 12px; margin-bottom: 32px; }
+    .btn-add-cart { flex: 1; padding: 16px 32px; background: var(--terracotta); color: white; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+    .btn-add-cart:hover { background: var(--brown); transform: translateY(-2px); }
+    .btn-buy-now { flex: 1; padding: 16px 32px; background: var(--brown); color: white; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+    .btn-buy-now:hover { background: var(--dark); transform: translateY(-2px); }
+
+    .trust-badges { display: flex; gap: 20px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid var(--border); }
+    .trust-badge-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+    .trust-badge-item svg { width: 16px; height: 16px; stroke: var(--terracotta); fill: none; }
+
+    /* RECOMMENDED SECTION */
+    .recommended { padding: 80px; background: var(--cream); }
+    .recommended .section-header { text-align: center; margin-bottom: 40px; }
+    .recommended .section-eyebrow { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 12px; }
+    .recommended .section-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; color: var(--brown); }
+    .recommended .section-title em { font-style: italic; }
+
+    .rec-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .rec-card { background: white; border-radius: 14px; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; text-decoration: none; color: inherit; display: block; }
+    .rec-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(61,43,31,0.12); }
+    .rec-card .rec-img { aspect-ratio: 1; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .rec-card .rec-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .rec-card:hover .rec-img img { transform: scale(1.06); }
+    .rec-card .rec-info { padding: 16px; }
+    .rec-card .rec-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 500; color: var(--brown); margin-bottom: 6px; }
+    .rec-card .rec-price { font-size: 15px; font-weight: 600; color: var(--brown); }
+
+    /* FOOTER */
+    .mini-footer { background: var(--brown); color: rgba(255,255,255,0.6); text-align: center; padding: 32px; font-size: 13px; }
+    .mini-footer a { color: var(--terracotta-light); text-decoration: none; }
+
+    /* LOADING */
+    .loading { text-align: center; padding: 100px 20px; color: var(--text-muted); font-size: 16px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .rec-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 860px) {
+      nav { padding: 0 16px; height: 56px; }
+      .nav-links { display: none; }
+      .nav-logo { font-size: 20px; }
+      .cart-btn { padding: 8px 16px; font-size: 12px; }
+      .breadcrumb { padding: 16px 16px; font-size: 12px; }
+      .product-detail { grid-template-columns: 1fr; gap: 24px; padding: 0 16px 40px; }
+      .product-image { aspect-ratio: 1; border-radius: 14px; }
+      .product-meta h1 { font-size: 28px; }
+      .product-meta .stars { font-size: 15px; }
+      .price-section .current-price { font-size: 26px; }
+      .price-section .original-price { font-size: 15px; }
+      .product-description { font-size: 14px; }
+      .action-buttons { flex-direction: column; }
+      .btn-add-cart, .btn-buy-now { padding: 14px 24px; font-size: 14px; }
+      .trust-badges { gap: 12px; }
+      .recommended { padding: 40px 16px; }
+      .recommended .section-title { font-size: 28px; }
+      .rec-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .rec-card .rec-info { padding: 12px; }
+      .rec-card .rec-name { font-size: 14px; }
+      .rec-card .rec-price { font-size: 14px; }
+    }
+    @media (max-width: 480px) {
+      .product-meta h1 { font-size: 24px; }
+      .price-section .current-price { font-size: 22px; }
+      .qty-row { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Spec <span>Interior</span></a>
+  <ul class="nav-links">
+    <li><a href="category.html?cat=lamp">Lamps</a></li>
+    <li><a href="category.html?cat=wall">Wall Decor</a></li>
+    <li><a href="category.html?cat=standing">Standing Lamp</a></li>
+    <li><a href="category.html?cat=gifting">Gifting</a></li>
+    <li><a href="category.html?cat=basket">Basket</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="location.href='checkout.html'">Cart (0)</button>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" id="breadcrumb">
+  <a href="index.html">Home</a> &nbsp;/&nbsp; <span id="breadCat">Products</span> &nbsp;/&nbsp; <span id="breadName">Loading...</span>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="product-detail" id="productDetail">
+  <div class="loading">Loading product...</div>
+</div>
+
+<!-- RECOMMENDED -->
+<section class="recommended" id="recommendedSection" style="display:none;">
+  <div class="section-header">
+    <div class="section-eyebrow">You May Also Like</div>
+    <h2 class="section-title">Similar <em>products</em></h2>
+  </div>
+  <div class="rec-grid" id="recGrid"></div>
+</section>
+
+<!-- FOOTER -->
+<div class="mini-footer">
+  <p>&copy; 2025 Spec Interior. All rights reserved. | <a href="index.html">Back to Home</a></p>
+</div>
+
+<script type="module">
+import { onProductsChange } from './js/products.js';
+import { addToCart, updateCartBadge } from './js/cart.js';
+
+updateCartBadge();
+
+const params = new URLSearchParams(window.location.search);
+const productId = params.get('id');
+
+if (!productId) {
+  document.getElementById('productDetail').innerHTML = '<div class="loading">Product not found. <a href="index.html">Go back home</a></div>';
+}
+
+const categoryLabels = { lamp: 'Cane Lamp', wall: 'Wall Decor', standing: 'Standing Lamp', gifting: 'Gift Set', basket: 'Basket', pendant: 'Pendant' };
+const categoryDescriptions = {
+  lamp: 'Handcrafted from natural cane and bamboo, this lamp casts beautiful shadow patterns and fills your space with warm, ambient light. Perfect for living rooms, bedrooms, or cozy reading corners.',
+  wall: 'A stunning piece of artisan wall decor that adds texture, depth, and character to any room. Handmade using traditional techniques passed down through generations.',
+  standing: 'An elegant floor-standing lamp that serves as both functional lighting and a sculptural statement piece. Designed to anchor any room with its presence.',
+  gifting: 'A thoughtfully curated gift set, beautifully packaged for housewarmings, weddings, and celebrations. Premium wrapping included for a special unboxing experience.',
+  basket: 'A versatile handwoven basket crafted from natural fibers. Perfect for storage, as a planter, or as a standalone decor piece in any corner of your home.'
+};
+const categoryFeatures = {
+  lamp: ['Hand-woven natural cane', 'Warm LED bulb compatible', 'Creates intricate shadow patterns', 'Suitable for indoor use', 'Easy to install'],
+  wall: ['100% handmade in India', 'Ready to hang (hardware included)', 'Natural & sustainable materials', 'Unique artisan craftsmanship', 'Lightweight & durable'],
+  standing: ['5ft+ height', 'Dimmable bulb compatible', 'Solid wood base', 'Living room & bedroom ready', 'Minimal assembly required'],
+  gifting: ['Premium gift wrapping', 'Personal message card included', 'Same-day dispatch available', 'Eco-friendly packaging', 'Perfect for all occasions'],
+  basket: ['100% natural jute/seagrass', 'Multi-purpose use', 'Handwoven by artisans', 'Eco-friendly & sustainable', 'Sturdy construction']
+};
+
+let allProducts = [];
+let qty = 1;
+
+onProductsChange((products) => {
+  allProducts = products;
+  const product = products.find(p => p.id === productId);
+  if (!product) {
+    document.getElementById('productDetail').innerHTML = '<div class="loading">Product not found. <a href="index.html">Go back home</a></div>';
+    return;
+  }
+  renderProduct(product);
+  renderRecommended(product);
+});
+
+function renderProduct(p) {
+  const cat = p.category || 'lamp';
+  const catLabel = categoryLabels[cat] || cat;
+  const discount = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
+  const stars = '★'.repeat(Math.round(p.rating || 5)) + '☆'.repeat(5 - Math.round(p.rating || 5));
+  const imgStyle = p.image
+    ? `<img src="${p.image}" alt="${p.name}"/>`
+    : `<div style="width:100%;height:100%;background:linear-gradient(145deg, ${p.color1||'#8B5E3C'}, ${p.color2||'#C4714A'});display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 200 200" width="140" opacity="0.3" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="50" rx="40" ry="12" fill="#F7F3ED"/><polygon points="60,50 140,50 160,160 40,160" fill="#F7F3ED" opacity="0.7"/><ellipse cx="100" cy="160" rx="60" ry="14" fill="#F7F3ED" opacity="0.4"/></svg></div>`;
+  const description = p.description || categoryDescriptions[cat] || 'A beautifully handcrafted piece from Spec Interior.';
+  const features = categoryFeatures[cat] || categoryFeatures.lamp;
+
+  document.title = `${p.name} — Spec Interior`;
+  document.getElementById('breadCat').innerHTML = `<a href="category.html?cat=${cat}">${catLabel}</a>`;
+  document.getElementById('breadName').textContent = p.name;
+
+  document.getElementById('productDetail').innerHTML = `
+    <div class="product-image" style="${!p.image ? 'background:linear-gradient(145deg,'+( p.color1||'#8B5E3C')+','+(p.color2||'#C4714A')+')' : ''}">
+      ${imgStyle}
+    </div>
+    <div class="product-meta">
+      <div class="category-label">${catLabel}</div>
+      <h1>${p.name}</h1>
+      <div class="rating-row">
+        <span class="stars">${stars}</span>
+        <span class="rating-text">${p.reviews || 0} reviews</span>
+      </div>
+      <div class="price-section">
+        <span class="current-price">₹${p.price.toLocaleString()}</span>
+        ${p.originalPrice ? `<span class="original-price">₹${p.originalPrice.toLocaleString()}</span>` : ''}
+        ${discount > 0 ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
+      </div>
+      <p class="product-description">${description}</p>
+      <div class="product-features">
+        <h3>Highlights</h3>
+        <ul>${features.map(f => `<li>${f}</li>`).join('')}</ul>
+      </div>
+      <div class="qty-row">
+        <span style="font-size:14px;color:var(--brown);font-weight:500;">Quantity:</span>
+        <div class="qty-control">
+          <button id="qtyMinus">−</button>
+          <span class="qty-value" id="qtyValue">1</span>
+          <button id="qtyPlus">+</button>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn-add-cart" id="addToCartBtn">Add to Cart</button>
+        <button class="btn-buy-now" id="buyNowBtn">Buy Now</button>
+      </div>
+      <div class="trust-badges">
+        <div class="trust-badge-item">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M5 12l5 5L20 7"/></svg>
+          7-Day Returns
+        </div>
+        <div class="trust-badge-item">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Free Shipping 999+
+        </div>
+        <div class="trust-badge-item">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          100% Handmade
+        </div>
+        <div class="trust-badge-item">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Secure Payment
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Qty controls
+  document.getElementById('qtyMinus').addEventListener('click', () => {
+    if (qty > 1) { qty--; document.getElementById('qtyValue').textContent = qty; }
+  });
+  document.getElementById('qtyPlus').addEventListener('click', () => {
+    qty++; document.getElementById('qtyValue').textContent = qty;
+  });
+
+  // Add to cart
+  document.getElementById('addToCartBtn').addEventListener('click', () => {
+    addToCart({ id: p.id, name: p.name, price: p.price, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    const btn = document.getElementById('addToCartBtn');
+    btn.textContent = '✓ Added!';
+    btn.style.background = 'var(--gold)';
+    setTimeout(() => { btn.textContent = 'Add to Cart'; btn.style.background = 'var(--terracotta)'; }, 1500);
+  });
+
+  // Buy now
+  document.getElementById('buyNowBtn').addEventListener('click', () => {
+    addToCart({ id: p.id, name: p.name, price: p.price, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    window.location.href = 'checkout.html';
+  });
+}
+
+function renderRecommended(currentProduct) {
+  // Get products from same category, excluding current
+  let similar = allProducts.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id);
+  // If not enough, add from other categories
+  if (similar.length < 4) {
+    const others = allProducts.filter(p => p.id !== currentProduct.id && p.category !== currentProduct.category);
+    similar = [...similar, ...others].slice(0, 8);
+  } else {
+    similar = similar.slice(0, 8);
+  }
+
+  if (similar.length === 0) {
+    document.getElementById('recommendedSection').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('recommendedSection').style.display = 'block';
+  document.getElementById('recGrid').innerHTML = similar.map(p => {
+    const imgHtml = p.image
+      ? `<img src="${p.image}" alt="${p.name}"/>`
+      : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${p.color1||'#8B5E3C'},${p.color2||'#C4714A'});"></div>`;
+    return `
+      <a href="product.html?id=${p.id}" class="rec-card">
+        <div class="rec-img">${imgHtml}</div>
+        <div class="rec-info">
+          <div class="rec-name">${p.name}</div>
+          <div class="rec-price">₹${p.price.toLocaleString()}</div>
+        </div>
+      </a>
+    `;
+  }).join('');
+}
+</script>
+</body>
+</html>
