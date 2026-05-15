@@ -818,26 +818,123 @@
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 860px) {
-      nav { padding: 0 24px; }
+      /* Navbar */
+      nav { padding: 0 16px; height: 56px; }
       .nav-links { display: none; }
+      .nav-logo { font-size: 20px; }
+      .cart-btn { padding: 8px 16px; font-size: 12px; }
+      .nav-icon { width: 20px; height: 20px; }
+      .nav-right { gap: 12px; }
+
+      /* Announcement */
+      .announcement { font-size: 11px; padding: 8px 12px; }
+
+      /* Hero */
       .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero-left { padding: 60px 24px; }
-      .hero-right { height: 50vw; }
-      .categories, .products, .story, .testimonials, .newsletter { padding: 60px 24px; }
+      .hero-left { padding: 40px 20px 32px; }
+      .hero-title { font-size: 36px; margin-bottom: 16px; }
+      .hero-eyebrow { font-size: 10px; margin-bottom: 16px; }
+      .hero-subtitle { font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+      .hero-ctas { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .btn-primary { padding: 14px 28px; font-size: 13px; }
+      .btn-outline { padding: 12px 22px; font-size: 13px; }
+      .hero-right { height: 45vw; }
+
+      /* Trust Bar */
+      .trust-bar { padding: 16px; gap: 12px; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; }
+      .trust-item { flex-shrink: 0; gap: 8px; }
+      .trust-icon { width: 28px; height: 28px; }
+      .trust-icon svg { width: 14px; height: 14px; }
+      .trust-label { font-size: 11px; }
+      .trust-sub { font-size: 9px; }
+
+      /* Section Headers */
+      .section-header { margin-bottom: 32px; }
+      .section-eyebrow { font-size: 10px; margin-bottom: 10px; }
+      .section-title { font-size: 28px; }
+      .section-sub { font-size: 13px; margin-top: 10px; }
+
+      /* Categories */
       .categories { padding: 40px 16px; }
-      .cat-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .cat-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
       .cat-card { aspect-ratio: 3/4; border-radius: 10px; }
-      .cat-info { padding: 12px; }
-      .cat-tag { font-size: 8px; letter-spacing: 0.1em; margin-bottom: 3px; }
-      .cat-name { font-size: 14px; }
-      .cat-count { font-size: 10px; margin-top: 2px; }
-      .product-grid { grid-template-columns: repeat(2, 1fr); }
-      .story { grid-template-columns: 1fr; gap: 40px; }
-      .testi-grid { grid-template-columns: 1fr; }
-      .newsletter { grid-template-columns: 1fr; gap: 32px; }
-      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-      .trust-bar { padding: 20px 24px; }
-      footer { padding: 60px 24px 32px; }
+      .cat-info { padding: 10px; }
+      .cat-tag { font-size: 7px; letter-spacing: 0.08em; margin-bottom: 2px; }
+      .cat-name { font-size: 12px; }
+      .cat-count { font-size: 9px; margin-top: 2px; }
+
+      /* Products */
+      .products { padding: 40px 16px; }
+      .product-tabs { gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+      .tab-btn { padding: 8px 14px; font-size: 11px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .product-card { border-radius: 10px; }
+      .product-img-wrap { aspect-ratio: 1; }
+      .product-badge { top: 8px; left: 8px; font-size: 9px; padding: 3px 8px; }
+      .wishlist-btn { top: 8px; right: 8px; width: 28px; height: 28px; }
+      .wishlist-btn svg { width: 12px; height: 12px; }
+      .product-info { padding: 12px 12px 14px; }
+      .product-cat { font-size: 9px; margin-bottom: 4px; }
+      .product-name { font-size: 14px; margin-bottom: 4px; }
+      .product-rating { margin-bottom: 8px; }
+      .stars { font-size: 11px; }
+      .rating-count { font-size: 10px; }
+      .price-sale { font-size: 15px; }
+      .price-original { font-size: 11px; }
+      .add-btn { width: 30px; height: 30px; font-size: 18px; }
+
+      /* Story */
+      .story { grid-template-columns: 1fr; gap: 32px; padding: 40px 16px; }
+      .story-images { height: 280px; }
+      .story-badge { width: 60px; height: 60px; }
+      .story-badge .num { font-size: 18px; }
+      .story-badge .label { font-size: 8px; }
+      .story-text { font-size: 13px; line-height: 1.7; }
+      .story-stats { padding: 20px; gap: 16px; margin: 24px 0; }
+      .stat-num { font-size: 26px; }
+      .stat-label { font-size: 10px; }
+
+      /* Testimonials */
+      .testimonials { padding: 40px 16px; }
+      .testi-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+      .testi-card { padding: 20px; border-radius: 12px; }
+      .testi-stars { font-size: 14px; margin-bottom: 12px; }
+      .testi-text { font-size: 15px; margin-bottom: 16px; }
+      .testi-avatar { width: 36px; height: 36px; font-size: 15px; }
+      .testi-name { font-size: 13px; }
+      .testi-loc { font-size: 11px; }
+
+      /* Newsletter */
+      .newsletter { grid-template-columns: 1fr; gap: 24px; padding: 40px 16px; }
+      .newsletter-title { font-size: 32px; }
+      .newsletter-sub { font-size: 13px; }
+      .nl-input-row { flex-direction: column; gap: 10px; }
+      .nl-input { padding: 14px 16px; font-size: 13px; }
+      .nl-btn { padding: 14px 24px; font-size: 13px; }
+
+      /* Footer */
+      footer { padding: 40px 16px 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; padding-bottom: 28px; }
+      .footer-desc { font-size: 13px; }
+      .footer-col h4 { font-size: 12px; margin-bottom: 14px; }
+      .footer-col a { font-size: 13px; }
+      .footer-contact { gap: 12px 20px; padding: 20px 0; }
+      .contact-item { font-size: 11px; }
+      .footer-bottom { padding-top: 20px; font-size: 11px; flex-direction: column; align-items: flex-start; }
+      .footer-payments { flex-wrap: wrap; }
+      .pay-badge { font-size: 10px; padding: 4px 8px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 30px; }
+      .cat-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .cat-name { font-size: 11px; }
+      .cat-info { padding: 8px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .product-info { padding: 10px; }
+      .product-name { font-size: 13px; }
+      .price-sale { font-size: 14px; }
+      .story-images { height: 220px; }
     }
 
     /* ── ANIMATIONS ── */
@@ -1384,6 +1481,13 @@
     }
     .whatsapp-btn { background: #25D366; }
     .call-btn { background: var(--terracotta); }
+
+    @media (max-width: 860px) {
+      .floating-btns { bottom: 16px; right: 16px; gap: 10px; }
+      .float-btn { width: 46px; height: 46px; }
+      .float-btn svg { width: 22px; height: 22px; }
+      .back-to-top { bottom: 16px; left: 16px; width: 40px; height: 40px; font-size: 16px; }
+    }
 
     /* ── BACK TO TOP ── */
     .back-to-top {
