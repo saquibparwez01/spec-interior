@@ -174,16 +174,22 @@
       .charts-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 700px) {
-      .sidebar { display: none; }
+      .sidebar { display: none !important; }
       .main { margin-left: 0; }
       .content { padding: 16px; }
     }
+
+    /* AUTH GATE - hide everything by default */
+    .sidebar, .main { display: none !important; }
+    body.authenticated .sidebar { display: flex !important; }
+    body.authenticated .main { display: flex !important; }
+    body.authenticated #loginGate { display: none !important; }
   </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar" id="adminSidebar" style="display:none;">
+<aside class="sidebar" id="adminSidebar">
   <div class="sidebar-brand">
     <div class="brand-name">Spec <span>Interior</span></div>
     <div class="brand-sub">Admin Dashboard</div>
@@ -221,7 +227,7 @@
 </aside>
 
 <!-- MAIN -->
-<main class="main" id="adminMain" style="display:none;">
+<main class="main" id="adminMain">
   <div class="topbar">
     <div class="page-title" id="pageTitle">Dashboard</div>
     <div class="topbar-right">
@@ -423,19 +429,14 @@
 
   function checkAdmin(user) {
     if (user && ALLOWED_ADMINS.includes(user.email)) {
-      loginGate.style.display = 'none';
-      document.getElementById('adminSidebar').style.display = 'flex';
-      document.getElementById('adminMain').style.display = 'flex';
+      document.body.classList.add('authenticated');
     } else if (user) {
-      // Signed in but not authorized
       signOut(auth);
+      document.body.classList.remove('authenticated');
       loginError.textContent = 'Access denied. This account is not authorized.';
       loginError.style.display = 'block';
-      loginGate.style.display = 'flex';
     } else {
-      loginGate.style.display = 'flex';
-      document.getElementById('adminSidebar').style.display = 'none';
-      document.getElementById('adminMain').style.display = 'none';
+      document.body.classList.remove('authenticated');
     }
   }
 
