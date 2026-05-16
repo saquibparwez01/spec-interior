@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Return & Refund Policy — Spec Interior</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
+      --terracotta: #C4714A; --terracotta-light: #D98B67;
+      --dark: #1A1410; --brown: #3D2B1F; --brown-light: #6B4C38;
+      --gold: #B8972A; --gold-light: #D4AF5A; --text-muted: #8C7B6E;
+      --border: rgba(61,43,31,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(253,250,246,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown); text-decoration: none; }
+    .nav-logo span { color: var(--terracotta); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--brown-light); font-size: 14px; letter-spacing: 0.04em; font-weight: 400; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--terracotta); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .cart-btn { background: var(--terracotta); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .cart-btn:hover { background: var(--brown); }
+
+    /* PAGE CONTENT */
+    .page-hero { padding: 60px 80px 40px; text-align: center; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 52px); font-weight: 400; color: var(--brown); margin-bottom: 12px; }
+    .page-hero h1 em { font-style: italic; color: var(--terracotta); }
+    .page-hero p { font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+    .policy-content { max-width: 800px; margin: 0 auto; padding: 0 40px 80px; }
+    .policy-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; color: var(--brown); margin: 40px 0 16px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .policy-content h2:first-of-type { border-top: none; padding-top: 0; }
+    .policy-content p { font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 16px; }
+    .policy-content ul, .policy-content ol { margin: 12px 0 20px 20px; }
+    .policy-content li { font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 8px; }
+    .policy-content strong { color: var(--brown); font-weight: 500; }
+
+    .highlight-box { background: var(--cream); border-left: 4px solid var(--terracotta); border-radius: 0 12px 12px 0; padding: 20px 24px; margin: 24px 0; }
+    .highlight-box p { margin-bottom: 0; font-size: 14px; }
+
+    .steps-list { counter-reset: step; list-style: none; margin-left: 0; padding-left: 0; }
+    .steps-list li { counter-increment: step; position: relative; padding-left: 36px; margin-bottom: 16px; }
+    .steps-list li::before { content: counter(step); position: absolute; left: 0; top: 2px; width: 24px; height: 24px; background: var(--terracotta); color: white; border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+    /* FOOTER */
+    .mini-footer { background: var(--brown); color: rgba(255,255,255,0.6); text-align: center; padding: 32px; font-size: 13px; }
+    .mini-footer a { color: var(--terracotta-light); text-decoration: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      nav { padding: 0 16px; height: 56px; }
+      .nav-links { display: none; }
+      .nav-logo { font-size: 20px; }
+      .cart-btn { padding: 8px 16px; font-size: 12px; }
+      .page-hero { padding: 40px 20px 24px; }
+      .page-hero h1 { font-size: 28px; }
+      .policy-content { padding: 0 20px 60px; }
+      .policy-content h2 { font-size: 22px; margin: 32px 0 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Spec <span>Interior</span></a>
+  <ul class="nav-links">
+    <li><a href="category.html?cat=lamp">Lamps</a></li>
+    <li><a href="category.html?cat=wall">Wall Decor</a></li>
+    <li><a href="category.html?cat=standing">Standing Lamp</a></li>
+    <li><a href="category.html?cat=gifting">Gifting</a></li>
+    <li><a href="category.html?cat=basket">Basket</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="location.href='checkout.html'">Cart (0)</button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Return & <em>Refund</em> Policy</h1>
+  <p>At Spec Interior, we take immense pride in the craftsmanship of our handmade cane and bamboo products. We want you to love your purchase, but if you are not entirely satisfied, we are here to help.</p>
+</div>
+
+<!-- POLICY CONTENT -->
+<div class="policy-content">
+
+  <h2>1. Return Window</h2>
+  <p>We offer a <strong>7-day return policy</strong>. You have 7 days from the date you received your item to request a return.</p>
+
+  <h2>2. Eligibility Criteria for Returns</h2>
+  <p>To be eligible for a return, your item must meet the following conditions:</p>
+  <ul>
+    <li>It must be in the same condition that you received it — unworn, unused, and undamaged.</li>
+    <li>It must be in its original packaging. Because cane items are fragile, returning them without their original protective box and padding often results in damage during transit, which will invalidate the refund.</li>
+    <li>You will need to provide the receipt, order number, or proof of purchase.</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><strong>Non-Returnable Items:</strong></p>
+    <p>• Custom-made or personalized cane orders<br/>• Items purchased on clearance or final sale</p>
+  </div>
+
+  <h2>3. The Return Process</h2>
+  <ol class="steps-list">
+    <li><strong>Request a Return:</strong> Contact our support team at <strong>saquibparwez18@gmail.com</strong> within your return window. Please include your order number and the reason for the return.</li>
+    <li><strong>Approval:</strong> If your return is accepted, we will send you a return shipping label (if applicable) as well as instructions on how and where to send your package. Items sent back to us without first requesting a return will not be accepted.</li>
+    <li><strong>Return Shipping:</strong> Customers are responsible for paying their own shipping costs for returning items, unless the item arrived damaged or defective. Shipping costs are non-refundable.</li>
+  </ol>
+
+  <h2>4. Natural Variations (Important Disclaimer)</h2>
+  <p>Cane and bamboo are natural materials. Minor variations in weave pattern, color shading, natural blemishes, or slight dimensional differences (within a reasonable margin) are inherent characteristics of handmade sustainable decor.</p>
+  <p>These natural variations are <strong>not considered manufacturing defects</strong> and are not eligible for a "defective item" free return.</p>
+
+  <h2>5. Exchanges</h2>
+  <p>The fastest way to ensure you get what you want is to return the item you have, and once the return is accepted, make a separate purchase for the new item.</p>
+
+  <h2>6. Refunds</h2>
+  <p>Once we receive and inspect your returned item, we will notify you via email regarding the approval or rejection of your refund.</p>
+  <p><strong>If approved:</strong> Your refund will be processed automatically to your original method of payment within <strong>5 to 7 business days</strong>.</p>
+  <p>Please note that it can take some time for your bank or credit card company to process and post the refund to your account.</p>
+
+  <div class="highlight-box">
+    <p><strong>Need help?</strong> Contact us at <strong>saquibparwez18@gmail.com</strong> or call <strong>+91 96545 35236</strong> — we're happy to assist with any return or refund queries.</p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="mini-footer">
+  <p>&copy; 2025 Spec Interior. All rights reserved. | <a href="index.html">Back to Home</a></p>
+</div>
+
+</body>
+</html>
