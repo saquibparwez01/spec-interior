@@ -183,7 +183,7 @@
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<aside class="sidebar" id="adminSidebar" style="display:none;">
   <div class="sidebar-brand">
     <div class="brand-name">Spec <span>Interior</span></div>
     <div class="brand-sub">Admin Dashboard</div>
@@ -221,7 +221,7 @@
 </aside>
 
 <!-- MAIN -->
-<main class="main">
+<main class="main" id="adminMain" style="display:none;">
   <div class="topbar">
     <div class="page-title" id="pageTitle">Dashboard</div>
     <div class="topbar-right">
@@ -423,6 +423,8 @@
   function checkAdmin(user) {
     if (user && ALLOWED_ADMINS.includes(user.email)) {
       loginGate.style.display = 'none';
+      document.getElementById('adminSidebar').style.display = 'flex';
+      document.getElementById('adminMain').style.display = 'flex';
     } else if (user) {
       // Signed in but not authorized
       signOut(auth);
@@ -431,6 +433,8 @@
       loginGate.style.display = 'flex';
     } else {
       loginGate.style.display = 'flex';
+      document.getElementById('adminSidebar').style.display = 'none';
+      document.getElementById('adminMain').style.display = 'none';
     }
   }
 

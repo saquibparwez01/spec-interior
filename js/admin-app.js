@@ -2,6 +2,7 @@
 import {
   db, collection, addDoc, getDocs, doc, updateDoc, deleteDoc,
   query, orderBy, onSnapshot,
+  auth, onAuthStateChanged,
   CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET
 } from './firebase-config.js';
 
@@ -436,10 +437,17 @@ document.getElementById('productModal').addEventListener('click', e => { if(e.ta
 document.getElementById('orderModal').addEventListener('click', e => { if(e.target===document.getElementById('orderModal')) document.getElementById('orderModal').classList.remove('open'); });
 
 // ─── INIT ────────────────────────────────────────────
+let initialized = false;
+onAuthStateChanged(auth, (user) => {
+  if (user && !initialized) {
+    initialized = true;
+    init();
+  }
+});
+
 async function init() {
   await seedProductsIfEmpty();
   listenProducts();
   listenOrders();
   loadDashboard();
 }
-init();
