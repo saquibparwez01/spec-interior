@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQs — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
+      --terracotta: #C4714A; --terracotta-light: #D98B67;
+      --dark: #1A1410; --brown: #3D2B1F; --brown-light: #6B4C38;
+      --gold: #B8972A; --gold-light: #D4AF5A; --text-muted: #8C7B6E;
+      --border: rgba(61,43,31,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); overflow-x: hidden; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(253,250,246,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown); text-decoration: none; }
+    .nav-logo span { color: var(--terracotta); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--brown-light); font-size: 14px; letter-spacing: 0.04em; font-weight: 400; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--terracotta); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .cart-btn { background: var(--terracotta); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .cart-btn:hover { background: var(--brown); }
+
+    .page-hero { padding: 60px 80px 40px; text-align: center; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 52px); font-weight: 400; color: var(--brown); margin-bottom: 12px; }
+    .page-hero h1 em { font-style: italic; color: var(--terracotta); }
+    .page-hero p { font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+    .faq-content { max-width: 800px; margin: 0 auto; padding: 0 40px 80px; }
+
+    .faq-section-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--brown); margin: 40px 0 20px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .faq-section-title:first-of-type { border-top: none; padding-top: 0; }
+    .faq-emoji { font-size: 22px; }
+
+    .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: white; }
+    .faq-question { padding: 18px 22px; font-size: 15px; font-weight: 500; color: var(--brown); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background 0.2s; }
+    .faq-question:hover { background: var(--cream); }
+    .faq-question::after { content: '+'; font-size: 22px; color: var(--terracotta); font-weight: 300; flex-shrink: 0; transition: transform 0.3s; }
+    .faq-item.open .faq-question::after { content: '−'; transform: rotate(180deg); }
+    .faq-answer { padding: 0 22px; max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; }
+    .faq-item.open .faq-answer { padding: 0 22px 20px; max-height: 500px; }
+    .faq-answer p { font-size: 14px; line-height: 1.8; color: var(--text-muted); margin-bottom: 10px; }
+    .faq-answer ul { margin: 8px 0 12px 18px; }
+    .faq-answer li { font-size: 14px; line-height: 1.7; color: var(--text-muted); margin-bottom: 6px; }
+
+    .mini-footer { background: var(--brown); color: rgba(255,255,255,0.6); text-align: center; padding: 32px; font-size: 13px; }
+    .mini-footer a { color: var(--terracotta-light); text-decoration: none; }
+
+    @media (max-width: 860px) {
+      nav { padding: 0 16px; height: 56px; }
+      .nav-links { display: none; }
+      .nav-logo { font-size: 20px; }
+      .cart-btn { padding: 8px 16px; font-size: 12px; }
+      .page-hero { padding: 40px 20px 24px; }
+      .page-hero h1 { font-size: 28px; }
+      .faq-content { padding: 0 16px 60px; }
+      .faq-section-title { font-size: 22px; margin: 32px 0 14px; }
+      .faq-question { padding: 14px 16px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Spec <span>Interior</span></a>
+  <ul class="nav-links">
+    <li><a href="category.html?cat=lamp">Lamps</a></li>
+    <li><a href="category.html?cat=wall">Wall Decor</a></li>
+    <li><a href="category.html?cat=standing">Standing Lamp</a></li>
+    <li><a href="category.html?cat=gifting">Gifting</a></li>
+    <li><a href="category.html?cat=basket">Basket</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="location.href='checkout.html'">Cart (0)</button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <h1>Frequently Asked <em>Questions</em></h1>
+  <p>Everything you need to know about our handcrafted cane products, shipping, and more.</p>
+</div>
+
+<div class="faq-content">
+
+  <!-- PRODUCT & CRAFTSMANSHIP -->
+  <div class="faq-section-title"><span class="faq-emoji">🌿</span> Product & Craftsmanship</div>
+
+  <div class="faq-item">
+    <div class="faq-question">Are your products completely handmade?</div>
+    <div class="faq-answer">
+      <p>Yes! Every single item at Spec Interior is crafted by hand by skilled artisans. Because they are handmade, no two pieces are 100% identical. Each item carries its own unique character and minor variations in weave, color, and texture.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Will the color of the cane change over time?</div>
+    <div class="faq-answer">
+      <p>Cane and bamboo are natural, organic materials. Over time, exposure to natural light can cause the material to mature into a slightly deeper, richer golden tone. This is completely natural and adds to the vintage charm of the product.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">How do I clean and maintain my cane products?</div>
+    <div class="faq-answer">
+      <p>Cane is highly durable but loves a little care:</p>
+      <ul>
+        <li><strong>For daily dust:</strong> Use a soft, dry cloth or a soft-bristle brush to clean the dust out of the crevices.</li>
+        <li><strong>For deeper cleaning:</strong> Wipe gently with a slightly damp microfiber cloth. Do not soak or use harsh chemical cleaners.</li>
+        <li><strong>Keep it dry:</strong> Ensure the product stays away from prolonged moisture or direct rain to prevent mold.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LIGHTING & INSTALLATION -->
+  <div class="faq-section-title"><span class="faq-emoji">💡</span> Lighting & Installation</div>
+
+  <div class="faq-item">
+    <div class="faq-question">Do your cane lamps come with electrical fixtures?</div>
+    <div class="faq-answer">
+      <p>Yes, our cane pendant lights and lampshades come complete with standard electrical fixtures (holder, wire, and ceiling cap). Note: Bulbs are not included unless explicitly stated on the product page.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">What kind of bulb should I use with a cane lampshade?</div>
+    <div class="faq-answer">
+      <p>We highly recommend using warm LED bulbs. LEDs stay cool, making them completely safe for natural materials like cane and bamboo, while casting a beautiful, cozy shadow pattern on your walls.</p>
+    </div>
+  </div>
+
+  <!-- SHIPPING & DELIVERY -->
+  <div class="faq-section-title"><span class="faq-emoji">📦</span> Shipping & Delivery</div>
+
+  <div class="faq-item">
+    <div class="faq-question">How long will it take for my order to arrive?</div>
+    <div class="faq-answer">
+      <ul>
+        <li><strong>Ready-to-ship items:</strong> Processed within 2–4 business days, with standard delivery taking another 5–7 business days.</li>
+        <li><strong>Made-to-order items:</strong> Since custom or larger items are woven from scratch, please allow 2–3 weeks for production before shipment.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">How much does shipping cost?</div>
+    <div class="faq-answer">
+      <p>Shipping charges are calculated at checkout based on the size and weight of your order. We offer <strong>free shipping on orders above ₹999</strong>.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">My item arrived damaged. What should I do?</div>
+    <div class="faq-answer">
+      <p>Because cane is lightweight and structural, transit can occasionally be rough. Don't worry! Take clear photos of the damaged item and the exterior box, and email us at <strong>saquibparwez18@gmail.com</strong> within 48 hours of delivery. We will arrange a replacement or refund immediately.</p>
+    </div>
+  </div>
+
+  <!-- RETURNS & CANCELLATIONS -->
+  <div class="faq-section-title"><span class="faq-emoji">🔄</span> Returns & Cancellations</div>
+
+  <div class="faq-item">
+    <div class="faq-question">Can I return a product if I change my mind?</div>
+    <div class="faq-answer">
+      <p>Yes, we offer a <strong>7-day return policy</strong> for unused items in their original packaging. Please note that because our products require large boxes, the customer is responsible for return shipping costs unless the item arrived damaged or defective.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">Can I cancel my order?</div>
+    <div class="faq-answer">
+      <p>You can cancel your order within 24 hours of placing it. Once an item has been processed or shipped out by our logistics partners, it cannot be canceled.</p>
+    </div>
+  </div>
+
+  <!-- CUSTOM ORDERS -->
+  <div class="faq-section-title"><span class="faq-emoji">🤝</span> Custom Orders & Bulk Inquiries</div>
+
+  <div class="faq-item">
+    <div class="faq-question">Do you take bulk orders for cafes, hotels, or projects?</div>
+    <div class="faq-answer">
+      <p>Absolutely! We love collaborating on commercial projects, cafes, and interior styling layouts. Please reach out to us directly at <strong>saquibparwez18@gmail.com</strong> or call <strong>+91 96545 35236</strong> with your project requirements, and we will provide a custom quote and timeline.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="mini-footer">
+  <p>&copy; 2025 Spec Interior. All rights reserved. | <a href="index.html">Back to Home</a></p>
+</div>
+
+<script>
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const wasOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      // Toggle clicked
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
