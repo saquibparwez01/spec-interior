@@ -227,6 +227,7 @@
     <div class="topbar-right">
       <button class="topbar-btn btn-ghost" id="refreshBtn" onclick="loadAll()">↻ Refresh</button>
       <button class="topbar-btn btn-accent" id="topActionBtn" onclick="openAddProduct()">+ Add Product</button>
+      <button class="topbar-btn btn-ghost" id="logoutBtn" onclick="adminLogout()" style="color:var(--red);">Logout</button>
       <div class="avatar">SI</div>
     </div>
   </div>
@@ -469,6 +470,12 @@
   document.getElementById('loginPassword').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') document.getElementById('loginBtn').click();
   });
+
+  // Logout function
+  window.adminLogout = async function() {
+    await signOut(auth);
+    location.reload();
+  };
 </script>
 
 <script type="module" src="./js/admin-app.js"></script>
