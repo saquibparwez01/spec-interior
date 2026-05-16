@@ -1,7 +1,7 @@
 // Firebase Configuration for Spec Interior
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, where, onSnapshot, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBX6_vugEivp8Y2h-DZw9L2-lxxyaR4U8c",
@@ -29,5 +29,6 @@ export {
   collection, addDoc, getDocs, doc, updateDoc, deleteDoc,
   query, orderBy, where, onSnapshot, getDoc, setDoc,
   signInWithEmailAndPassword, signOut, onAuthStateChanged,
+  GoogleAuthProvider, signInWithPopup,
   CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, RAZORPAY_KEY_ID
 };
