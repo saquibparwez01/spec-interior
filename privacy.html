@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Privacy Policy — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
+      --terracotta: #C4714A; --terracotta-light: #D98B67;
+      --dark: #1A1410; --brown: #3D2B1F; --brown-light: #6B4C38;
+      --gold: #B8972A; --gold-light: #D4AF5A; --text-muted: #8C7B6E;
+      --border: rgba(61,43,31,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); overflow-x: hidden; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(253,250,246,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown); text-decoration: none; }
+    .nav-logo span { color: var(--terracotta); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--brown-light); font-size: 14px; letter-spacing: 0.04em; font-weight: 400; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--terracotta); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .cart-btn { background: var(--terracotta); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .cart-btn:hover { background: var(--brown); }
+
+    .page-hero { padding: 60px 80px 40px; text-align: center; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 52px); font-weight: 400; color: var(--brown); margin-bottom: 12px; }
+    .page-hero h1 em { font-style: italic; color: var(--terracotta); }
+    .page-hero p { font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+    .effective-date { font-size: 13px; color: var(--terracotta); font-weight: 500; letter-spacing: 0.06em; margin-bottom: 8px; }
+
+    .policy-content { max-width: 800px; margin: 0 auto; padding: 0 40px 80px; }
+    .policy-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; color: var(--brown); margin: 40px 0 16px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .policy-content h2:first-of-type { border-top: none; padding-top: 0; }
+    .policy-content p { font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 16px; }
+    .policy-content ul { margin: 12px 0 20px 20px; }
+    .policy-content li { font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 8px; }
+    .policy-content strong { color: var(--brown); font-weight: 500; }
+
+    .highlight-box { background: var(--cream); border-left: 4px solid var(--terracotta); border-radius: 0 12px 12px 0; padding: 20px 24px; margin: 24px 0; }
+    .highlight-box p { margin-bottom: 0; font-size: 14px; }
+
+    .mini-footer { background: var(--brown); color: rgba(255,255,255,0.6); text-align: center; padding: 32px; font-size: 13px; }
+    .mini-footer a { color: var(--terracotta-light); text-decoration: none; }
+
+    @media (max-width: 860px) {
+      nav { padding: 0 16px; height: 56px; }
+      .nav-links { display: none; }
+      .nav-logo { font-size: 20px; }
+      .cart-btn { padding: 8px 16px; font-size: 12px; }
+      .page-hero { padding: 40px 20px 24px; }
+      .page-hero h1 { font-size: 28px; }
+      .policy-content { padding: 0 20px 60px; }
+      .policy-content h2 { font-size: 22px; margin: 32px 0 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Spec <span>Interior</span></a>
+  <ul class="nav-links">
+    <li><a href="category.html?cat=lamp">Lamps</a></li>
+    <li><a href="category.html?cat=wall">Wall Decor</a></li>
+    <li><a href="category.html?cat=standing">Standing Lamp</a></li>
+    <li><a href="category.html?cat=gifting">Gifting</a></li>
+    <li><a href="category.html?cat=basket">Basket</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="location.href='checkout.html'">Cart (0)</button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="effective-date">Effective Date: May 16, 2026</div>
+  <h1>Privacy <em>Policy</em></h1>
+  <p>At Spec Interior, we respect your privacy and are committed to protecting the personal data you share with us.</p>
+</div>
+
+<div class="policy-content">
+
+  <h2>1. Information We Collect</h2>
+  <p>When you visit or shop at Spec Interior, we collect certain information to provide you with the best possible service:</p>
+  <ul>
+    <li><strong>Personal Information You Provide:</strong> This includes your name, billing address, shipping address, email address, and phone number, which you provide when making a purchase or contacting customer support.</li>
+    <li><strong>Payment Information:</strong> Payment processing is handled securely by our third-party payment gateways (e.g., Razorpay). Spec Interior does not store your credit card or bank account details.</li>
+    <li><strong>Device and Usage Data:</strong> When you browse our website, we automatically collect certain information about your device, including your IP address, browser type, time zone, and how you interact with our pages (using cookies and tracking pixels).</li>
+  </ul>
+
+  <h2>2. How We Use Your Information</h2>
+  <p>We use the information we collect to run our business smoothly and securely, specifically to:</p>
+  <ul>
+    <li>Process, pack, and ship your cane lighting and decor orders.</li>
+    <li>Send you order confirmations, tracking details, and invoice updates.</li>
+    <li>Communicate with you to provide customer support or answer product inquiries.</li>
+    <li>Screen orders for potential risk or fraud.</li>
+    <li>With your permission, send you marketing emails or updates about new sustainable product collections and exclusive promotions.</li>
+  </ul>
+
+  <h2>3. Sharing Your Personal Information</h2>
+  <p>We do not sell your personal data. We only share your information with trusted third-party service providers who help us operate our business, such as:</p>
+  <ul>
+    <li><strong>E-commerce Platforms:</strong> To power our online storefront.</li>
+    <li><strong>Courier & Logistics Partners:</strong> To deliver your handwoven products safely to your doorstep (we share your name, address, and phone number with them).</li>
+    <li><strong>Analytics Tools:</strong> To help us understand how customers use our site so we can improve the shopping experience (e.g., Google Analytics).</li>
+  </ul>
+
+  <h2>4. Data Security & Retention</h2>
+  <p><strong>Security:</strong> We implement a variety of security measures, including SSL encryption, to maintain the safety of your personal information during checkout and browsing.</p>
+  <p><strong>Retention:</strong> When you place an order through Spec Interior, we will maintain your order information for our internal business records unless and until you ask us to delete this information.</p>
+
+  <h2>5. Cookies</h2>
+  <p>We use cookies to enhance your browsing experience. Cookies allow our website to remember your preferences, keep items in your shopping cart, and analyze our traffic. You can choose to disable cookies through your browser settings, though some parts of our website may not function perfectly as a result.</p>
+
+  <h2>6. Your Rights</h2>
+  <p>Depending on where you live, you may have the right to access, correct, amend, or delete the personal information we hold about you. If you would like to exercise any of these rights, please contact us using the information below.</p>
+
+  <h2>7. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time to reflect changes to our practices or for operational, legal, or regulatory reasons.</p>
+
+  <h2>8. Contact Us</h2>
+  <p>For more information about our privacy practices, or if you have any questions or complaints, please reach out to us:</p>
+  <div class="highlight-box">
+    <p><strong>Email:</strong> saquibparwez18@gmail.com</p>
+    <p><strong>Phone:</strong> +91 96545 35236</p>
+    <p><strong>Address:</strong> Shop No. 03, Swami Vivekanand Rd, opp. Saayba Hotel, B Block BKC, Bandra West, Mumbai, Maharashtra 400050</p>
+  </div>
+
+</div>
+
+<div class="mini-footer">
+  <p>&copy; 2025 Spec Interior. All rights reserved. | <a href="index.html">Back to Home</a></p>
+</div>
+
+</body>
+</html>
