@@ -226,7 +226,7 @@ window.renderProductsAdmin = function() {
     const thumbContent = p.image
       ? `<img src="${p.image}" alt="${p.name}"/>`
       : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${p.color1||'#8B5E3C'},${p.color2||'#C4714A'});border-radius:8px;"></div>`;
-    const catLabel = p.category==='lamp'?'Cane Lamp':p.category==='wall'?'Wall Decor':'Pendant';
+    const catLabel = {lamp:'Cane Lamp',wall:'Wall Decor',standing:'Standing Lamp',gifting:'Gifting',basket:'Basket',pendant:'Pendant Light'}[p.category] || p.category;
     return `<tr>
       <td><div class="product-cell"><div class="product-thumb">${thumbContent}</div><div class="product-cell-info"><div class="name">${p.name}</div><div class="cat">ID: ${p.id.slice(0,8)}</div></div></div></td>
       <td><span class="badge badge-processing">${catLabel}</span></td>
