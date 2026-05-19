@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invoice — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #f5f5f5; color: #1a1410; padding: 20px; }
+
+    .invoice-container { max-width: 800px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); overflow: hidden; }
+
+    .invoice-header { background: #3D2B1F; color: white; padding: 32px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .invoice-brand { }
+    .invoice-brand h1 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; margin-bottom: 4px; }
+    .invoice-brand h1 span { color: #C4714A; }
+    .invoice-brand p { font-size: 12px; opacity: 0.7; line-height: 1.6; }
+    .invoice-meta { text-align: right; }
+    .invoice-meta h2 { font-size: 24px; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; color: #D4AF5A; }
+    .invoice-meta .meta-item { font-size: 13px; opacity: 0.8; margin-bottom: 4px; }
+    .invoice-meta .meta-value { font-weight: 600; color: white; }
+
+    .invoice-body { padding: 32px 40px; }
+
+    .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #eee; }
+    .party-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C4714A; font-weight: 600; margin-bottom: 8px; }
+    .party-name { font-size: 16px; font-weight: 600; color: #3D2B1F; margin-bottom: 4px; }
+    .party-detail { font-size: 13px; color: #8C7B6E; line-height: 1.7; }
+
+    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .items-table th { background: #F7F3ED; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6B4C38; font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid #E8DDD0; }
+    .items-table th:last-child, .items-table td:last-child { text-align: right; }
+    .items-table th:nth-child(3), .items-table td:nth-child(3) { text-align: center; }
+    .items-table td { padding: 14px 16px; font-size: 14px; color: #3D2B1F; border-bottom: 1px solid #f0ebe4; }
+    .items-table tr:last-child td { border-bottom: none; }
+    .item-name { font-weight: 500; }
+    .item-cat { font-size: 11px; color: #8C7B6E; margin-top: 2px; }
+
+    .totals { display: flex; justify-content: flex-end; margin-bottom: 32px; }
+    .totals-box { width: 280px; }
+    .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; color: #6B4C38; }
+    .total-row.subtotal { border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 8px; }
+    .total-row.grand { border-top: 2px solid #3D2B1F; padding-top: 12px; margin-top: 8px; font-size: 18px; font-weight: 700; color: #3D2B1F; }
+    .total-label { }
+    .total-value { font-weight: 600; }
+
+    .invoice-footer { background: #F7F3ED; padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-note { font-size: 12px; color: #8C7B6E; line-height: 1.7; max-width: 400px; }
+    .footer-note strong { color: #3D2B1F; }
+    .payment-info { text-align: right; font-size: 12px; color: #6B4C38; }
+    .payment-info .method { font-weight: 600; color: #C4714A; font-size: 14px; }
+
+    .print-actions { text-align: center; padding: 24px; background: #f5f5f5; }
+    .print-btn { padding: 14px 36px; background: #C4714A; color: white; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; margin: 0 8px; }
+    .print-btn:hover { background: #3D2B1F; }
+    .print-btn.secondary { background: #6B4C38; }
+    .back-link { display: inline-block; margin-top: 12px; font-size: 13px; color: #8C7B6E; text-decoration: none; }
+    .back-link:hover { color: #C4714A; }
+
+    .loading { text-align: center; padding: 80px 20px; color: #8C7B6E; font-size: 16px; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .print-actions { display: none; }
+      .invoice-container { box-shadow: none; border-radius: 0; }
+    }
+    @media (max-width: 600px) {
+      .invoice-header { flex-direction: column; gap: 16px; padding: 24px 20px; }
+      .invoice-meta { text-align: left; }
+      .invoice-body { padding: 20px; }
+      .parties { grid-template-columns: 1fr; gap: 20px; }
+      .invoice-footer { padding: 20px; flex-direction: column; align-items: flex-start; }
+      .payment-info { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="invoice-container" id="invoiceContainer">
+  <div class="loading" id="invoiceLoading">Loading invoice...</div>
+</div>
+
+<div class="print-actions" id="printActions" style="display:none;">
+  <button class="print-btn" onclick="window.print()">🖨️ Print Invoice</button>
+  <button class="print-btn secondary" onclick="history.back()">← Back to Admin</button>
+  <br/>
+  <a href="admin.html" class="back-link">Return to Dashboard</a>
+</div>
+
+<script type="module">
+import { db, doc, getDoc } from './js/firebase-config.js';
+
+const params = new URLSearchParams(window.location.search);
+const orderId = params.get('id');
+
+if (!orderId) {
+  document.getElementById('invoiceLoading').innerHTML = 'No order ID provided. <a href="admin.html">Go back</a>';
+} else {
+  loadInvoice(orderId);
+}
+
+async function loadInvoice(id) {
+  try {
+    const snap = await getDoc(doc(db, 'orders', id));
+    if (!snap.exists()) {
+      document.getElementById('invoiceLoading').innerHTML = 'Order not found. <a href="admin.html">Go back</a>';
+      return;
+    }
+    const order = { id: snap.id, ...snap.data() };
+    renderInvoice(order);
+  } catch (e) {
+    document.getElementById('invoiceLoading').innerHTML = 'Error loading order: ' + e.message;
+  }
+}
+
+function renderInvoice(order) {
+  const items = order.items || [];
+  const subtotal = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const gstRate = 18;
+  const gstAmount = Math.round(subtotal * gstRate / (100 + gstRate)); // GST inclusive
+  const baseAmount = subtotal - gstAmount;
+  const shipping = order.shipping || 0;
+  const total = order.total || subtotal;
+  const invoiceNum = 'SI-' + (order.orderId || order.id.slice(0, 8)).toUpperCase();
+  const orderDate = new Date(order.createdAt || order.date);
+  const payMethod = { cod: 'Cash on Delivery', upi: 'UPI', card: 'Credit/Debit Card', online: 'Online Payment' }[order.payment] || order.payment || 'N/A';
+
+  document.getElementById('invoiceContainer').innerHTML = `
+    <div class="invoice-header">
+      <div class="invoice-brand">
+        <h1>Spec <span>Interior</span></h1>
+        <p>Shop No. 03, Swami Vivekanand Rd<br/>Bandra West, Mumbai 400050<br/>GSTIN: XXXXXXXXXXXXXXX<br/>Email: saquibparwez18@gmail.com</p>
+      </div>
+      <div class="invoice-meta">
+        <h2>Invoice</h2>
+        <div class="meta-item">Invoice No: <span class="meta-value">${invoiceNum}</span></div>
+        <div class="meta-item">Date: <span class="meta-value">${orderDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span></div>
+        <div class="meta-item">Status: <span class="meta-value">${order.status || 'Pending'}</span></div>
+      </div>
+    </div>
+
+    <div class="invoice-body">
+      <div class="parties">
+        <div>
+          <div class="party-label">Bill From</div>
+          <div class="party-name">Spec Interior</div>
+          <div class="party-detail">Shop No. 03, Swami Vivekanand Rd<br/>opp. Saayba Hotel, B Block BKC<br/>Bandra West, Mumbai 400050<br/>Phone: +91 96545 35236</div>
+        </div>
+        <div>
+          <div class="party-label">Bill To</div>
+          <div class="party-name">${order.customer || 'Customer'}</div>
+          <div class="party-detail">${order.address || 'N/A'}<br/>${order.phone ? 'Phone: ' + order.phone : ''}${order.email ? '<br/>Email: ' + order.email : ''}</div>
+        </div>
+      </div>
+
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(item => `
+            <tr>
+              <td><div class="item-name">${item.name}</div></td>
+              <td>₹${item.price.toLocaleString()}</td>
+              <td>${item.qty}</td>
+              <td>₹${(item.price * item.qty).toLocaleString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <div class="totals-box">
+          <div class="total-row subtotal">
+            <span class="total-label">Subtotal</span>
+            <span class="total-value">₹${subtotal.toLocaleString()}</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">GST (${gstRate}% inclusive)</span>
+            <span class="total-value">₹${gstAmount.toLocaleString()}</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">Shipping</span>
+            <span class="total-value">${shipping > 0 ? '₹' + shipping.toLocaleString() : 'Free'}</span>
+          </div>
+          <div class="total-row grand">
+            <span class="total-label">Total</span>
+            <span class="total-value">₹${total.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="invoice-footer">
+      <div class="footer-note">
+        <strong>Thank you for your purchase!</strong><br/>
+        All items are handcrafted from natural cane and bamboo. Minor variations in color and texture are characteristic of artisan products. For any queries, contact us at saquibparwez18@gmail.com
+      </div>
+      <div class="payment-info">
+        <div>Payment Method</div>
+        <div class="method">${payMethod}</div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('printActions').style.display = 'block';
+  document.title = `Invoice ${invoiceNum} — Spec Interior`;
+}
+</script>
+</body>
+</html>

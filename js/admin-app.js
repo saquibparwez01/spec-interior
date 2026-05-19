@@ -185,7 +185,7 @@ window.renderOrders = function() {
         </select>
       </td>
       <td style="color:var(--muted);">${new Date(o.createdAt||o.date).toLocaleDateString('en-IN')}</td>
-      <td><button class="action-btn action-view" onclick="viewOrder('${o.id}')">View</button></td>
+      <td><button class="action-btn action-view" onclick="viewOrder('${o.id}')">View</button> <button class="action-btn action-edit" onclick="window.open('invoice.html?id=${o.id}','_blank')">Invoice</button></td>
     </tr>
   `).join('') : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:30px;">No orders found</td></tr>';
 };
