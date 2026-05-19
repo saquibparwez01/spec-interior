@@ -109,17 +109,23 @@ async function loadInvoice(id) {
       return;
     }
     const order = { id: snap.id, ...snap.data() };
-    renderInvoice(order);
+    // Fetch product details for HSN codes
+    const { getDocs, collection, query } = await import('./js/firebase-config.js');
+    const prodSnap = await getDocs(collection(db, 'products'));
+    const products = prodSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderInvoice(order, products);
   } catch (e) {
     document.getElementById('invoiceLoading').innerHTML = 'Error loading order: ' + e.message;
   }
 }
 
-function renderInvoice(order) {
+function renderInvoice(order, products) {
   const items = order.items || [];
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const gstRate = 18;
+  const gstRate = 5;
   const gstAmount = Math.round(subtotal * gstRate / (100 + gstRate)); // GST inclusive
+  const cgst = Math.round(gstAmount / 2);
+  const sgst = gstAmount - cgst;
   const baseAmount = subtotal - gstAmount;
   const shipping = order.shipping || 0;
   const total = order.total || subtotal;
@@ -159,32 +165,41 @@ function renderInvoice(order) {
         <thead>
           <tr>
             <th>Item</th>
+            <th>HSN</th>
             <th>Price</th>
             <th>Qty</th>
             <th>Amount</th>
           </tr>
         </thead>
         <tbody>
-          ${items.map(item => `
+          ${items.map(item => {
+            const prod = products.find(p => p.id === item.id);
+            const hsn = prod?.hsn || '—';
+            return `
             <tr>
               <td><div class="item-name">${item.name}</div></td>
+              <td style="font-size:12px;color:#6B4C38;">${hsn}</td>
               <td>₹${item.price.toLocaleString()}</td>
               <td>${item.qty}</td>
               <td>₹${(item.price * item.qty).toLocaleString()}</td>
             </tr>
-          `).join('')}
+          `}).join('')}
         </tbody>
       </table>
 
       <div class="totals">
         <div class="totals-box">
           <div class="total-row subtotal">
-            <span class="total-label">Subtotal</span>
-            <span class="total-value">₹${subtotal.toLocaleString()}</span>
+            <span class="total-label">Taxable Amount</span>
+            <span class="total-value">₹${baseAmount.toLocaleString()}</span>
           </div>
           <div class="total-row">
-            <span class="total-label">GST (${gstRate}% inclusive)</span>
-            <span class="total-value">₹${gstAmount.toLocaleString()}</span>
+            <span class="total-label">CGST (2.5%)</span>
+            <span class="total-value">₹${cgst.toLocaleString()}</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">SGST (2.5%)</span>
+            <span class="total-value">₹${sgst.toLocaleString()}</span>
           </div>
           <div class="total-row">
             <span class="total-label">Shipping</span>

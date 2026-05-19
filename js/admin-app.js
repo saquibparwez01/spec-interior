@@ -250,6 +250,8 @@ window.openAddProduct = function() {
   document.getElementById('pBadge').value = 'new';
   document.getElementById('pPrice').value = '';
   document.getElementById('pOriginal').value = '';
+  document.getElementById('pHsn').value = '';
+  document.getElementById('pGst').value = '5';
   document.getElementById('pStock').value = '';
   document.getElementById('pRating').value = '5';
   document.getElementById('pColor1').value = '#8B5E3C';
@@ -269,6 +271,8 @@ window.openEditProduct = function(id) {
   document.getElementById('pBadge').value = p.badge;
   document.getElementById('pPrice').value = p.price;
   document.getElementById('pOriginal').value = p.originalPrice;
+  document.getElementById('pHsn').value = p.hsn || '';
+  document.getElementById('pGst').value = p.gstRate || 5;
   document.getElementById('pStock').value = p.stock;
   document.getElementById('pRating').value = p.rating;
   document.getElementById('pColor1').value = p.color1 || '#8B5E3C';
@@ -319,7 +323,10 @@ window.saveProduct = async function() {
   const price = parseInt(document.getElementById('pPrice').value);
   const original = parseInt(document.getElementById('pOriginal').value);
   const stock = parseInt(document.getElementById('pStock').value);
+  const hsn = document.getElementById('pHsn').value.trim();
+  const gstRate = parseInt(document.getElementById('pGst').value) || 5;
   if (!name || !price || !original || isNaN(stock)) { showToast('Please fill all required fields', true); return; }
+  if (!hsn) { showToast('HSN Code is mandatory for GST filing', true); return; }
 
   showToast('Saving...');
   let imageUrl = '';
@@ -343,6 +350,8 @@ window.saveProduct = async function() {
     color1: document.getElementById('pColor1').value,
     color2: document.getElementById('pColor2').value,
     stock,
+    hsn,
+    gstRate,
     image: imageUrl
   };
 
