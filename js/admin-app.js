@@ -71,7 +71,27 @@ function listenOrders() {
   });
 }
 
+// ─── HSN AUTO-FILL BY CATEGORY ───────────────────────
+const HSN_MAP = {
+  lamp: '4602',      // Articles of plaiting materials (cane/bamboo lamps)
+  wall: '4602',      // Wall hangings from cane/bamboo/macrame
+  standing: '9405',  // Standing lamps with electrical fittings
+  gifting: '4602',   // Gift sets of cane/bamboo articles
+  basket: '4602',    // Woven baskets from natural fiber
+  pendant: '9405'    // Pendant lights with electrical fittings
+};
+
+function autoFillHsn() {
+  const cat = document.getElementById('pCategory').value;
+  const hsnField = document.getElementById('pHsn');
+  if (HSN_MAP[cat]) {
+    hsnField.value = HSN_MAP[cat];
+  }
+}
+document.getElementById('pCategory').addEventListener('change', autoFillHsn);
+
 // ─── TABS ────────────────────────────────────────────
+// Tab switching
 document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -258,6 +278,7 @@ window.openAddProduct = function() {
   document.getElementById('pColor2').value = '#C4714A';
   pendingImageFile = null;
   resetImageUpload();
+  autoFillHsn();
   document.getElementById('productModal').classList.add('open');
 };
 
