@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wishlist — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream:#F7F3ED;--warm-white:#FDFAF6;--sand:#E8DDD0;--terracotta:#C4714A;--brown:#3D2B1F;--brown-light:#6B4C38;--gold:#B8972A;--text-muted:#8C7B6E;--border:rgba(61,43,31,0.12);--red:#E05252; }
+    body { font-family:'DM Sans',sans-serif; background:var(--warm-white); color:#1A1410; }
+    nav { position:sticky;top:0;z-index:100;background:rgba(253,250,246,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:72px; }
+    .nav-logo { font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--brown);text-decoration:none; }
+    .nav-logo span { color:var(--terracotta); }
+    .nav-links { display:flex;gap:36px;list-style:none; }
+    .nav-links a { text-decoration:none;color:var(--brown-light);font-size:14px;transition:color 0.2s; }
+    .nav-links a:hover { color:var(--terracotta); }
+    .nav-right { display:flex;align-items:center;gap:20px; }
+    .cart-btn { background:var(--terracotta);color:white;border:none;padding:10px 22px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer; }
+
+    .page-hero { padding:60px 80px 40px;text-align:center; }
+    .page-hero h1 { font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:400;color:var(--brown);margin-bottom:8px; }
+    .page-hero h1 em { font-style:italic;color:var(--terracotta); }
+    .page-hero p { font-size:15px;color:var(--text-muted); }
+
+    .wishlist-grid { max-width:1000px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px; }
+    .wish-card { background:white;border-radius:14px;overflow:hidden;position:relative;transition:transform 0.25s,box-shadow 0.25s;cursor:pointer; }
+    .wish-card:hover { transform:translateY(-4px);box-shadow:0 12px 40px rgba(61,43,31,0.1); }
+    .wish-img { aspect-ratio:1;overflow:hidden; }
+    .wish-img img { width:100%;height:100%;object-fit:cover; }
+    .wish-info { padding:16px; }
+    .wish-name { font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--brown);margin-bottom:6px; }
+    .wish-price { font-size:16px;font-weight:600;color:var(--brown); }
+    .wish-price .original { font-size:13px;color:var(--text-muted);text-decoration:line-through;margin-left:8px; }
+    .wish-remove { position:absolute;top:12px;right:12px;width:32px;height:32px;background:white;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.1);font-size:14px;color:var(--red);transition:transform 0.2s; }
+    .wish-remove:hover { transform:scale(1.1);background:var(--red);color:white; }
+
+    .empty-state { text-align:center;padding:80px 20px;color:var(--text-muted); }
+    .empty-state h3 { font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--brown);margin-bottom:12px; }
+    .empty-state a { display:inline-block;margin-top:20px;padding:14px 32px;background:var(--terracotta);color:white;text-decoration:none;border-radius:50px;font-weight:500; }
+
+    .mini-footer { background:var(--brown);color:rgba(255,255,255,0.6);text-align:center;padding:32px;font-size:13px; }
+    .mini-footer a { color:#D98B67;text-decoration:none; }
+
+    @media (max-width:860px) {
+      nav { padding:0 16px;height:56px; } .nav-links { display:none; }
+      .page-hero { padding:40px 20px 24px; } .page-hero h1 { font-size:28px; }
+      .wishlist-grid { grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px 60px; }
+    }
+    @media (max-width:480px) { .wishlist-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Spec <span>Interior</span></a>
+  <ul class="nav-links">
+    <li><a href="category.html?cat=lamp">Lamps</a></li>
+    <li><a href="category.html?cat=wall">Wall Decor</a></li>
+    <li><a href="category.html?cat=standing">Standing Lamp</a></li>
+    <li><a href="category.html?cat=gifting">Gifting</a></li>
+    <li><a href="category.html?cat=basket">Basket</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="location.href='checkout.html'">Cart (0)</button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <h1>Your <em>Wishlist</em></h1>
+  <p id="wishCount">Loading...</p>
+</div>
+
+<div class="wishlist-grid" id="wishGrid"></div>
+
+<div class="mini-footer">
+  <p>&copy; 2025 Spec Interior. All rights reserved. | <a href="index.html">Back to Home</a></p>
+</div>
+
+<script type="module">
+import { getWishlist, removeFromWishlist } from './js/wishlist.js';
+import { updateCartBadge } from './js/cart.js';
+updateCartBadge();
+
+function render() {
+  const list = getWishlist();
+  const grid = document.getElementById('wishGrid');
+  document.getElementById('wishCount').textContent = list.length > 0 ? `${list.length} item${list.length > 1 ? 's' : ''} saved` : '';
+
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>Your wishlist is empty</h3><p>Browse our collection and tap the heart icon to save items you love.</p><a href="index.html">← Explore Products</a></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(item => {
+    const imgHtml = item.image
+      ? `<img src="${item.image}" alt="${item.name}"/>`
+      : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${item.color1},${item.color2});"></div>`;
+    return `
+      <div class="wish-card" onclick="window.location.href='product.html?id=${item.id}'">
+        <div class="wish-img">${imgHtml}</div>
+        <div class="wish-info">
+          <div class="wish-name">${item.name}</div>
+          <div class="wish-price">₹${item.price.toLocaleString()}${item.originalPrice ? `<span class="original">₹${item.originalPrice.toLocaleString()}</span>` : ''}</div>
+        </div>
+        <button class="wish-remove" onclick="event.stopPropagation();removeItem('${item.id}')" title="Remove">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+window.removeItem = function(id) {
+  removeFromWishlist(id);
+  render();
+};
+
+render();
+</script>
+</body>
+</html>

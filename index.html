@@ -966,8 +966,8 @@
       <li><a href="category.html?cat=basket">Basket</a></li>
     </ul>
     <div class="nav-right">
-      <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5" onclick="openSearch()" style="cursor:pointer;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <a href="wishlist.html"><svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>
       <button class="cart-btn">Cart (0)</button>
     </div>
   </nav>
@@ -1641,11 +1641,63 @@
     onProductsChange((products) => {
       if (products.length > 0) {
         renderProducts(products);
+        window.dispatchEvent(new CustomEvent('productsLoaded', { detail: products }));
       }
     });
 
     // Also attach listeners to static products (fallback)
     attachProductListeners();
+  </script>
+
+  <!-- SEARCH OVERLAY -->
+  <div id="searchOverlay" style="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding-top:120px;">
+    <div style="background:white;border-radius:16px;width:90%;max-width:560px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8C7B6E" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search products..." style="flex:1;border:none;outline:none;font-size:16px;font-family:'DM Sans',sans-serif;color:#1A1410;" autofocus/>
+        <button onclick="closeSearch()" style="background:none;border:none;font-size:20px;color:#8C7B6E;cursor:pointer;">✕</button>
+      </div>
+      <div id="searchResults" style="max-height:400px;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Search functionality
+    let allSearchProducts = [];
+    function openSearch() {
+      document.getElementById('searchOverlay').style.display = 'flex';
+      document.getElementById('searchInput').focus();
+    }
+    function closeSearch() {
+      document.getElementById('searchOverlay').style.display = 'none';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchResults').innerHTML = '';
+    }
+    document.getElementById('searchOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeSearch();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSearch();
+    });
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const q = this.value.toLowerCase().trim();
+      if (!q) { document.getElementById('searchResults').innerHTML = '<p style="color:#8C7B6E;font-size:14px;padding:12px 0;">Type to search...</p>'; return; }
+      const results = allSearchProducts.filter(p => p.name.toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q));
+      if (results.length === 0) {
+        document.getElementById('searchResults').innerHTML = '<p style="color:#8C7B6E;font-size:14px;padding:12px 0;">No products found.</p>';
+        return;
+      }
+      document.getElementById('searchResults').innerHTML = results.slice(0, 8).map(p => {
+        const imgStyle = p.image ? `background-image:url('${p.image}');background-size:cover;background-position:center;` : `background:linear-gradient(135deg,${p.color1||'#8B5E3C'},${p.color2||'#C4714A'});`;
+        return `<a href="product.html?id=${p.id}" style="display:flex;align-items:center;gap:14px;padding:12px;border-radius:10px;text-decoration:none;color:#1A1410;transition:background 0.15s;" onmouseover="this.style.background='#F7F3ED'" onmouseout="this.style.background='transparent'">
+          <div style="width:48px;height:48px;border-radius:8px;flex-shrink:0;${imgStyle}"></div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:500;color:#3D2B1F;">${p.name}</div><div style="font-size:12px;color:#8C7B6E;">${{lamp:'Cane Lamp',wall:'Wall Decor',standing:'Standing Lamp',gifting:'Gifting',basket:'Basket',pendant:'Pendant'}[p.category]||p.category}</div></div>
+          <div style="font-size:14px;font-weight:600;color:#3D2B1F;">₹${p.price.toLocaleString()}</div>
+        </a>`;
+      }).join('');
+    });
+    // Populate search products from Firebase listener
+    window.addEventListener('productsLoaded', function(e) { allSearchProducts = e.detail; });
   </script>
 
   <!-- BULK ORDER POPUP -->
