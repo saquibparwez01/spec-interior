@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream:#F7F3ED;--warm-white:#FDFAF6;--sand:#E8DDD0;--terracotta:#C4714A;--terracotta-light:#D98B67;--dark:#1A1410;--brown:#3D2B1F;--brown-light:#6B4C38;--gold:#B8972A;--text-muted:#8C7B6E;--border:rgba(61,43,31,0.12); }
+    body { font-family:'DM Sans',sans-serif; background:var(--warm-white); color:var(--dark); }
+    nav { position:sticky;top:0;z-index:100;background:rgba(253,250,246,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:72px; }
+    .nav-logo { font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--brown);text-decoration:none; }
+    .nav-logo span { color:var(--terracotta); }
+    .nav-links { display:flex;gap:36px;list-style:none; }
+    .nav-links a { text-decoration:none;color:var(--brown-light);font-size:14px;transition:color 0.2s; }
+    .nav-links a:hover { color:var(--terracotta); }
+    .nav-right { display:flex;align-items:center;gap:20px; }
+    .cart-btn { background:var(--terracotta);color:white;border:none;padding:10px 22px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer; }
+
+    .page-hero { padding:60px 80px 40px;text-align:center; }
+    .page-hero h1 { font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,52px);font-weight:400;color:var(--brown);margin-bottom:12px; }
+    .page-hero h1 em { font-style:italic;color:var(--terracotta); }
+    .page-hero p { font-size:15px;color:var(--text-muted);max-width:500px;margin:0 auto;line-height:1.7; }
+
+    .contact-grid { max-width:1000px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:1fr 1fr;gap:48px; }
+
+    .contact-form h3 { font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--brown);margin-bottom:20px; }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px; }
+    .form-group input, .form-group textarea, .form-group select { width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;background:white;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color 0.2s; }
+    .form-group input:focus, .form-group textarea:focus { border-color:var(--terracotta); }
+    .form-group textarea { resize:vertical;min-height:100px; }
+    .form-row { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+    .submit-btn { width:100%;padding:16px;background:var(--brown);color:white;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.2s;margin-top:8px; }
+    .submit-btn:hover { background:var(--terracotta); }
+
+    .contact-info { }
+    .contact-info h3 { font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--brown);margin-bottom:20px; }
+    .info-card { background:var(--cream);border-radius:14px;padding:24px;margin-bottom:16px; }
+    .info-card h4 { font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);font-weight:600;margin-bottom:10px; }
+    .info-card p { font-size:14px;color:var(--text-muted);line-height:1.7; }
+    .info-card a { color:var(--brown);text-decoration:none;font-weight:500; }
+    .info-card a:hover { color:var(--terracotta); }
+
+    .map-embed { border-radius:14px;overflow:hidden;height:220px;margin-top:16px; }
+    .map-embed iframe { width:100%;height:100%;border:0; }
+
+    .hours-badge { display:inline-flex;align-items:center;gap:6px;background:rgba(60,179,113,0.1);color:#3CB371;font-size:12px;font-weight:600;padding:4px 12px;border-radius:50px;margin-top:8px; }
+
+    .mini-footer { background:var(--brown);color:rgba(255,255,255,0.6);text-align:center;padding:32px;font-size:13px; }
+    .mini-footer a { color:var(--terracotta-light);text-decoration:none; }
+
+    .toast { position:fixed;bottom:28px;right:28px;background:#3CB371;color:white;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:500;z-index:999;transform:translateY(80px);opacity:0;transition:all 0.3s; }
+    .toast.show { transform:translateY(0);opacity:1; }
+
+    @media (max-width:860px) {
+      nav { padding:0 16px;height:56px; } .nav-links { display:none; }
+      .page-hero { padding:40px 20px 24px; } .page-hero h1 { font-size:28px; }
+      .contact-grid { grid-template-columns:1fr;gap:32px;padding:0 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Spec <span>Interior</span></a>
+  <ul class="nav-links">
+    <li><a href="category.html?cat=lamp">Lamps</a></li>
+    <li><a href="category.html?cat=wall">Wall Decor</a></li>
+    <li><a href="category.html?cat=standing">Standing Lamp</a></li>
+    <li><a href="category.html?cat=gifting">Gifting</a></li>
+    <li><a href="category.html?cat=basket">Basket</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="location.href='checkout.html'">Cart (0)</button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <h1>Get in <em>Touch</em></h1>
+  <p>Have a question, need a custom quote, or want to collaborate? We'd love to hear from you.</p>
+</div>
+
+<div class="contact-grid">
+  <div class="contact-form">
+    <h3>Send us a message</h3>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name</label><input type="text" id="cName" placeholder="Your name"/></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="cPhone" placeholder="+91 XXXXX XXXXX"/></div>
+    </div>
+    <div class="form-group"><label>Email</label><input type="email" id="cEmail" placeholder="you@email.com"/></div>
+    <div class="form-group"><label>Subject</label>
+      <select id="cSubject">
+        <option value="">Select a topic</option>
+        <option>Product Inquiry</option>
+        <option>Bulk Order / Custom Quote</option>
+        <option>Order Status / Tracking</option>
+        <option>Return / Refund</option>
+        <option>Collaboration / Partnership</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Message</label><textarea id="cMessage" placeholder="Tell us how we can help..."></textarea></div>
+    <button class="submit-btn" onclick="submitContact()">Send Message</button>
+  </div>
+
+  <div class="contact-info">
+    <h3>Contact Information</h3>
+    <div class="info-card">
+      <h4>📍 Visit Our Store</h4>
+      <p><a href="https://maps.app.goo.gl/Gv1N7YxQVhe41DNQ7" target="_blank">Shop No. 03, Swami Vivekanand Rd, opp. Saayba Hotel, B Block BKC, Bandra West, Mumbai, Maharashtra 400050</a></p>
+    </div>
+    <div class="info-card">
+      <h4>📞 Call / WhatsApp</h4>
+      <p><a href="tel:+919654535236">+91 96545 35236</a></p>
+      <p><a href="https://wa.me/919654535236" target="_blank">Chat on WhatsApp →</a></p>
+    </div>
+    <div class="info-card">
+      <h4>✉️ Email</h4>
+      <p><a href="mailto:saquibparwez18@gmail.com">saquibparwez18@gmail.com</a></p>
+    </div>
+    <div class="info-card">
+      <h4>🕐 Working Hours</h4>
+      <p>Monday – Saturday<br/>10:30 AM – 7:00 PM</p>
+      <p style="margin-top:4px;">Sunday: Closed</p>
+      <span class="hours-badge">● Currently Open</span>
+    </div>
+
+    <div class="map-embed">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.5!2d72.83!3d19.06!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDAzJzM2LjAiTiA3MsKwNDknNDguMCJF!5e0!3m2!1sen!2sin!4v1" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
+<div class="mini-footer">
+  <p>&copy; 2025 Spec Interior. All rights reserved. | <a href="index.html">Back to Home</a></p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function submitContact() {
+  const name = document.getElementById('cName').value.trim();
+  const phone = document.getElementById('cPhone').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const subject = document.getElementById('cSubject').value;
+  const message = document.getElementById('cMessage').value.trim();
+  if (!name || !email || !message) { showToast('Please fill name, email and message', true); return; }
+  // Send via WhatsApp as a simple solution
+  const text = `New Contact Form Submission:\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`;
+  window.open(`https://wa.me/919654535236?text=${encodeURIComponent(text)}`, '_blank');
+  showToast('Message sent! We\'ll get back to you soon.');
+  document.getElementById('cName').value='';document.getElementById('cPhone').value='';document.getElementById('cEmail').value='';document.getElementById('cSubject').value='';document.getElementById('cMessage').value='';
+}
+function showToast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = isErr ? '#E05252' : '#3CB371';
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>
