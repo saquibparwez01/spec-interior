@@ -10,10 +10,18 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
-      --terracotta: #C4714A; --dark: #1A1410; --brown: #3D2B1F;
-      --brown-light: #6B4C38; --gold: #B8972A; --text-muted: #8C7B6E;
-      --border: rgba(61,43,31,0.12); --green: #3CB371; --red: #E05252;
+      --cream: #F5F5F0; --warm-white: #FAFAF7; --sand: #EDEAE3;
+      --terracotta: #4A5D3E; --dark: #1A1F16; --brown: #2E3B28;
+      --brown-light: #5A6B52; --gold: #8B9E6B; --text-muted: #7A7E72;
+      --border: rgba(46,59,40,0.12); --green: #3CB371; --red: #E05252;
+    }
+
+    [data-theme="dark"] {
+      --cream: #1C2118; --warm-white: #141812; --sand: #242A1F;
+      --terracotta: #A3B88A; --terracotta-light: #B8CCA0;
+      --dark: #F2F0EB; --brown: #E8E5DE; --brown-light: #C8C4BB;
+      --gold: #C8D9A8; --gold-light: #D4E6B5; --text-muted: #A8A59C;
+      --border: rgba(200,196,187,0.15);
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); min-height: 100vh; }
 
@@ -109,6 +117,9 @@
   </style>
 </head>
 <body>
+<script>
+(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();
+</script>
 
 <header class="checkout-header">
   <a href="index.html">Spec <span>Interior</span></a>
@@ -201,7 +212,7 @@ function renderCheckout() {
           <div class="summary-thumb">
             ${item.image
               ? `<img src="${item.image}" alt="${item.name}"/>`
-              : `<div class="summary-thumb-placeholder" style="background:linear-gradient(135deg,${item.color1||'#8B5E3C'},${item.color2||'#C4714A'})"></div>`
+              : `<div class="summary-thumb-placeholder" style="background:linear-gradient(135deg,${item.color1||'#8B5E3C'},${item.color2||'#4A5D3E'})"></div>`
             }
           </div>
           <div class="summary-details">

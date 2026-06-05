@@ -9,17 +9,25 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
-      --terracotta: #C4714A; --terracotta-light: #D98B67;
-      --dark: #1A1410; --brown: #3D2B1F; --brown-light: #6B4C38;
-      --gold: #B8972A; --gold-light: #D4AF5A; --text-muted: #8C7B6E;
-      --border: rgba(61,43,31,0.12); --green: #3CB371;
+      --cream: #F5F5F0; --warm-white: #FAFAF7; --sand: #EDEAE3;
+      --terracotta: #4A5D3E; --terracotta-light: #5C7A4A;
+      --dark: #1A1F16; --brown: #2E3B28; --brown-light: #5A6B52;
+      --gold: #8B9E6B; --gold-light: #A3B88A; --text-muted: #7A7E72;
+      --border: rgba(46,59,40,0.12); --green: #3CB371;
+    }
+
+    [data-theme="dark"] {
+      --cream: #1C2118; --warm-white: #141812; --sand: #242A1F;
+      --terracotta: #A3B88A; --terracotta-light: #B8CCA0;
+      --dark: #F2F0EB; --brown: #E8E5DE; --brown-light: #C8C4BB;
+      --gold: #C8D9A8; --gold-light: #D4E6B5; --text-muted: #A8A59C;
+      --border: rgba(200,196,187,0.15);
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); overflow-x: hidden; }
 
     /* NAV */
-    nav { position: sticky; top: 0; z-index: 100; background: rgba(253,250,246,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(250,250,247,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
     .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown); text-decoration: none; }
     .nav-logo span { color: var(--terracotta); }
     .nav-links { display: flex; gap: 36px; list-style: none; }
@@ -53,7 +61,7 @@
     .products-section { padding: 40px 80px 100px; }
     .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
     .product-card { background: white; border-radius: 14px; overflow: hidden; position: relative; transition: transform 0.25s, box-shadow 0.25s; }
-    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(61,43,31,0.12); }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(46,59,40,0.12); }
     .product-img-wrap { position: relative; aspect-ratio: 1; overflow: hidden; }
     .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
     .product-card:hover .product-img-wrap img { transform: scale(1.08); }
@@ -97,6 +105,9 @@
   </style>
 </head>
 <body>
+<script>
+(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();
+</script>
 
 <!-- NAV -->
 <nav>
@@ -152,7 +163,7 @@ const categoryConfig = {
     title: 'Handcrafted Cane <em>Lamps</em>',
     description: 'Warm, ambient lighting crafted from natural cane and bamboo. Each lamp casts intricate shadow patterns that transform your space into a cozy sanctuary.',
     icon: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M12 7a4 4 0 014 4v4H8v-4a4 4 0 014-4z"/>',
-    color: '#C4714A',
+    color: '#4A5D3E',
     bgPattern: 'radial-gradient(circle at 20% 80%, rgba(196,113,74,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(184,151,42,0.06) 0%, transparent 50%)',
     features: ['Hand-woven cane', 'Warm LED compatible', 'Shadow patterns', 'Indoor & outdoor']
   },
@@ -160,7 +171,7 @@ const categoryConfig = {
     title: 'Artisan <em>Wall Decor</em>',
     description: 'Transform bare walls into gallery-worthy displays. From macramé tapestries to geometric panels — each piece adds texture, depth, and soul to your space.',
     icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/>',
-    color: '#B8972A',
+    color: '#8B9E6B',
     bgPattern: 'radial-gradient(circle at 30% 70%, rgba(184,151,42,0.08) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(107,76,56,0.06) 0%, transparent 50%)',
     features: ['Handmade in India', 'Ready to hang', 'Natural materials', 'Statement pieces']
   },
@@ -168,7 +179,7 @@ const categoryConfig = {
     title: 'Elegant <em>Standing Lamps</em>',
     description: 'Floor-standing statement pieces that anchor any room. Tall, sculptural, and designed to be both functional lighting and conversation starters.',
     icon: '<line x1="12" y1="2" x2="12" y2="18"/><path d="M8 18h8"/><path d="M6 22h12"/><circle cx="12" cy="5" r="3"/>',
-    color: '#6B4C38',
+    color: '#5A6B52',
     bgPattern: 'radial-gradient(circle at 50% 80%, rgba(107,76,56,0.08) 0%, transparent 50%), radial-gradient(circle at 20% 20%, rgba(196,113,74,0.05) 0%, transparent 50%)',
     features: ['5ft+ height', 'Dimmable options', 'Solid wood base', 'Living room ready']
   },
@@ -176,7 +187,7 @@ const categoryConfig = {
     title: 'Curated <em>Gift Sets</em>',
     description: 'Thoughtfully packaged gift sets for housewarmings, weddings, and celebrations. Premium wrapping included — because the unboxing should feel as special as the gift.',
     icon: '<path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/>',
-    color: '#D4AF5A',
+    color: '#A3B88A',
     bgPattern: 'radial-gradient(circle at 60% 60%, rgba(212,175,90,0.08) 0%, transparent 50%), radial-gradient(circle at 10% 40%, rgba(196,113,74,0.05) 0%, transparent 50%)',
     features: ['Gift wrapped', 'Personal message card', 'Premium packaging', 'Same-day dispatch']
   },
@@ -245,7 +256,7 @@ function renderGrid(products) {
     const discount = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
     const badgeHtml = p.badge === 'new' ? '<span class="product-badge new">New</span>' : discount > 0 ? `<span class="product-badge">−${discount}%</span>` : '';
     const stars = '★'.repeat(Math.round(p.rating||5)) + '☆'.repeat(5 - Math.round(p.rating||5));
-    const imgStyle = p.image ? `background-image:url('${p.image}');background-size:cover;background-position:center;` : `background:linear-gradient(145deg, ${p.color1||'#8B5E3C'}, ${p.color2||'#C4714A'});`;
+    const imgStyle = p.image ? `background-image:url('${p.image}');background-size:cover;background-position:center;` : `background:linear-gradient(145deg, ${p.color1||'#8B5E3C'}, ${p.color2||'#4A5D3E'});`;
     const catLabel = {lamp:'Cane Lamp',wall:'Wall Decor',standing:'Standing Lamp',gifting:'Gift Set',basket:'Basket',pendant:'Pendant'}[p.category] || p.category;
 
     return `

@@ -8,9 +8,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --cream:#F7F3ED;--warm-white:#FDFAF6;--sand:#E8DDD0;--terracotta:#C4714A;--brown:#3D2B1F;--brown-light:#6B4C38;--gold:#B8972A;--text-muted:#8C7B6E;--border:rgba(61,43,31,0.12);--red:#E05252; }
-    body { font-family:'DM Sans',sans-serif; background:var(--warm-white); color:#1A1410; }
-    nav { position:sticky;top:0;z-index:100;background:rgba(253,250,246,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:72px; }
+    :root { --cream:#F5F5F0;--warm-white:#FAFAF7;--sand:#EDEAE3;--terracotta:#4A5D3E;--brown:#2E3B28;--brown-light:#5A6B52;--gold:#8B9E6B;--text-muted:#7A7E72;--border:rgba(46,59,40,0.12);--red:#E05252; }
+
+    [data-theme="dark"] {
+      --cream: #1C2118; --warm-white: #141812; --sand: #242A1F;
+      --terracotta: #A3B88A; --terracotta-light: #B8CCA0;
+      --dark: #F2F0EB; --brown: #E8E5DE; --brown-light: #C8C4BB;
+      --gold: #C8D9A8; --gold-light: #D4E6B5; --text-muted: #A8A59C;
+      --border: rgba(200,196,187,0.15);
+    }
+    body { font-family:'DM Sans',sans-serif; background:var(--warm-white); color:#1A1F16; }
+    nav { position:sticky;top:0;z-index:100;background:rgba(250,250,247,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:72px; }
     .nav-logo { font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--brown);text-decoration:none; }
     .nav-logo span { color:var(--terracotta); }
     .nav-links { display:flex;gap:36px;list-style:none; }
@@ -41,7 +49,7 @@
     .empty-state a { display:inline-block;margin-top:20px;padding:14px 32px;background:var(--terracotta);color:white;text-decoration:none;border-radius:50px;font-weight:500; }
 
     .mini-footer { background:var(--brown);color:rgba(255,255,255,0.6);text-align:center;padding:32px;font-size:13px; }
-    .mini-footer a { color:#D98B67;text-decoration:none; }
+    .mini-footer a { color:#5C7A4A;text-decoration:none; }
 
     @media (max-width:860px) {
       nav { padding:0 16px;height:56px; } .nav-links { display:none; }
@@ -52,6 +60,9 @@
   </style>
 </head>
 <body>
+<script>
+(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();
+</script>
 <nav>
   <a href="index.html" class="nav-logo">Spec <span>Interior</span></a>
   <ul class="nav-links">

@@ -8,58 +8,72 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F5F5F0; --warm-white: #FAFAF7; --sand: #EDEAE3;
+      --terracotta: #4A5D3E; --terracotta-light: #5C7A4A;
+      --dark: #1A1F16; --brown: #2E3B28; --brown-light: #5A6B52;
+      --gold: #8B9E6B; --gold-light: #A3B88A; --text-muted: #7A7E72;
+      --border: rgba(46,59,40,0.12);
+    }
+    [data-theme="dark"] {
+      --cream: #1C2118; --warm-white: #141812; --sand: #242A1F;
+      --terracotta: #A3B88A; --terracotta-light: #B8CCA0;
+      --dark: #F2F0EB; --brown: #E8E5DE; --brown-light: #C8C4BB;
+      --gold: #C8D9A8; --gold-light: #D4E6B5; --text-muted: #A8A59C;
+      --border: rgba(200,196,187,0.15);
+    }
     body { font-family: 'DM Sans', sans-serif; background: #f5f5f5; color: #1a1410; padding: 20px; }
 
     .invoice-container { max-width: 800px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); overflow: hidden; }
 
-    .invoice-header { background: #3D2B1F; color: white; padding: 32px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .invoice-header { background: #2E3B28; color: white; padding: 32px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
     .invoice-brand { }
     .invoice-brand h1 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; margin-bottom: 4px; }
-    .invoice-brand h1 span { color: #C4714A; }
+    .invoice-brand h1 span { color: #4A5D3E; }
     .invoice-brand p { font-size: 12px; opacity: 0.7; line-height: 1.6; }
     .invoice-meta { text-align: right; }
-    .invoice-meta h2 { font-size: 24px; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; color: #D4AF5A; }
+    .invoice-meta h2 { font-size: 24px; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; color: #A3B88A; }
     .invoice-meta .meta-item { font-size: 13px; opacity: 0.8; margin-bottom: 4px; }
     .invoice-meta .meta-value { font-weight: 600; color: white; }
 
     .invoice-body { padding: 32px 40px; }
 
     .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #eee; }
-    .party-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C4714A; font-weight: 600; margin-bottom: 8px; }
-    .party-name { font-size: 16px; font-weight: 600; color: #3D2B1F; margin-bottom: 4px; }
-    .party-detail { font-size: 13px; color: #8C7B6E; line-height: 1.7; }
+    .party-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #4A5D3E; font-weight: 600; margin-bottom: 8px; }
+    .party-name { font-size: 16px; font-weight: 600; color: #2E3B28; margin-bottom: 4px; }
+    .party-detail { font-size: 13px; color: #7A7E72; line-height: 1.7; }
 
     .items-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-    .items-table th { background: #F7F3ED; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6B4C38; font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid #E8DDD0; }
+    .items-table th { background: #F5F5F0; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5A6B52; font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid #EDEAE3; }
     .items-table th:last-child, .items-table td:last-child { text-align: right; }
     .items-table th:nth-child(3), .items-table td:nth-child(3) { text-align: center; }
-    .items-table td { padding: 14px 16px; font-size: 14px; color: #3D2B1F; border-bottom: 1px solid #f0ebe4; }
+    .items-table td { padding: 14px 16px; font-size: 14px; color: #2E3B28; border-bottom: 1px solid #f0ebe4; }
     .items-table tr:last-child td { border-bottom: none; }
     .item-name { font-weight: 500; }
-    .item-cat { font-size: 11px; color: #8C7B6E; margin-top: 2px; }
+    .item-cat { font-size: 11px; color: #7A7E72; margin-top: 2px; }
 
     .totals { display: flex; justify-content: flex-end; margin-bottom: 32px; }
     .totals-box { width: 280px; }
-    .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; color: #6B4C38; }
+    .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; color: #5A6B52; }
     .total-row.subtotal { border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 8px; }
-    .total-row.grand { border-top: 2px solid #3D2B1F; padding-top: 12px; margin-top: 8px; font-size: 18px; font-weight: 700; color: #3D2B1F; }
+    .total-row.grand { border-top: 2px solid #2E3B28; padding-top: 12px; margin-top: 8px; font-size: 18px; font-weight: 700; color: #2E3B28; }
     .total-label { }
     .total-value { font-weight: 600; }
 
-    .invoice-footer { background: #F7F3ED; padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-    .footer-note { font-size: 12px; color: #8C7B6E; line-height: 1.7; max-width: 400px; }
-    .footer-note strong { color: #3D2B1F; }
-    .payment-info { text-align: right; font-size: 12px; color: #6B4C38; }
-    .payment-info .method { font-weight: 600; color: #C4714A; font-size: 14px; }
+    .invoice-footer { background: #F5F5F0; padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-note { font-size: 12px; color: #7A7E72; line-height: 1.7; max-width: 400px; }
+    .footer-note strong { color: #2E3B28; }
+    .payment-info { text-align: right; font-size: 12px; color: #5A6B52; }
+    .payment-info .method { font-weight: 600; color: #4A5D3E; font-size: 14px; }
 
     .print-actions { text-align: center; padding: 24px; background: #f5f5f5; }
-    .print-btn { padding: 14px 36px; background: #C4714A; color: white; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; margin: 0 8px; }
-    .print-btn:hover { background: #3D2B1F; }
-    .print-btn.secondary { background: #6B4C38; }
-    .back-link { display: inline-block; margin-top: 12px; font-size: 13px; color: #8C7B6E; text-decoration: none; }
-    .back-link:hover { color: #C4714A; }
+    .print-btn { padding: 14px 36px; background: #4A5D3E; color: white; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; margin: 0 8px; }
+    .print-btn:hover { background: #2E3B28; }
+    .print-btn.secondary { background: #5A6B52; }
+    .back-link { display: inline-block; margin-top: 12px; font-size: 13px; color: #7A7E72; text-decoration: none; }
+    .back-link:hover { color: #4A5D3E; }
 
-    .loading { text-align: center; padding: 80px 20px; color: #8C7B6E; font-size: 16px; }
+    .loading { text-align: center; padding: 80px 20px; color: #7A7E72; font-size: 16px; }
 
     @media print {
       body { background: white; padding: 0; }
@@ -77,6 +91,9 @@
   </style>
 </head>
 <body>
+<script>
+(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();
+</script>
 
 <div class="invoice-container" id="invoiceContainer">
   <div class="loading" id="invoiceLoading">Loading invoice...</div>
@@ -178,7 +195,7 @@ function renderInvoice(order, products) {
             return `
             <tr>
               <td><div class="item-name">${item.name}</div></td>
-              <td style="font-size:12px;color:#6B4C38;">${hsn}</td>
+              <td style="font-size:12px;color:#5A6B52;">${hsn}</td>
               <td>₹${item.price.toLocaleString()}</td>
               <td>${item.qty}</td>
               <td>₹${(item.price * item.qty).toLocaleString()}</td>

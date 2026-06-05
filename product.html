@@ -9,17 +9,25 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --cream: #F7F3ED; --warm-white: #FDFAF6; --sand: #E8DDD0;
-      --terracotta: #C4714A; --terracotta-light: #D98B67;
-      --dark: #1A1410; --brown: #3D2B1F; --brown-light: #6B4C38;
-      --gold: #B8972A; --gold-light: #D4AF5A; --text-muted: #8C7B6E;
-      --border: rgba(61,43,31,0.12);
+      --cream: #F5F5F0; --warm-white: #FAFAF7; --sand: #EDEAE3;
+      --terracotta: #4A5D3E; --terracotta-light: #5C7A4A;
+      --dark: #1A1F16; --brown: #2E3B28; --brown-light: #5A6B52;
+      --gold: #8B9E6B; --gold-light: #A3B88A; --text-muted: #7A7E72;
+      --border: rgba(46,59,40,0.12);
+    }
+
+    [data-theme="dark"] {
+      --cream: #1C2118; --warm-white: #141812; --sand: #242A1F;
+      --terracotta: #A3B88A; --terracotta-light: #B8CCA0;
+      --dark: #F2F0EB; --brown: #E8E5DE; --brown-light: #C8C4BB;
+      --gold: #C8D9A8; --gold-light: #D4E6B5; --text-muted: #A8A59C;
+      --border: rgba(200,196,187,0.15);
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); overflow-x: hidden; }
 
     /* NAV */
-    nav { position: sticky; top: 0; z-index: 100; background: rgba(253,250,246,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(250,250,247,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
     .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown); text-decoration: none; }
     .nav-logo span { color: var(--terracotta); }
     .nav-links { display: flex; gap: 36px; list-style: none; }
@@ -85,7 +93,7 @@
 
     .rec-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
     .rec-card { background: white; border-radius: 14px; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; text-decoration: none; color: inherit; display: block; }
-    .rec-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(61,43,31,0.12); }
+    .rec-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(46,59,40,0.12); }
     .rec-card .rec-img { aspect-ratio: 1; overflow: hidden; display: flex; align-items: center; justify-content: center; }
     .rec-card .rec-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
     .rec-card:hover .rec-img img { transform: scale(1.06); }
@@ -135,6 +143,9 @@
   </style>
 </head>
 <body>
+<script>
+(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();
+</script>
 
 <!-- NAV -->
 <nav>
@@ -225,7 +236,7 @@ function renderProduct(p) {
   const stars = '★'.repeat(Math.round(p.rating || 5)) + '☆'.repeat(5 - Math.round(p.rating || 5));
   const imgStyle = p.image
     ? `<img src="${p.image}" alt="${p.name}"/>`
-    : `<div style="width:100%;height:100%;background:linear-gradient(145deg, ${p.color1||'#8B5E3C'}, ${p.color2||'#C4714A'});display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 200 200" width="140" opacity="0.3" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="50" rx="40" ry="12" fill="#F7F3ED"/><polygon points="60,50 140,50 160,160 40,160" fill="#F7F3ED" opacity="0.7"/><ellipse cx="100" cy="160" rx="60" ry="14" fill="#F7F3ED" opacity="0.4"/></svg></div>`;
+    : `<div style="width:100%;height:100%;background:linear-gradient(145deg, ${p.color1||'#8B5E3C'}, ${p.color2||'#4A5D3E'});display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 200 200" width="140" opacity="0.3" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="50" rx="40" ry="12" fill="#F5F5F0"/><polygon points="60,50 140,50 160,160 40,160" fill="#F5F5F0" opacity="0.7"/><ellipse cx="100" cy="160" rx="60" ry="14" fill="#F5F5F0" opacity="0.4"/></svg></div>`;
   const description = p.description || categoryDescriptions[cat] || 'A beautifully handcrafted piece from Spec Interior.';
   const features = categoryFeatures[cat] || categoryFeatures.lamp;
 
@@ -234,7 +245,7 @@ function renderProduct(p) {
   document.getElementById('breadName').textContent = p.name;
 
   document.getElementById('productDetail').innerHTML = `
-    <div class="product-image" style="${!p.image ? 'background:linear-gradient(145deg,'+( p.color1||'#8B5E3C')+','+(p.color2||'#C4714A')+')' : ''}">
+    <div class="product-image" style="${!p.image ? 'background:linear-gradient(145deg,'+( p.color1||'#8B5E3C')+','+(p.color2||'#4A5D3E')+')' : ''}">
       ${imgStyle}
     </div>
     <div class="product-meta">
@@ -331,7 +342,7 @@ function renderRecommended(currentProduct) {
   document.getElementById('recGrid').innerHTML = similar.map(p => {
     const imgHtml = p.image
       ? `<img src="${p.image}" alt="${p.name}"/>`
-      : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${p.color1||'#8B5E3C'},${p.color2||'#C4714A'});"></div>`;
+      : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${p.color1||'#8B5E3C'},${p.color2||'#4A5D3E'});"></div>`;
     return `
       <a href="product.html?id=${p.id}" class="rec-card">
         <div class="rec-img">${imgHtml}</div>
