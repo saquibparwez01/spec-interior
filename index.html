@@ -31,25 +31,51 @@
     }
 
     [data-theme="dark"] {
-      --cream: #1E231A;
+      --cream: #1C2118;
       --warm-white: #141812;
-      --sand: #252A20;
-      --terracotta: #8B9E6B;
-      --terracotta-light: #A3B88A;
-      --dark: #E8E6E0;
-      --brown: #D4D0C8;
-      --brown-light: #A8A49C;
-      --gold: #A3B88A;
-      --gold-light: #B8CCA0;
-      --text-muted: #8A8880;
-      --border: rgba(168,164,156,0.12);
+      --sand: #242A1F;
+      --terracotta: #A3B88A;
+      --terracotta-light: #B8CCA0;
+      --dark: #F2F0EB;
+      --brown: #E8E5DE;
+      --brown-light: #C8C4BB;
+      --gold: #C8D9A8;
+      --gold-light: #D4E6B5;
+      --text-muted: #A8A59C;
+      --border: rgba(200,196,187,0.15);
       --nav-bg: rgba(20,24,18,0.95);
-      --card-bg: #1E231A;
+      --card-bg: #1C2118;
       --footer-bg: #0E110C;
-      --trust-bg: #1E231A;
-      --trust-icon-bg: #252A20;
+      --trust-bg: #1C2118;
+      --trust-icon-bg: #2A3024;
       --testimonial-bg: #0E110C;
     }
+
+    /* Dark mode overrides for elements with hardcoded colors */
+    [data-theme="dark"] .announcement { background: #1C2118; color: #C8C4BB; }
+    [data-theme="dark"] .announcement span { color: #D4E6B5; }
+    [data-theme="dark"] .testi-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+    [data-theme="dark"] .testi-text { color: #E0DDD6; }
+    [data-theme="dark"] .testi-name { color: #F2F0EB; }
+    [data-theme="dark"] .testi-loc { color: rgba(255,255,255,0.55); }
+    [data-theme="dark"] .testi-stars { color: #D4E6B5; }
+    [data-theme="dark"] .footer-col h4 { color: #C8D9A8; }
+    [data-theme="dark"] .footer-col a { color: rgba(255,255,255,0.65); }
+    [data-theme="dark"] .footer-col a:hover { color: #B8CCA0; }
+    [data-theme="dark"] .footer-brand .nav-logo { color: #F2F0EB; }
+    [data-theme="dark"] .footer-desc { color: rgba(255,255,255,0.6); }
+    [data-theme="dark"] .footer-bottom { color: rgba(255,255,255,0.55); }
+    [data-theme="dark"] .nav-logo { color: #F2F0EB; }
+    [data-theme="dark"] .nav-logo span { color: #A3B88A; }
+    [data-theme="dark"] .nav-icon { stroke: #C8C4BB; }
+    [data-theme="dark"] .wishlist-btn { background: #242A1F; }
+    [data-theme="dark"] .nl-input { background: #242A1F; border-color: rgba(255,255,255,0.12); color: #F2F0EB; }
+    [data-theme="dark"] .nl-input::placeholder { color: #8A8880; }
+    [data-theme="dark"] .section-title em { color: #A3B88A; }
+    [data-theme="dark"] .newsletter-title em { color: #A3B88A; }
+    [data-theme="dark"] .hero-title em { color: #A3B88A; }
+    [data-theme="dark"] .contact-item { color: rgba(255,255,255,0.7); }
+    [data-theme="dark"] .pay-badge { color: rgba(255,255,255,0.6); }
 
     html { scroll-behavior: smooth; }
 
