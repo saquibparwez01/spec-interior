@@ -942,10 +942,47 @@
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
     .hero-eyebrow { animation: fadeUp 0.6s ease 0.1s both; }
     .hero-title { animation: fadeUp 0.7s ease 0.25s both; }
     .hero-subtitle { animation: fadeUp 0.7s ease 0.4s both; }
     .hero-ctas { animation: fadeUp 0.7s ease 0.55s both; }
+
+    /* Scroll reveal classes */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .reveal-scale { opacity: 0; transform: scale(0.92); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+    /* Stagger children */
+    .stagger-children > * { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .stagger-children.visible > *:nth-child(1) { transition-delay: 0.05s; opacity: 1; transform: translateY(0); }
+    .stagger-children.visible > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+    .stagger-children.visible > *:nth-child(3) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
+    .stagger-children.visible > *:nth-child(4) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+    .stagger-children.visible > *:nth-child(5) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
+    .stagger-children.visible > *:nth-child(6) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+    .stagger-children.visible > *:nth-child(7) { transition-delay: 0.35s; opacity: 1; transform: translateY(0); }
+    .stagger-children.visible > *:nth-child(8) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
@@ -1030,7 +1067,7 @@
   </section>
 
   <!-- Trust Bar -->
-  <div class="trust-bar">
+  <div class="trust-bar reveal">
     <div class="trust-item">
       <div class="trust-icon">
         <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M5 12l5 5L20 7"/></svg>
@@ -1079,13 +1116,13 @@
   </div>
 
   <!-- Categories -->
-  <section class="categories" id="categories">
+  <section class="categories reveal" id="categories">
     <div class="section-header">
       <div class="section-eyebrow">Shop by Category</div>
       <h2 class="section-title">Curated for every <em>corner</em></h2>
       <p class="section-sub">From statement pendants to delicate wall hangings — find the piece that speaks to your space.</p>
     </div>
-    <div class="cat-grid">
+    <div class="cat-grid stagger-children">
       <a href="category.html?cat=lamp" class="cat-card" style="background: linear-gradient(135deg, #8B5E3C, #C4714A);">
         <div class="cat-overlay"></div>
         <div class="cat-info">
@@ -1130,7 +1167,7 @@
   </section>
 
   <!-- Products -->
-  <section class="products" id="products">
+  <section class="products reveal" id="products">
     <div class="section-header">
       <div class="section-eyebrow">New Arrivals</div>
       <h2 class="section-title">Fresh from the <em>studio</em></h2>
@@ -1261,7 +1298,7 @@
   </section>
 
   <!-- Story Section -->
-  <section class="story" id="story">
+  <section class="story reveal" id="story">
     <div class="story-images">
       <div style="width:72%;height:85%;background:linear-gradient(135deg,#C4714A,#8B5E3C);border-radius:16px;position:absolute;top:0;left:0;display:flex;align-items:center;justify-content:center;">
         <svg viewBox="0 0 200 280" width="160" xmlns="http://www.w3.org/2000/svg" opacity="0.25">
@@ -1310,12 +1347,12 @@
   </section>
 
   <!-- Testimonials -->
-  <section class="testimonials">
+  <section class="testimonials reveal">
     <div class="section-header">
       <div class="section-eyebrow">Customer Love</div>
       <h2 class="section-title">What our community <em>says</em></h2>
     </div>
-    <div class="testi-grid">
+    <div class="testi-grid stagger-children">
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
         <p class="testi-text">"The tin pendant lamp I ordered completely transformed my dining room. The quality is exceptional and the warm glow it casts is exactly what I was looking for."</p>
@@ -1353,7 +1390,7 @@
   </section>
 
   <!-- Newsletter -->
-  <section class="newsletter">
+  <section class="newsletter reveal">
     <div>
       <h2 class="newsletter-title">Light up your<br/><em>inbox</em> too</h2>
       <p class="newsletter-sub">Subscribe and get <strong style="color:var(--terracotta);">₹100 OFF</strong> your first order! Plus exclusive new arrivals, design inspiration, and artisan community stories.</p>
@@ -1557,6 +1594,17 @@
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    // Scroll reveal animations
+    const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
 
     // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
