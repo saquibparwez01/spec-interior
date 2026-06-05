@@ -10,18 +10,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream: #F7F3ED;
-      --warm-white: #FDFAF6;
-      --sand: #E8DDD0;
-      --terracotta: #C4714A;
-      --terracotta-light: #D98B67;
-      --dark: #1A1410;
-      --brown: #3D2B1F;
-      --brown-light: #6B4C38;
-      --gold: #B8972A;
-      --gold-light: #D4AF5A;
-      --text-muted: #8C7B6E;
-      --border: rgba(61,43,31,0.12);
+      --cream: #2A2A2A;
+      --warm-white: #1E1E1E;
+      --sand: #2E2E2E;
+      --terracotta: #C67B4E;
+      --terracotta-light: #D4956A;
+      --dark: #F0EDE8;
+      --brown: #E8DDD0;
+      --brown-light: #B8A99A;
+      --gold: #D4AF5A;
+      --gold-light: #E8C96A;
+      --text-muted: #9A8E82;
+      --border: rgba(255,255,255,0.1);
     }
 
     html { scroll-behavior: smooth; }
@@ -35,8 +35,8 @@
 
     /* ── ANNOUNCEMENT BAR ── */
     .announcement {
-      background: var(--brown);
-      color: var(--sand);
+      background: #151515;
+      color: #B8A99A;
       text-align: center;
       padding: 10px 20px;
       font-size: 13px;
@@ -49,7 +49,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(253,250,246,0.95);
+      background: rgba(30,30,30,0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 0 40px;
@@ -236,7 +236,7 @@
 
     /* ── TRUST BAR ── */
     .trust-bar {
-      background: var(--sand);
+      background: #252525;
       padding: 22px 80px;
       display: flex;
       justify-content: space-between;
@@ -251,7 +251,7 @@
     }
     .trust-icon {
       width: 36px; height: 36px;
-      background: var(--cream);
+      background: #333;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -404,7 +404,7 @@
     }
 
     .product-card {
-      background: var(--warm-white);
+      background: #2A2A2A;
       border-radius: 14px;
       overflow: hidden;
       position: relative;
@@ -412,7 +412,7 @@
     }
     .product-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 20px 60px rgba(61,43,31,0.12);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
 
     .product-img-wrap {
@@ -607,10 +607,10 @@
     /* ── TESTIMONIALS ── */
     .testimonials {
       padding: 100px 80px;
-      background: var(--brown);
+      background: #151515;
       color: white;
     }
-    .testimonials .section-title { color: var(--sand); }
+    .testimonials .section-title { color: #E8DDD0; }
     .testimonials .section-eyebrow { color: var(--gold-light); }
 
     .testi-grid {
@@ -716,7 +716,7 @@
 
     /* ── FOOTER ── */
     footer {
-      background: var(--dark);
+      background: #111111;
       color: rgba(255,255,255,0.55);
       padding: 80px 80px 40px;
     }
