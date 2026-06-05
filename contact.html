@@ -103,7 +103,8 @@
       </select>
     </div>
     <div class="form-group"><label>Message</label><textarea id="cMessage" placeholder="Tell us how we can help..."></textarea></div>
-    <button class="submit-btn" onclick="submitContact()">Send Message</button>
+    <button class="submit-btn" onclick="submitContact('whatsapp')" style="background:#25D366;">💬 Send via WhatsApp (Faster Response)</button>
+    <button class="submit-btn" onclick="submitContact('form')" style="margin-top:10px;">📩 Submit Form (We'll reply within 24hrs)</button>
   </div>
 
   <div class="contact-info">
@@ -140,20 +141,42 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
-function submitContact() {
+<script type="module">
+import { db, collection, addDoc } from './js/firebase-config.js';
+
+window.submitContact = async function(method) {
   const name = document.getElementById('cName').value.trim();
   const phone = document.getElementById('cPhone').value.trim();
   const email = document.getElementById('cEmail').value.trim();
   const subject = document.getElementById('cSubject').value;
   const message = document.getElementById('cMessage').value.trim();
   if (!name || !email || !message) { showToast('Please fill name, email and message', true); return; }
-  // Send via WhatsApp as a simple solution
-  const text = `New Contact Form Submission:\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`;
-  window.open(`https://wa.me/919654535236?text=${encodeURIComponent(text)}`, '_blank');
-  showToast('Message sent! We\'ll get back to you soon.');
-  document.getElementById('cName').value='';document.getElementById('cPhone').value='';document.getElementById('cEmail').value='';document.getElementById('cSubject').value='';document.getElementById('cMessage').value='';
+
+  // Always save to Firebase
+  try {
+    await addDoc(collection(db, 'contacts'), {
+      name, phone, email, subject, message,
+      method: method,
+      status: 'unread',
+      createdAt: new Date().toISOString()
+    });
+  } catch(e) { console.error('Firebase save error:', e); }
+
+  if (method === 'whatsapp') {
+    const text = `New Inquiry from ${name}:\n\nPhone: ${phone}\nEmail: ${email}\nSubject: ${subject}\n\n${message}`;
+    window.open(`https://wa.me/919654535236?text=${encodeURIComponent(text)}`, '_blank');
+    showToast('Opening WhatsApp... Message also saved!');
+  } else {
+    showToast('Message sent! We\'ll reply within 24 hours.');
+  }
+
+  document.getElementById('cName').value='';
+  document.getElementById('cPhone').value='';
+  document.getElementById('cEmail').value='';
+  document.getElementById('cSubject').value='';
+  document.getElementById('cMessage').value='';
 }
+
 function showToast(msg, isErr) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.style.background = isErr ? '#E05252' : '#3CB371';

@@ -459,6 +459,7 @@ function loadTab(tab) {
   if (tab === 'products') renderProductsAdmin();
   if (tab === 'payments') renderPayments();
   if (tab === 'customers') renderCustomers();
+  if (tab === 'messages') renderMessages();
 }
 window.loadAll = function() { loadDashboard(); };
 
@@ -479,5 +480,66 @@ async function init() {
   await seedProductsIfEmpty();
   listenProducts();
   listenOrders();
+  listenMessages();
   loadDashboard();
 }
+
+// ─── MESSAGES ────────────────────────────────────────
+let messagesCache = [];
+
+function listenMessages() {
+  const q = query(collection(db, 'contacts'), orderBy('createdAt', 'desc'));
+  onSnapshot(q, (snap) => {
+    messagesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    document.getElementById('msgBadge').textContent = messagesCache.filter(m => m.status === 'unread').length;
+    if (document.getElementById('tab-messages').classList.contains('active')) renderMessages();
+  });
+}
+
+window.renderMessages = function() {
+  const filter = document.getElementById('msgFilter').value;
+  const filtered = messagesCache.filter(m => filter === 'all' || m.status === filter);
+  document.getElementById('messagesBody').innerHTML = filtered.length ? filtered.map(m => {
+    const date = new Date(m.createdAt).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'});
+    const methodBadge = m.method === 'whatsapp' ? '<span class="badge badge-shipped">WhatsApp</span>' : '<span class="badge badge-processing">Form</span>';
+    const statusBadge = m.status === 'unread' ? '<span class="badge badge-pending">Unread</span>' : '<span class="badge badge-active">Read</span>';
+    return `<tr>
+      <td style="color:var(--muted);font-size:12px;">${date}</td>
+      <td style="font-weight:500;">${m.name||'—'}</td>
+      <td style="color:var(--muted);">${m.email||'—'}</td>
+      <td>${m.phone||'—'}</td>
+      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.subject||'—'}</td>
+      <td>${methodBadge}</td>
+      <td>${statusBadge}</td>
+      <td><div style="display:flex;gap:6px;"><button class="action-btn action-view" onclick="viewMessage('${m.id}')">View</button>${m.status==='unread'?`<button class="action-btn action-edit" onclick="markRead('${m.id}')">✓</button>`:''}</div></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:30px;">No messages found</td></tr>';
+};
+
+window.viewMessage = function(id) {
+  const m = messagesCache.find(msg => msg.id === id);
+  if (!m) return;
+  // Mark as read
+  if (m.status === 'unread') markRead(id);
+  document.getElementById('orderDetailContent').innerHTML = `
+    <div class="order-detail-grid">
+      <div class="detail-item"><label>Name</label><div class="val">${m.name||'—'}</div></div>
+      <div class="detail-item"><label>Date</label><div class="val">${new Date(m.createdAt).toLocaleString('en-IN')}</div></div>
+      <div class="detail-item"><label>Email</label><div class="val">${m.email||'—'}</div></div>
+      <div class="detail-item"><label>Phone</label><div class="val">${m.phone||'—'}</div></div>
+      <div class="detail-item"><label>Subject</label><div class="val">${m.subject||'—'}</div></div>
+      <div class="detail-item"><label>Method</label><div class="val">${m.method==='whatsapp'?'WhatsApp':'Direct Form'}</div></div>
+    </div>
+    <div class="order-items-list" style="margin-top:16px;">
+      <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Message</div>
+      <p style="font-size:14px;color:var(--text);line-height:1.7;">${m.message||'No message'}</p>
+    </div>
+  `;
+  document.getElementById('orderModal').classList.add('open');
+};
+
+window.markRead = async function(id) {
+  await updateDoc(doc(db, 'contacts', id), { status: 'read' });
+  showToast('Marked as read');
+};
+
