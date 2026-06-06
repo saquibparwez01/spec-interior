@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Auto Git Push",
+  "description": "Reminds the agent to stage, commit, and push changes to git after completing any task that modifies files",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check if there are any uncommitted changes in the git repository. If there are, stage the relevant files, commit with a descriptive message, and push to the remote. Do not push .vscode or other IDE config folders."
+  }
+}
