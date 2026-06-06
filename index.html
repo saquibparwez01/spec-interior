@@ -171,9 +171,17 @@
     .hero {
       min-height: 70vh;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       position: relative;
       overflow: hidden;
+      background: url('hero-bg.jpg') center/cover no-repeat;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(26,31,22,0.6);
+      z-index: 1;
     }
 
     .hero-left {
@@ -183,13 +191,14 @@
       padding: 50px 50px 50px 60px;
       position: relative;
       z-index: 2;
+      max-width: 650px;
     }
 
     .hero-eyebrow {
       font-size: 12px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--terracotta);
+      color: var(--gold-light);
       font-weight: 500;
       margin-bottom: 24px;
       display: flex;
@@ -201,7 +210,7 @@
       display: block;
       width: 40px;
       height: 1px;
-      background: var(--terracotta);
+      background: var(--gold-light);
     }
 
     .hero-title {
@@ -209,18 +218,18 @@
       font-size: clamp(52px, 6vw, 84px);
       font-weight: 300;
       line-height: 1.05;
-      color: var(--brown);
+      color: #FFFFFF;
       margin-bottom: 28px;
     }
     .hero-title em {
       font-style: italic;
-      color: var(--terracotta);
+      color: var(--gold-light);
     }
 
     .hero-subtitle {
       font-size: 15px;
       line-height: 1.7;
-      color: var(--text-muted);
+      color: rgba(255,255,255,0.8);
       max-width: 400px;
       margin-bottom: 32px;
       font-weight: 300;
@@ -233,8 +242,8 @@
     }
 
     .btn-primary {
-      background: var(--brown);
-      color: var(--cream);
+      background: var(--terracotta);
+      color: white;
       padding: 16px 36px;
       border-radius: 50px;
       text-decoration: none;
@@ -244,25 +253,24 @@
       transition: background 0.25s, transform 0.15s;
       display: inline-block;
     }
-    .btn-primary:hover { background: var(--terracotta); transform: translateY(-2px); }
+    .btn-primary:hover { background: var(--terracotta-light); transform: translateY(-2px); }
 
     .btn-outline {
-      color: var(--brown);
+      color: white;
       padding: 16px 28px;
       border-radius: 50px;
       text-decoration: none;
       font-size: 14px;
       font-weight: 400;
       letter-spacing: 0.04em;
-      border: 1.5px solid var(--border);
-      transition: border-color 0.2s, color 0.2s;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
       display: inline-block;
     }
-    .btn-outline:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.1); }
 
     .hero-right {
-      position: relative;
-      overflow: hidden;
+      display: none;
     }
 
     .hero-image-grid {
