@@ -176,7 +176,7 @@ function renderCheckout() {
   }
 
   const total = getCartTotal();
-  const shipping = total >= 999 ? 0 : 99;
+  const shipping = total >= 2999 ? 0 : 99;
   const grandTotal = total + shipping;
 
   content.innerHTML = `
@@ -311,7 +311,7 @@ async function handlePlaceOrder() {
       showToast(err.message || 'Something went wrong. Please try again.');
     }
     btn.disabled = false;
-    btn.textContent = `Place Order — ₹${(getCartTotal() + (getCartTotal() >= 999 ? 0 : 99)).toLocaleString()}`;
+    btn.textContent = `Place Order — ₹${(getCartTotal() + (getCartTotal() >= 2999 ? 0 : 99)).toLocaleString()}`;
   }
 }
 
