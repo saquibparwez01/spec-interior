@@ -46,7 +46,8 @@
       toggle.style.display = 'flex';
       updateIcon();
     }).catch(function() {
-      // Autoplay blocked — show toggle so user can click
+      // Autoplay blocked — show toggle so user can tap to resume
+      isPlaying = false;
       toggle.style.display = 'flex';
       updateIcon();
     });
@@ -68,11 +69,36 @@
     }
   });
 
-  // Check if user previously enabled sound — auto-resume
+  // Auto-resume: try to play on any user interaction if it was blocked
+  function tryAutoResume() {
+    const savedState = localStorage.getItem(SOUND_KEY);
+    if (savedState === 'playing' && !isPlaying) {
+      playSound();
+    }
+    // Remove listeners once played
+    if (isPlaying) {
+      document.removeEventListener('click', tryAutoResume);
+      document.removeEventListener('touchstart', tryAutoResume);
+      document.removeEventListener('scroll', tryAutoResume);
+    }
+  }
+
+  // Check if user previously enabled sound
   const savedState = localStorage.getItem(SOUND_KEY);
   if (savedState === 'playing') {
     toggle.style.display = 'flex';
-    playSound();
+    // Try to play immediately
+    audio.play().then(function() {
+      isPlaying = true;
+      updateIcon();
+    }).catch(function() {
+      // Autoplay blocked — wait for any user interaction to resume
+      isPlaying = false;
+      updateIcon();
+      document.addEventListener('click', tryAutoResume, { once: true });
+      document.addEventListener('touchstart', tryAutoResume, { once: true });
+      document.addEventListener('scroll', tryAutoResume, { once: true });
+    });
   } else if (savedState === 'paused') {
     toggle.style.display = 'flex';
     updateIcon();
