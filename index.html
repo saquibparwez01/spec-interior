@@ -1830,6 +1830,7 @@
   <script type="module">
     import { getProducts, onProductsChange } from './js/products.js';
     import { addToCart, getCart, getCartCount, updateCartBadge, updateQty, removeFromCart } from './js/cart.js';
+    import { addToWishlist, removeFromWishlist, isInWishlist } from './js/wishlist.js';
 
     // Initialize cart badge
     updateCartBadge();
@@ -2026,10 +2027,46 @@
       document.querySelectorAll('.wishlist-btn').forEach(btn => {
         if (btn.dataset.listening) return;
         btn.dataset.listening = 'true';
-        btn.addEventListener('click', function() {
+
+        // Check if already in wishlist
+        const card = btn.closest('.product-card');
+        let productData = null;
+        if (btn.dataset.product) {
+          productData = JSON.parse(btn.dataset.product);
+        } else if (card) {
+          const addBtn = card.querySelector('.add-btn');
+          if (addBtn && addBtn.dataset.product) {
+            productData = JSON.parse(addBtn.dataset.product);
+          }
+        }
+
+        if (productData && isInWishlist(productData.id)) {
+          btn.querySelector('svg').setAttribute('fill', 'var(--terracotta)');
+        }
+
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
           const svg = this.querySelector('svg');
-          const filled = svg.getAttribute('fill') === 'var(--terracotta)';
-          svg.setAttribute('fill', filled ? 'none' : 'var(--terracotta)');
+          let product = productData;
+
+          if (!product) {
+            const card = this.closest('.product-card');
+            const addBtn = card?.querySelector('.add-btn');
+            if (addBtn && addBtn.dataset.product) {
+              product = JSON.parse(addBtn.dataset.product);
+            }
+          }
+
+          if (!product) return;
+
+          if (isInWishlist(product.id)) {
+            removeFromWishlist(product.id);
+            svg.setAttribute('fill', 'none');
+          } else {
+            addToWishlist(product);
+            svg.setAttribute('fill', 'var(--terracotta)');
+          }
         });
       });
     }

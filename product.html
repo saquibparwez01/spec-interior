@@ -207,6 +207,7 @@
 <script type="module">
 import { onProductsChange } from './js/products.js';
 import { addToCart, updateCartBadge } from './js/cart.js';
+import { addToWishlist, removeFromWishlist, isInWishlist } from './js/wishlist.js';
 
 updateCartBadge();
 
@@ -301,6 +302,9 @@ function renderProduct(p) {
           ${p.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
         </button>
         <button class="btn-buy-now" id="buyNowBtn" ${p.stock === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>Buy Now</button>
+        <button id="wishlistBtn" style="width:52px;height:52px;border:1.5px solid var(--border);border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" title="Add to Wishlist">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="var(--terracotta)" stroke-width="1.5" fill="${isInWishlist(p.id) ? 'var(--terracotta)' : 'none'}"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
       </div>
       <div class="trust-badges">
         <div class="trust-badge-item">
@@ -348,6 +352,18 @@ function renderProduct(p) {
   document.getElementById('buyNowBtn').addEventListener('click', () => {
     addToCart({ id: p.id, name: p.name, price: p.price, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
     window.location.href = 'checkout.html';
+  });
+
+  // Wishlist toggle
+  document.getElementById('wishlistBtn').addEventListener('click', () => {
+    const svg = document.getElementById('wishlistBtn').querySelector('svg');
+    if (isInWishlist(p.id)) {
+      removeFromWishlist(p.id);
+      svg.setAttribute('fill', 'none');
+    } else {
+      addToWishlist({ id: p.id, name: p.name, price: p.price, originalPrice: p.originalPrice, image: p.image || '', color1: p.color1, color2: p.color2, category: p.category });
+      svg.setAttribute('fill', 'var(--terracotta)');
+    }
   });
 }
 
