@@ -257,7 +257,7 @@ async function sendEmailNotifications(order, customerInfo, cart) {
         customerName: customerInfo.name,
         customerEmail: customerInfo.email,
         customerPhone: customerInfo.phone,
-        items: cart.map(item => ({ name: item.name, price: item.price, qty: item.qty })),
+        items: cart.map(item => ({ name: item.name, price: item.price, qty: item.qty, image: item.image || null })),
         total: order.total,
         address: `${customerInfo.address}, ${customerInfo.city}, ${customerInfo.state} ${customerInfo.pincode}`,
         paymentMethod: order.payment
