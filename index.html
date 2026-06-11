@@ -1998,15 +1998,20 @@
       if (!controls) {
         controls = document.createElement('div');
         controls.className = 'cart-qty-controls';
+        controls.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); });
         btn.parentElement.appendChild(controls);
       }
-      controls.innerHTML = `<button class="cq-dec">−</button><span class="qty-num">${qty}</span><button class="cq-inc">+</button>`;
+      controls.innerHTML = `<button class="cq-dec" onclick="event.preventDefault();event.stopPropagation();">−</button><span class="qty-num">${qty}</span><button class="cq-inc" onclick="event.preventDefault();event.stopPropagation();">+</button>`;
 
-      controls.querySelector('.cq-inc').addEventListener('click', () => {
+      controls.querySelector('.cq-inc').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         updateQty(product.id, qty + 1);
         showQtyControls(btn, product);
       });
-      controls.querySelector('.cq-dec').addEventListener('click', () => {
+      controls.querySelector('.cq-dec').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (qty > 1) {
           updateQty(product.id, qty - 1);
         } else {
