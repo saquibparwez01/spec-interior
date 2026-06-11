@@ -1160,14 +1160,14 @@
   </script>
 
   <!-- Ambient Sound Popup -->
-  <div id="soundPopup" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9997;background:linear-gradient(135deg,#2E3B28,#1A1F16);padding:16px 24px;display:none;align-items:center;justify-content:center;gap:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3);animation:slideDown 0.4s ease;">
+  <div id="soundPopup" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9997;background:linear-gradient(135deg,#2E3B28,#1A1F16);padding:16px 24px;align-items:center;justify-content:center;gap:16px;box-shadow:0 4px 24px rgba(0,0,0,0.3);animation:slideDown 0.4s ease;">
     <span style="font-size:14px;color:rgba(255,255,255,0.9);font-family:'DM Sans',sans-serif;">🌿 Want to dive into nature? Experience ambient forest sounds while you browse</span>
     <button id="soundYes" style="padding:8px 20px;background:#A3B88A;color:#1A1F16;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Yes, play</button>
     <button id="soundNo" style="padding:8px 20px;background:transparent;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.2);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;">No thanks</button>
   </div>
 
   <!-- Ambient Sound Control (floating button) -->
-  <button id="soundToggle" style="display:none;position:fixed;bottom:24px;left:24px;z-index:9996;width:44px;height:44px;border-radius:50%;background:var(--brown);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.2);display:none;align-items:center;justify-content:center;transition:transform 0.2s,background 0.2s;" title="Toggle ambient sound">
+  <button id="soundToggle" style="display:none;position:fixed;bottom:24px;left:24px;z-index:9996;width:44px;height:44px;border-radius:50%;background:var(--brown);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.2);align-items:center;justify-content:center;transition:transform 0.2s,background 0.2s;" title="Toggle ambient sound">
     <svg id="soundIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>
     <svg id="muteIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
   </button>
@@ -1185,30 +1185,24 @@
       const muteIcon = document.getElementById('muteIcon');
       let isPlaying = false;
 
-      // Check if user already made a choice
-      const soundChoice = sessionStorage.getItem('specSoundChoice');
-      if (!soundChoice) {
+      // Show popup after a short delay for better UX
+      setTimeout(function() {
         popup.style.display = 'flex';
-      } else if (soundChoice === 'yes') {
-        // Resume sound on revisit within session
-        toggle.style.display = 'flex';
-      }
+      }, 1500);
 
       document.getElementById('soundYes').addEventListener('click', function() {
         popup.style.display = 'none';
-        sessionStorage.setItem('specSoundChoice', 'yes');
         audio.volume = 0.3;
-        audio.play().then(() => {
+        audio.play().then(function() {
           isPlaying = true;
           toggle.style.display = 'flex';
-        }).catch(() => {
+        }).catch(function() {
           toggle.style.display = 'flex';
         });
       });
 
       document.getElementById('soundNo').addEventListener('click', function() {
         popup.style.display = 'none';
-        sessionStorage.setItem('specSoundChoice', 'no');
       });
 
       toggle.addEventListener('click', function() {
