@@ -1946,6 +1946,7 @@
       }).join('');
 
       attachProductListeners();
+      attachWishlistListeners();
     }
 
     function attachProductListeners() {
@@ -2015,6 +2016,7 @@
       });
     }
 
+    function attachWishlistListeners() {
       // Wishlist toggle
       document.querySelectorAll('.wishlist-btn').forEach(btn => {
         if (btn.dataset.listening) return;
@@ -2037,6 +2039,7 @@
 
     // Also attach listeners to static products (fallback)
     attachProductListeners();
+    attachWishlistListeners();
   </script>
 
   <!-- SEARCH OVERLAY -->
