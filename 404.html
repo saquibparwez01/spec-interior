@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Page Not Found — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F5F5F0; --warm-white: #FAFAF7; --sand: #EDEAE3;
+      --terracotta: #4A5D3E; --terracotta-light: #5C7A4A;
+      --dark: #1A1F16; --brown: #2E3B28; --brown-light: #5A6B52;
+      --gold: #8B9E6B; --gold-light: #A3B88A; --text-muted: #7A7E72;
+    }
+    [data-theme="dark"] {
+      --cream: #1C2118; --warm-white: #141812; --sand: #242A1F;
+      --terracotta: #A3B88A; --dark: #F2F0EB; --brown: #E8E5DE;
+      --brown-light: #C8C4BB; --gold-light: #D4E6B5; --text-muted: #A8A59C;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; }
+    .error-code { font-family: 'Cormorant Garamond', serif; font-size: clamp(100px, 20vw, 180px); font-weight: 300; color: var(--terracotta); opacity: 0.3; line-height: 1; margin-bottom: -20px; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 5vw, 42px); font-weight: 400; color: var(--brown); margin-bottom: 16px; }
+    p { font-size: 16px; color: var(--text-muted); max-width: 440px; line-height: 1.7; margin-bottom: 32px; }
+    .actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn { display: inline-block; padding: 14px 32px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; text-decoration: none; transition: all 0.2s; }
+    .btn-primary { background: var(--terracotta); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-outline { border: 1.5px solid var(--brown-light); color: var(--brown-light); }
+    .btn-outline:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .logo { position: absolute; top: 32px; left: 32px; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--brown); text-decoration: none; }
+    .logo span { color: var(--terracotta); }
+    [data-theme="dark"] body { background: #141812; }
+  </style>
+</head>
+<body>
+<script>
+(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();
+</script>
+<a href="index.html" class="logo">Spec <span>Interior</span></a>
+<div class="error-code">404</div>
+<h1>Page not found</h1>
+<p>The page you're looking for doesn't exist or has been moved. Let's get you back to something beautiful.</p>
+<div class="actions">
+  <a href="index.html" class="btn btn-primary">Back to Home</a>
+  <a href="category.html" class="btn btn-outline">Browse Collection</a>
+</div>
+</body>
+</html>
