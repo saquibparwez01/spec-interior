@@ -157,7 +157,7 @@ import { checkStock } from './js/products.js';
 import { COUPON_CODES } from './js/firebase-config.js';
 
 const content = document.getElementById('checkoutContent');
-const cart = getCart();
+let cart = getCart();
 
 let appliedCoupon = null;
 let discountAmount = 0;
@@ -388,7 +388,8 @@ function renderCheckout() {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
       const item = cart.find(i => i.id === id);
-      if (item) { updateQty(id, item.qty + 1); refreshCart(); }
+      if (item && item.qty < 10) { updateQty(id, item.qty + 1); refreshCart(); }
+      else if (item && item.qty >= 10) { showToast('Maximum 10 per item'); }
     });
   });
   document.querySelectorAll('.qty-dec-btn').forEach(btn => {
@@ -517,9 +518,8 @@ function showSuccess(order, customerInfo, pricing) {
 }
 
 function refreshCart() {
-  // Update cart reference
-  cart.length = 0;
-  getCart().forEach(i => cart.push(i));
+  // Get fresh cart data
+  cart = getCart();
 
   if (cart.length === 0) {
     content.innerHTML = `
@@ -531,33 +531,34 @@ function refreshCart() {
     return;
   }
 
-  // Re-render the whole checkout (preserves form data)
-  const name = document.getElementById('custName')?.value || '';
-  const email = document.getElementById('custEmail')?.value || '';
-  const phone = document.getElementById('custPhone')?.value || '';
-  const address = document.getElementById('custAddress')?.value || '';
-  const city = document.getElementById('custCity')?.value || '';
-  const state = document.getElementById('custState')?.value || '';
-  const pincode = document.getElementById('custPincode')?.value || '';
-  const notes = document.getElementById('custNotes')?.value || '';
-  const couponVal = document.getElementById('couponInput')?.value || '';
+  // Save form values before re-render
+  const savedForm = {
+    name: document.getElementById('custName')?.value || '',
+    email: document.getElementById('custEmail')?.value || '',
+    phone: document.getElementById('custPhone')?.value || '',
+    address: document.getElementById('custAddress')?.value || '',
+    city: document.getElementById('custCity')?.value || '',
+    state: document.getElementById('custState')?.value || '',
+    pincode: document.getElementById('custPincode')?.value || '',
+    notes: document.getElementById('custNotes')?.value || '',
+    coupon: document.getElementById('couponInput')?.value || ''
+  };
 
   renderCheckout();
 
   // Restore form values
   if (document.getElementById('custName')) {
-    document.getElementById('custName').value = name;
-    document.getElementById('custEmail').value = email;
-    document.getElementById('custPhone').value = phone;
-    document.getElementById('custAddress').value = address;
-    document.getElementById('custCity').value = city;
-    document.getElementById('custState').value = state;
-    document.getElementById('custPincode').value = pincode;
-    document.getElementById('custNotes').value = notes;
-    document.getElementById('couponInput').value = couponVal;
+    document.getElementById('custName').value = savedForm.name;
+    document.getElementById('custEmail').value = savedForm.email;
+    document.getElementById('custPhone').value = savedForm.phone;
+    document.getElementById('custAddress').value = savedForm.address;
+    document.getElementById('custCity').value = savedForm.city;
+    document.getElementById('custState').value = savedForm.state;
+    document.getElementById('custPincode').value = savedForm.pincode;
+    document.getElementById('custNotes').value = savedForm.notes;
+    document.getElementById('couponInput').value = savedForm.coupon;
   }
 
-  // Re-apply coupon if it was applied
   if (appliedCoupon) updateTotalsUI();
 }
 
