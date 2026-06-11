@@ -276,6 +276,11 @@ function renderProduct(p) {
         ${p.originalPrice ? `<span class="original-price">₹${p.originalPrice.toLocaleString()}</span>` : ''}
         ${discount > 0 ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
       </div>
+      <div style="margin-bottom:16px;">
+        ${(p.stock === 0) ? '<span style="color:#E05252;font-size:13px;font-weight:500;">● Out of Stock</span>' :
+          (p.stock !== undefined && p.stock <= 5) ? `<span style="color:#E0A030;font-size:13px;font-weight:500;">● Only ${p.stock} left in stock</span>` :
+          '<span style="color:#3CB371;font-size:13px;font-weight:500;">● In Stock</span>'}
+      </div>
       <p class="product-description">${description}</p>
       <div class="product-features">
         <h3>Highlights</h3>
@@ -290,8 +295,10 @@ function renderProduct(p) {
         </div>
       </div>
       <div class="action-buttons">
-        <button class="btn-add-cart" id="addToCartBtn">Add to Cart</button>
-        <button class="btn-buy-now" id="buyNowBtn">Buy Now</button>
+        <button class="btn-add-cart" id="addToCartBtn" ${p.stock === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+          ${p.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+        </button>
+        <button class="btn-buy-now" id="buyNowBtn" ${p.stock === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>Buy Now</button>
       </div>
       <div class="trust-badges">
         <div class="trust-badge-item">

@@ -24,11 +24,26 @@ const CLOUDINARY_UPLOAD_PRESET = "spec-interior-store";
 // Razorpay config
 const RAZORPAY_KEY_ID = "rzp_test_SphB04wind6znp";
 
+// EmailJS config
+const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
+const EMAILJS_ORDER_TEMPLATE_ID = "YOUR_EMAILJS_ORDER_TEMPLATE_ID";
+const EMAILJS_ADMIN_TEMPLATE_ID = "YOUR_EMAILJS_ADMIN_TEMPLATE_ID";
+
+// Coupon codes
+const COUPON_CODES = {
+  'LUMERA10': { type: 'percent', value: 10, minOrder: 500, description: '10% off' },
+  'SPEC200': { type: 'flat', value: 200, minOrder: 1500, description: '₹200 off' },
+  'WELCOME15': { type: 'percent', value: 15, minOrder: 1000, description: '15% off for new customers' }
+};
+
 export {
   db, auth, app,
   collection, addDoc, getDocs, doc, updateDoc, deleteDoc,
   query, orderBy, where, onSnapshot, getDoc, setDoc,
   signInWithEmailAndPassword, signOut, onAuthStateChanged,
   GoogleAuthProvider, signInWithPopup,
-  CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, RAZORPAY_KEY_ID
+  CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, RAZORPAY_KEY_ID,
+  EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_ORDER_TEMPLATE_ID, EMAILJS_ADMIN_TEMPLATE_ID,
+  COUPON_CODES
 };

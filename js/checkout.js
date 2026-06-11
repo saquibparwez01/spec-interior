@@ -2,6 +2,7 @@
 import { RAZORPAY_KEY_ID } from './firebase-config.js';
 import { createOrder } from './orders.js';
 import { getCart, getCartTotal, clearCart } from './cart.js';
+import { reduceStock } from './products.js';
 
 /**
  * Generate a simple order ID
@@ -13,9 +14,10 @@ function generateOrderId() {
 /**
  * Initiate Razorpay payment
  * @param {Object} customerInfo - { name, email, phone, address, city, state, pincode, notes }
+ * @param {Object} pricing - { subtotal, shipping, discount, couponCode, grandTotal }
  * @returns {Promise<Object>} - The created order
  */
-export function initiatePayment(customerInfo) {
+export function initiatePayment(customerInfo, pricing = null) {
   return new Promise((resolve, reject) => {
     const cart = getCart();
     if (cart.length === 0) {
@@ -23,7 +25,7 @@ export function initiatePayment(customerInfo) {
       return;
     }
 
-    const total = getCartTotal();
+    const total = pricing ? pricing.grandTotal : getCartTotal();
     const orderId = generateOrderId();
 
     const options = {
@@ -47,11 +49,17 @@ export function initiatePayment(customerInfo) {
               price: item.price,
               qty: item.qty
             })),
+            subtotal: pricing ? pricing.subtotal : getCartTotal(),
+            shipping: pricing ? pricing.shipping : 0,
+            discount: pricing ? pricing.discount : 0,
+            couponCode: pricing ? pricing.couponCode : null,
             total,
             payment: 'online',
             paymentId: response.razorpay_payment_id,
             notes: customerInfo.notes || ''
           });
+          // Reduce stock
+          await reduceStock(cart);
           clearCart();
           resolve(order);
         } catch (err) {
@@ -64,7 +72,7 @@ export function initiatePayment(customerInfo) {
         contact: customerInfo.phone
       },
       theme: {
-        color: '#C4714A'
+        color: '#4A5D3E'
       },
       modal: {
         ondismiss: function () {
@@ -80,12 +88,13 @@ export function initiatePayment(customerInfo) {
 
 /**
  * Create a COD (Cash on Delivery) order without payment
+ * @param {Object} pricing - { subtotal, shipping, discount, couponCode, grandTotal }
  */
-export async function createCODOrder(customerInfo) {
+export async function createCODOrder(customerInfo, pricing = null) {
   const cart = getCart();
   if (cart.length === 0) throw new Error('Cart is empty');
 
-  const total = getCartTotal();
+  const total = pricing ? pricing.grandTotal : getCartTotal();
   const orderId = generateOrderId();
 
   const order = await createOrder({
@@ -100,12 +109,18 @@ export async function createCODOrder(customerInfo) {
       price: item.price,
       qty: item.qty
     })),
+    subtotal: pricing ? pricing.subtotal : getCartTotal(),
+    shipping: pricing ? pricing.shipping : 0,
+    discount: pricing ? pricing.discount : 0,
+    couponCode: pricing ? pricing.couponCode : null,
     total,
     payment: 'cod',
     paymentId: null,
     notes: customerInfo.notes || ''
   });
 
+  // Reduce stock
+  await reduceStock(cart);
   clearCart();
   return order;
 }
