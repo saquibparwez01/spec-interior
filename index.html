@@ -1166,60 +1166,25 @@
     <button id="soundNo" style="padding:8px 20px;background:transparent;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.2);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;">No thanks</button>
   </div>
 
-  <!-- Ambient Sound Control (floating button) -->
-  <button id="soundToggle" style="display:none;position:fixed;bottom:24px;left:24px;z-index:9996;width:44px;height:44px;border-radius:50%;background:var(--brown);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.2);align-items:center;justify-content:center;transition:transform 0.2s,background 0.2s;" title="Toggle ambient sound">
-    <svg id="soundIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>
-    <svg id="muteIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-  </button>
-
-  <audio id="ambientAudio" loop preload="none">
-    <source src="ambient.mp3" type="audio/mpeg"/>
-  </audio>
-
+  <!-- Ambient Sound Script -->
+  <script src="js/ambient.js"></script>
   <script>
     (function() {
-      const popup = document.getElementById('soundPopup');
-      const audio = document.getElementById('ambientAudio');
-      const toggle = document.getElementById('soundToggle');
-      const soundIcon = document.getElementById('soundIcon');
-      const muteIcon = document.getElementById('muteIcon');
-      let isPlaying = false;
-
-      // Show popup after a short delay for better UX
-      setTimeout(function() {
-        popup.style.display = 'flex';
-      }, 1500);
+      // Only show popup if user hasn't made a choice yet
+      if (!window.specAmbient.isActive()) {
+        setTimeout(function() {
+          document.getElementById('soundPopup').style.display = 'flex';
+        }, 1500);
+      }
 
       document.getElementById('soundYes').addEventListener('click', function() {
-        popup.style.display = 'none';
-        audio.volume = 0.3;
-        audio.play().then(function() {
-          isPlaying = true;
-          toggle.style.display = 'flex';
-        }).catch(function() {
-          toggle.style.display = 'flex';
-        });
+        document.getElementById('soundPopup').style.display = 'none';
+        window.specAmbient.play();
       });
 
       document.getElementById('soundNo').addEventListener('click', function() {
-        popup.style.display = 'none';
-      });
-
-      toggle.addEventListener('click', function() {
-        if (isPlaying) {
-          audio.pause();
-          isPlaying = false;
-          soundIcon.style.display = 'none';
-          muteIcon.style.display = 'block';
-          toggle.style.background = '#7A7E72';
-        } else {
-          audio.volume = 0.3;
-          audio.play();
-          isPlaying = true;
-          soundIcon.style.display = 'block';
-          muteIcon.style.display = 'none';
-          toggle.style.background = 'var(--brown)';
-        }
+        document.getElementById('soundPopup').style.display = 'none';
+        localStorage.setItem('specAmbientSound', 'dismissed');
       });
     })();
   </script>
