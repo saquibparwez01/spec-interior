@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin.html
+Disallow: /invoice.html
+Disallow: /checkout.html
+
+Sitemap: https://specinterior.com/sitemap.xml
