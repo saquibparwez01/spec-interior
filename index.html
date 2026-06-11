@@ -652,6 +652,32 @@
       justify-content: center;
     }
     .add-btn:hover { background: var(--brown); transform: scale(1.1); }
+    .cart-qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cart-qty-controls button {
+      width: 28px; height: 28px;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--brown);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .cart-qty-controls button:hover { background: var(--sand); }
+    .cart-qty-controls .qty-num {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--brown);
+      min-width: 18px;
+      text-align: center;
+    }
 
     /* ── STORY SECTION ── */
     .story {
@@ -1803,7 +1829,7 @@
 
   <script type="module">
     import { getProducts, onProductsChange } from './js/products.js';
-    import { addToCart, getCartCount, updateCartBadge } from './js/cart.js';
+    import { addToCart, getCart, getCartCount, updateCartBadge, updateQty, removeFromCart } from './js/cart.js';
 
     // Initialize cart badge
     updateCartBadge();
@@ -1923,19 +1949,16 @@
     }
 
     function attachProductListeners() {
-      // Add to cart
+      // Add to cart with +/- controls
       document.querySelectorAll('.add-btn').forEach(btn => {
-        // Skip if already has listener
         if (btn.dataset.listening) return;
         btn.dataset.listening = 'true';
 
         btn.addEventListener('click', function() {
           let product;
           if (this.dataset.product) {
-            // Dynamic product from Firebase
             product = JSON.parse(this.dataset.product);
           } else {
-            // Static product — extract info from the card
             const card = this.closest('.product-card');
             const name = card.querySelector('.product-name')?.textContent || 'Product';
             const priceText = card.querySelector('.price-sale')?.textContent || '0';
@@ -1943,14 +1966,54 @@
             product = { id: 'static-' + name.replace(/\s+/g, '-').toLowerCase(), name, price, image: '', color1: '#8B5E3C', color2: '#C4714A' };
           }
           addToCart(product);
-          this.textContent = '✓';
-          this.style.background = 'var(--gold)';
-          setTimeout(() => {
-            this.textContent = '+';
-            this.style.background = 'var(--terracotta)';
-          }, 1200);
+          showQtyControls(this, product);
         });
+
+        // Check if item already in cart — show controls
+        if (btn.dataset.product) {
+          const product = JSON.parse(btn.dataset.product);
+          const cartItems = getCart();
+          const inCart = cartItems.find(i => i.id === product.id);
+          if (inCart) showQtyControls(btn, product);
+        }
       });
+    }
+
+    function showQtyControls(btn, product) {
+      const cartItems = getCart();
+      const inCart = cartItems.find(i => i.id === product.id);
+      const qty = inCart ? inCart.qty : 0;
+
+      if (qty === 0) {
+        // Show add button again
+        btn.style.display = 'flex';
+        const controls = btn.parentElement.querySelector('.cart-qty-controls');
+        if (controls) controls.remove();
+        return;
+      }
+
+      btn.style.display = 'none';
+      let controls = btn.parentElement.querySelector('.cart-qty-controls');
+      if (!controls) {
+        controls = document.createElement('div');
+        controls.className = 'cart-qty-controls';
+        btn.parentElement.appendChild(controls);
+      }
+      controls.innerHTML = `<button class="cq-dec">−</button><span class="qty-num">${qty}</span><button class="cq-inc">+</button>`;
+
+      controls.querySelector('.cq-inc').addEventListener('click', () => {
+        updateQty(product.id, qty + 1);
+        showQtyControls(btn, product);
+      });
+      controls.querySelector('.cq-dec').addEventListener('click', () => {
+        if (qty > 1) {
+          updateQty(product.id, qty - 1);
+        } else {
+          removeFromCart(product.id);
+        }
+        showQtyControls(btn, product);
+      });
+    }
 
       // Wishlist toggle
       document.querySelectorAll('.wishlist-btn').forEach(btn => {

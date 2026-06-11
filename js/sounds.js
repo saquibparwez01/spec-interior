@@ -35,6 +35,25 @@
     } catch (e) {}
   }
 
+  // Cart remove sound — soft descending tone
+  function playRemoveSound() {
+    if (!isSoundEnabled()) return;
+    try {
+      const ctx = getContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(500, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(250, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.2);
+    } catch (e) {}
+  }
+
   // Product tap sound — soft click
   function playTapSound() {
     if (!isSoundEnabled()) return;
@@ -59,15 +78,19 @@
     playCartSound();
   });
 
-  // Attach to product card clicks
+  // Attach to product card clicks and remove buttons
   document.addEventListener('click', function(e) {
     const productCard = e.target.closest('.product-card, .rec-card, .cat-card');
-    const isCartBtn = e.target.closest('.btn-add-cart, .add-to-cart-btn, [id="addToCartBtn"], .cart-add-btn');
+    const isCartBtn = e.target.closest('.btn-add-cart, .add-to-cart-btn, [id="addToCartBtn"], .cart-add-btn, .add-btn, .cq-inc');
+    const isRemoveBtn = e.target.closest('.remove-item-btn, .qty-dec-btn, .cq-dec');
     
-    // Don't play tap sound if it's the cart button (cart sound will play instead via cartUpdated event)
-    if (productCard && !isCartBtn) playTapSound();
+    // Don't play tap sound if it's a cart/remove button
+    if (productCard && !isCartBtn && !isRemoveBtn) playTapSound();
+
+    // Play remove sound
+    if (isRemoveBtn) playRemoveSound();
   });
 
   // Expose globally
-  window.specSounds = { playCartSound, playTapSound };
+  window.specSounds = { playCartSound, playTapSound, playRemoveSound };
 })();
