@@ -88,38 +88,3 @@ export async function reduceStock(cartItems) {
     }
   }
 }
-
-/**
- * Send WhatsApp notification to admin about new order
- */
-export function sendWhatsAppNotification(order, customerInfo) {
-  const adminPhone = '919654535236';
-  const items = order.items ? order.items.map(i => `• ${i.name} x${i.qty}`).join('\n') : '';
-  const message = `🛒 *New Order Received!*\n\n` +
-    `*Order ID:* #${order.orderId || order.id}\n` +
-    `*Customer:* ${customerInfo.name}\n` +
-    `*Phone:* ${customerInfo.phone}\n` +
-    `*Email:* ${customerInfo.email}\n\n` +
-    `*Items:*\n${items}\n\n` +
-    `*Total:* ₹${order.total.toLocaleString()}\n` +
-    `*Payment:* ${order.payment === 'cod' ? 'COD' : 'Online'}\n` +
-    `*Address:* ${customerInfo.address}, ${customerInfo.city}, ${customerInfo.state} ${customerInfo.pincode}\n\n` +
-    `Check admin panel for details.`;
-
-  // Open WhatsApp with pre-filled message to admin (for manual send / automation)
-  const adminUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
-
-  // Send WhatsApp confirmation to customer
-  const customerMessage = `Hi ${customerInfo.name}! 🙏\n\n` +
-    `Thank you for your order at *Spec Interior*!\n\n` +
-    `*Order ID:* #${order.orderId || order.id}\n` +
-    `*Total:* ₹${order.total.toLocaleString()}\n` +
-    `*Payment:* ${order.payment === 'cod' ? 'Cash on Delivery' : 'Paid Online'}\n\n` +
-    `Your order will be delivered in 7–10 business days.\n\n` +
-    `For any queries, reply here or call us at +91 96545 35236.\n\n` +
-    `— Team Spec Interior 🌿`;
-
-  const customerUrl = `https://wa.me/91${customerInfo.phone}?text=${encodeURIComponent(customerMessage)}`;
-
-  return { adminUrl, customerUrl };
-}
