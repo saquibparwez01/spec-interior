@@ -324,11 +324,15 @@ function renderProduct(p) {
   `;
 
   // Qty controls
+  const maxStock = p.stock ?? 99;
   document.getElementById('qtyMinus').addEventListener('click', () => {
     if (qty > 1) { qty--; document.getElementById('qtyValue').textContent = qty; }
   });
   document.getElementById('qtyPlus').addEventListener('click', () => {
-    qty++; document.getElementById('qtyValue').textContent = qty;
+    if (qty < maxStock) {
+      qty++;
+      document.getElementById('qtyValue').textContent = qty;
+    }
   });
 
   // Add to cart
