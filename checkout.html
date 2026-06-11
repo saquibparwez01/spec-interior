@@ -497,6 +497,12 @@ function showSuccess(order, customerInfo, pricing) {
 
 renderCheckout();
 </script>
-<script src="js/ambient.js"></script>
+<script>
+  // Pause ambient sound on checkout page
+  const ambientAudio = document.getElementById('ambientAudio');
+  if (ambientAudio) ambientAudio.pause();
+  // Also prevent ambient.js from auto-playing on this page
+  localStorage.setItem('specAmbientCheckout', 'paused');
+</script>
 </body>
 </html>
