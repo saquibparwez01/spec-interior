@@ -379,7 +379,7 @@ function renderCheckout() {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
       removeFromCart(id);
-      location.reload();
+      refreshCart();
     });
   });
 
@@ -388,15 +388,15 @@ function renderCheckout() {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
       const item = cart.find(i => i.id === id);
-      if (item) { updateQty(id, item.qty + 1); location.reload(); }
+      if (item) { updateQty(id, item.qty + 1); refreshCart(); }
     });
   });
   document.querySelectorAll('.qty-dec-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
       const item = cart.find(i => i.id === id);
-      if (item && item.qty > 1) { updateQty(id, item.qty - 1); location.reload(); }
-      else if (item && item.qty === 1) { removeFromCart(id); location.reload(); }
+      if (item && item.qty > 1) { updateQty(id, item.qty - 1); refreshCart(); }
+      else if (item && item.qty === 1) { removeFromCart(id); refreshCart(); }
     });
   });
 
@@ -514,6 +514,51 @@ function showSuccess(order, customerInfo, pricing) {
       <a href="index.html">← Continue Shopping</a>
     </div>
   `;
+}
+
+function refreshCart() {
+  // Update cart reference
+  cart.length = 0;
+  getCart().forEach(i => cart.push(i));
+
+  if (cart.length === 0) {
+    content.innerHTML = `
+      <div class="empty-cart">
+        <h2>Your cart is empty</h2>
+        <p>Add some beautiful handcrafted pieces to your cart first.</p>
+        <a href="index.html">← Continue Shopping</a>
+      </div>`;
+    return;
+  }
+
+  // Re-render the whole checkout (preserves form data)
+  const name = document.getElementById('custName')?.value || '';
+  const email = document.getElementById('custEmail')?.value || '';
+  const phone = document.getElementById('custPhone')?.value || '';
+  const address = document.getElementById('custAddress')?.value || '';
+  const city = document.getElementById('custCity')?.value || '';
+  const state = document.getElementById('custState')?.value || '';
+  const pincode = document.getElementById('custPincode')?.value || '';
+  const notes = document.getElementById('custNotes')?.value || '';
+  const couponVal = document.getElementById('couponInput')?.value || '';
+
+  renderCheckout();
+
+  // Restore form values
+  if (document.getElementById('custName')) {
+    document.getElementById('custName').value = name;
+    document.getElementById('custEmail').value = email;
+    document.getElementById('custPhone').value = phone;
+    document.getElementById('custAddress').value = address;
+    document.getElementById('custCity').value = city;
+    document.getElementById('custState').value = state;
+    document.getElementById('custPincode').value = pincode;
+    document.getElementById('custNotes').value = notes;
+    document.getElementById('couponInput').value = couponVal;
+  }
+
+  // Re-apply coupon if it was applied
+  if (appliedCoupon) updateTotalsUI();
 }
 
 renderCheckout();
