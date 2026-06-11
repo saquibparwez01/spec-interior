@@ -1,6 +1,13 @@
 // UI Sound Effects Module
 (function() {
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  let audioContext = null;
+
+  function getContext() {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioContext;
+  }
   
   // Check if user enabled sounds
   function isSoundEnabled() {
@@ -12,18 +19,19 @@
   function playCartSound() {
     if (!isSoundEnabled()) return;
     try {
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
+      const ctx = getContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       osc.connect(gain);
-      gain.connect(audioContext.destination);
+      gain.connect(ctx.destination);
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(600, audioContext.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.08);
-      osc.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
-      osc.start(audioContext.currentTime);
-      osc.stop(audioContext.currentTime + 0.25);
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.25);
     } catch (e) {}
   }
 
@@ -31,27 +39,33 @@
   function playTapSound() {
     if (!isSoundEnabled()) return;
     try {
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
+      const ctx = getContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       osc.connect(gain);
-      gain.connect(audioContext.destination);
+      gain.connect(ctx.destination);
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, audioContext.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.06);
-      gain.gain.setValueAtTime(0.08, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-      osc.start(audioContext.currentTime);
-      osc.stop(audioContext.currentTime + 0.1);
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.1);
     } catch (e) {}
   }
+
+  // Listen for cart updates (fired by cart.js saveCart)
+  window.addEventListener('cartUpdated', function() {
+    playCartSound();
+  });
 
   // Attach to product card clicks
   document.addEventListener('click', function(e) {
     const productCard = e.target.closest('.product-card, .rec-card, .cat-card');
-    if (productCard) playTapSound();
-
-    const addCartBtn = e.target.closest('.btn-add-cart, .add-to-cart-btn, [id="addToCartBtn"]');
-    if (addCartBtn) playCartSound();
+    const isCartBtn = e.target.closest('.btn-add-cart, .add-to-cart-btn, [id="addToCartBtn"], .cart-add-btn');
+    
+    // Don't play tap sound if it's the cart button (cart sound will play instead via cartUpdated event)
+    if (productCard && !isCartBtn) playTapSound();
   });
 
   // Expose globally
