@@ -107,16 +107,25 @@
 </div>
 
 <script type="module">
-import { db, doc, getDoc } from './js/firebase-config.js';
+import { db, doc, getDoc, auth, onAuthStateChanged } from './js/firebase-config.js';
 
-const params = new URLSearchParams(window.location.search);
-const orderId = params.get('id');
+const ALLOWED_ADMINS = ['saquibparwez18@gmail.com', 'saquibparwez@specinterior.com'];
 
-if (!orderId) {
-  document.getElementById('invoiceLoading').innerHTML = 'No order ID provided. <a href="admin.html">Go back</a>';
-} else {
-  loadInvoice(orderId);
-}
+// Auth check — only admin can view invoices
+onAuthStateChanged(auth, (user) => {
+  if (!user || !ALLOWED_ADMINS.includes(user.email)) {
+    document.getElementById('invoiceLoading').innerHTML = 'Access denied. <a href="admin.html">Login as admin</a>';
+    return;
+  }
+  // User is admin, proceed
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('id');
+  if (!orderId) {
+    document.getElementById('invoiceLoading').innerHTML = 'No order ID provided. <a href="admin.html">Go back</a>';
+  } else {
+    loadInvoice(orderId);
+  }
+});
 
 async function loadInvoice(id) {
   try {

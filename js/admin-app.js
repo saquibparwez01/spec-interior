@@ -6,6 +6,12 @@ import {
   CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET
 } from './firebase-config.js';
 
+// ─── XSS PROTECTION ─────────────────────────────────
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // ─── STATE ──────────────────────────────────────────
 let productsCache = [];
 let ordersCache = [];
@@ -220,14 +226,14 @@ window.viewOrder = function(id) {
   if (!o) return;
   document.getElementById('orderDetailContent').innerHTML = `
     <div class="order-detail-grid">
-      <div class="detail-item"><label>Order ID</label><div class="val">#${o.orderId||o.id.slice(0,8)}</div></div>
+      <div class="detail-item"><label>Order ID</label><div class="val">#${esc(o.orderId||o.id.slice(0,8))}</div></div>
       <div class="detail-item"><label>Date</label><div class="val">${new Date(o.createdAt||o.date).toLocaleString('en-IN')}</div></div>
-      <div class="detail-item"><label>Customer</label><div class="val">${o.customer||'—'}</div></div>
-      <div class="detail-item"><label>Phone</label><div class="val">${o.phone||'—'}</div></div>
-      <div class="detail-item"><label>Email</label><div class="val">${o.email||'—'}</div></div>
+      <div class="detail-item"><label>Customer</label><div class="val">${esc(o.customer||'—')}</div></div>
+      <div class="detail-item"><label>Phone</label><div class="val">${esc(o.phone||'—')}</div></div>
+      <div class="detail-item"><label>Email</label><div class="val">${esc(o.email||'—')}</div></div>
       <div class="detail-item"><label>Payment</label><div class="val">${payLabel(o.payment)}</div></div>
-      <div class="detail-item" style="grid-column:span 2"><label>Address</label><div class="val">${o.address||'—'}</div></div>
-      ${o.notes?`<div class="detail-item" style="grid-column:span 2"><label>Notes</label><div class="val">${o.notes}</div></div>`:''}
+      <div class="detail-item" style="grid-column:span 2"><label>Address</label><div class="val">${esc(o.address||'—')}</div></div>
+      ${o.notes?`<div class="detail-item" style="grid-column:span 2"><label>Notes</label><div class="val">${esc(o.notes)}</div></div>`:''}
     </div>
     <div class="order-items-list">
       <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Items Ordered</div>
@@ -523,16 +529,16 @@ window.viewMessage = function(id) {
   if (m.status === 'unread') markRead(id);
   document.getElementById('orderDetailContent').innerHTML = `
     <div class="order-detail-grid">
-      <div class="detail-item"><label>Name</label><div class="val">${m.name||'—'}</div></div>
+      <div class="detail-item"><label>Name</label><div class="val">${esc(m.name||'—')}</div></div>
       <div class="detail-item"><label>Date</label><div class="val">${new Date(m.createdAt).toLocaleString('en-IN')}</div></div>
-      <div class="detail-item"><label>Email</label><div class="val">${m.email||'—'}</div></div>
-      <div class="detail-item"><label>Phone</label><div class="val">${m.phone||'—'}</div></div>
-      <div class="detail-item"><label>Subject</label><div class="val">${m.subject||'—'}</div></div>
+      <div class="detail-item"><label>Email</label><div class="val">${esc(m.email||'—')}</div></div>
+      <div class="detail-item"><label>Phone</label><div class="val">${esc(m.phone||'—')}</div></div>
+      <div class="detail-item"><label>Subject</label><div class="val">${esc(m.subject||'—')}</div></div>
       <div class="detail-item"><label>Method</label><div class="val">${m.method==='whatsapp'?'WhatsApp':'Direct Form'}</div></div>
     </div>
     <div class="order-items-list" style="margin-top:16px;">
       <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Message</div>
-      <p style="font-size:14px;color:var(--text);line-height:1.7;">${m.message||'No message'}</p>
+      <p style="font-size:14px;color:var(--text);line-height:1.7;">${esc(m.message||'No message')}</p>
     </div>
   `;
   document.getElementById('orderModal').classList.add('open');

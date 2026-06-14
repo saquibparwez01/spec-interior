@@ -251,7 +251,10 @@ async function sendEmailNotifications(order, customerInfo, cart) {
   try {
     const response = await fetch('https://yellow-snow-d1e7.saquibparwez18.workers.dev/', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': 'spec-interior-2025-secure'
+      },
       body: JSON.stringify({
         orderId: order.orderId || order.id,
         customerName: customerInfo.name,
