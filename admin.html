@@ -222,6 +222,10 @@
     Messages
     <span class="nav-badge" id="msgBadge">0</span>
   </div>
+  <div class="nav-item" data-tab="coupons">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 01-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 00-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>
+    Coupons
+  </div>
 
   <div class="sidebar-footer">
     <a class="view-store-btn" href="index.html" target="_blank">
@@ -345,6 +349,18 @@
       </div>
     </div>
 
+    <!-- COUPONS TAB -->
+    <div class="tab-panel" id="tab-coupons">
+      <div class="table-wrap">
+        <div class="table-header">
+          <h3>Coupon Codes</h3>
+          <button class="topbar-btn btn-accent" onclick="openAddCoupon()">+ Add Coupon</button>
+        </div>
+        <table><thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Order</th><th>Description</th><th>Actions</th></tr></thead>
+        <tbody id="couponsBody"></tbody></table>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -417,6 +433,29 @@
     <div id="orderDetailContent"></div>
     <div class="modal-actions" style="margin-top:20px;">
       <button class="modal-close-btn" onclick="document.getElementById('orderModal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- COUPON MODAL -->
+<div class="modal-bg" id="couponModal">
+  <div class="modal-box">
+    <h3 id="couponModalTitle">Add Coupon</h3>
+    <input type="hidden" id="editCouponId"/>
+    <div class="form-group"><label>Coupon Code</label><input type="text" id="cCode" placeholder="e.g. DIWALI20" style="text-transform:uppercase;"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Discount Type</label>
+        <select id="cType"><option value="percent">Percentage (%)</option><option value="flat">Flat (₹)</option></select>
+      </div>
+      <div class="form-group"><label>Value</label><input type="number" id="cValue" placeholder="10"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Minimum Order (₹)</label><input type="number" id="cMinOrder" placeholder="500"/></div>
+      <div class="form-group"><label>Description</label><input type="text" id="cDesc" placeholder="10% off on all orders"/></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-close-btn" onclick="document.getElementById('couponModal').classList.remove('open')">Cancel</button>
+      <button class="modal-save" onclick="saveCoupon()">Save Coupon</button>
     </div>
   </div>
 </div>

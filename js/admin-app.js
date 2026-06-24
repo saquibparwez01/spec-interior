@@ -211,7 +211,7 @@ window.renderOrders = function() {
         </select>
       </td>
       <td style="color:var(--muted);">${new Date(o.createdAt||o.date).toLocaleDateString('en-IN')}</td>
-      <td><button class="action-btn action-view" onclick="viewOrder('${o.id}')">View</button> <button class="action-btn action-edit" onclick="window.open('invoice.html?id=${o.id}','_blank')">Invoice</button></td>
+      <td><button class="action-btn action-view" onclick="viewOrder('${o.id}')">View</button> <button class="action-btn action-edit" onclick="window.open('invoice.html?id=${o.id}','_blank')">Invoice</button> <button class="action-btn action-del" onclick="deleteOrder('${o.id}')">Delete</button></td>
     </tr>
   `).join('') : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:30px;">No orders found</td></tr>';
 };
@@ -466,6 +466,7 @@ function loadTab(tab) {
   if (tab === 'payments') renderPayments();
   if (tab === 'customers') renderCustomers();
   if (tab === 'messages') renderMessages();
+  if (tab === 'coupons') renderCoupons();
 }
 window.loadAll = function() { loadDashboard(); };
 
@@ -487,6 +488,7 @@ async function init() {
   listenProducts();
   listenOrders();
   listenMessages();
+  listenCoupons();
   loadDashboard();
 }
 
@@ -549,3 +551,100 @@ window.markRead = async function(id) {
   showToast('Marked as read');
 };
 
+
+// ─── COUPONS ─────────────────────────────────────────
+let couponsCache = [];
+
+function listenCoupons() {
+  const q = query(collection(db, 'coupons'), orderBy('code'));
+  onSnapshot(q, (snap) => {
+    couponsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (document.getElementById('tab-coupons').classList.contains('active')) renderCoupons();
+  });
+}
+
+window.renderCoupons = function() {
+  document.getElementById('couponsBody').innerHTML = couponsCache.length ? couponsCache.map(c => `
+    <tr>
+      <td style="font-weight:600;color:var(--accent2);letter-spacing:0.05em;">${esc(c.code)}</td>
+      <td><span class="badge ${c.type === 'percent' ? 'badge-processing' : 'badge-shipped'}">${c.type === 'percent' ? 'Percentage' : 'Flat'}</span></td>
+      <td style="font-weight:500;">${c.type === 'percent' ? c.value + '%' : '₹' + c.value}</td>
+      <td>₹${(c.minOrder || 0).toLocaleString()}</td>
+      <td style="color:var(--muted);">${esc(c.description || '—')}</td>
+      <td><div style="display:flex;gap:6px;">
+        <button class="action-btn action-edit" onclick="openEditCoupon('${c.id}')">Edit</button>
+        <button class="action-btn action-del" onclick="deleteCoupon('${c.id}')">Delete</button>
+      </div></td>
+    </tr>
+  `).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px;">No coupons. Click "+ Add Coupon" to create one.</td></tr>';
+};
+
+window.openAddCoupon = function() {
+  document.getElementById('couponModalTitle').textContent = 'Add Coupon';
+  document.getElementById('editCouponId').value = '';
+  document.getElementById('cCode').value = '';
+  document.getElementById('cType').value = 'percent';
+  document.getElementById('cValue').value = '';
+  document.getElementById('cMinOrder').value = '';
+  document.getElementById('cDesc').value = '';
+  document.getElementById('couponModal').classList.add('open');
+};
+
+window.openEditCoupon = function(id) {
+  const c = couponsCache.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('couponModalTitle').textContent = 'Edit Coupon';
+  document.getElementById('editCouponId').value = c.id;
+  document.getElementById('cCode').value = c.code;
+  document.getElementById('cType').value = c.type;
+  document.getElementById('cValue').value = c.value;
+  document.getElementById('cMinOrder').value = c.minOrder || '';
+  document.getElementById('cDesc').value = c.description || '';
+  document.getElementById('couponModal').classList.add('open');
+};
+
+window.saveCoupon = async function() {
+  const code = document.getElementById('cCode').value.trim().toUpperCase();
+  const type = document.getElementById('cType').value;
+  const value = parseInt(document.getElementById('cValue').value);
+  const minOrder = parseInt(document.getElementById('cMinOrder').value) || 0;
+  const description = document.getElementById('cDesc').value.trim();
+  const editId = document.getElementById('editCouponId').value;
+
+  if (!code || !value) { showToast('Code and value are required', true); return; }
+
+  const couponData = { code, type, value, minOrder, description };
+
+  try {
+    if (editId) {
+      await updateDoc(doc(db, 'coupons', editId), couponData);
+      showToast('Coupon updated!');
+    } else {
+      await addDoc(collection(db, 'coupons'), couponData);
+      showToast('Coupon created!');
+    }
+    document.getElementById('couponModal').classList.remove('open');
+  } catch (e) {
+    showToast('Error: ' + e.message, true);
+  }
+};
+
+window.deleteCoupon = async function(id) {
+  if (!confirm('Delete this coupon?')) return;
+  try {
+    await deleteDoc(doc(db, 'coupons', id));
+    showToast('Coupon deleted');
+  } catch (e) { showToast('Error: ' + e.message, true); }
+};
+
+// Close coupon modal on backdrop
+document.getElementById('couponModal').addEventListener('click', e => { if(e.target===document.getElementById('couponModal')) document.getElementById('couponModal').classList.remove('open'); });
+
+// ─── DELETE ORDER ────────────────────────────────────
+window.deleteOrder = async function(id) {
+  if (!confirm('Delete this order? This cannot be undone.')) return;
+  try {
+    await deleteDoc(doc(db, 'orders', id));
+    showToast('Order deleted');
+  } catch (e) { showToast('Error: ' + e.message, true); }
+};
