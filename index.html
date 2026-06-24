@@ -499,16 +499,21 @@
     }
 
     .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      display: flex;
       gap: 14px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      scrollbar-width: none;
     }
+    .cat-grid::-webkit-scrollbar { display: none; }
 
     .cat-card {
       position: relative;
       border-radius: 12px;
       overflow: hidden;
-      aspect-ratio: 3/2;
+      aspect-ratio: 1;
+      flex: 0 0 200px;
       cursor: pointer;
       text-decoration: none;
       display: block;
@@ -1070,8 +1075,8 @@
 
       /* Categories */
       .categories { padding: 40px 16px; }
-      .cat-grid { display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px; }
-      .cat-card { flex: 0 0 140px; aspect-ratio: 1; border-radius: 10px; }
+      .cat-grid { gap: 10px; }
+      .cat-card { flex: 0 0 160px; border-radius: 10px; }
       .cat-info { padding: 10px; }
       .cat-tag { font-size: 7px; letter-spacing: 0.08em; margin-bottom: 2px; }
       .cat-name { font-size: 12px; }
@@ -1141,7 +1146,7 @@
 
     @media (max-width: 480px) {
       .hero-title { font-size: 30px; }
-      .cat-card { flex: 0 0 120px; }
+      .cat-card { flex: 0 0 130px; }
       .cat-name { font-size: 11px; }
       .cat-info { padding: 8px; }
       .product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
