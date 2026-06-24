@@ -1742,6 +1742,15 @@
     </div>
   </section>
 
+  <!-- Recently Viewed -->
+  <section class="recommended reveal" id="recentlyViewedSection" style="display:none;background:var(--warm-white);">
+    <div class="section-header">
+      <div class="section-eyebrow">Recently Viewed</div>
+      <h2 class="section-title">Continue <em>browsing</em></h2>
+    </div>
+    <div class="rec-grid" id="recentlyViewedGrid"></div>
+  </section>
+
   <!-- Newsletter -->
   <section class="newsletter reveal">
     <div>
@@ -2239,6 +2248,18 @@
     });
     // Populate search products from Firebase listener
     window.addEventListener('productsLoaded', function(e) { allSearchProducts = e.detail; });
+
+    // Recently Viewed on homepage
+    (function() {
+      const recent = JSON.parse(localStorage.getItem('specRecentlyViewed') || '[]');
+      if (recent.length > 0) {
+        document.getElementById('recentlyViewedSection').style.display = 'block';
+        document.getElementById('recentlyViewedGrid').innerHTML = recent.slice(0, 4).map(p => {
+          const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}"/>` : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${p.color1||'#8B5E3C'},${p.color2||'#4A5D3E'});"></div>`;
+          return `<a href="product.html?id=${p.id}" class="rec-card"><div class="rec-img">${imgHtml}</div><div class="rec-info"><div class="rec-name">${p.name}</div><div class="rec-price">₹${p.price.toLocaleString()}</div></div></a>`;
+        }).join('');
+      }
+    })();
   </script>
 
   <!-- BULK ORDER POPUP -->

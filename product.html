@@ -246,6 +246,7 @@ onProductsChange((products) => {
   }
   renderProduct(product);
   renderRecommended(product);
+  renderRecentlyViewed();
 });
 
 function renderProduct(p) {
@@ -324,6 +325,31 @@ function renderProduct(p) {
           Secure Payment
         </div>
       </div>
+
+      <!-- Pincode Check -->
+      <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border);">
+        <div style="font-size:14px;font-weight:500;color:var(--brown);margin-bottom:10px;">Check Delivery Availability</div>
+        <div style="display:flex;gap:10px;">
+          <input type="text" id="pincodeInput" placeholder="Enter pincode" maxlength="6" style="flex:1;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);background:transparent;outline:none;"/>
+          <button id="pincodeCheck" style="padding:12px 20px;background:var(--terracotta);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;">Check</button>
+        </div>
+        <p id="pincodeResult" style="font-size:13px;margin-top:8px;color:var(--text-muted);"></p>
+      </div>
+
+      <!-- Share Buttons -->
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Share this product:</div>
+        <div style="display:flex;gap:10px;">
+          <a id="shareWhatsApp" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:white;border-radius:50px;font-size:12px;font-weight:500;text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+            WhatsApp
+          </a>
+          <button id="shareCopy" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--sand);color:var(--brown);border:none;border-radius:50px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy Link
+          </button>
+        </div>
+      </div>
     </div>
   `;
 
@@ -365,6 +391,83 @@ function renderProduct(p) {
       svg.setAttribute('fill', 'var(--terracotta)');
     }
   });
+
+  // Share WhatsApp
+  const shareUrl = window.location.href;
+  const shareText = `Check out ${p.name} at Spec Interior — ₹${p.price.toLocaleString()}`;
+  document.getElementById('shareWhatsApp').href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+
+  // Copy link
+  document.getElementById('shareCopy').addEventListener('click', () => {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      const btn = document.getElementById('shareCopy');
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Copied!';
+      setTimeout(() => { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link'; }, 2000);
+    });
+  });
+
+  // Pincode check
+  document.getElementById('pincodeCheck').addEventListener('click', () => {
+    const pin = document.getElementById('pincodeInput').value.trim();
+    const result = document.getElementById('pincodeResult');
+    if (!pin || pin.length !== 6 || !/^\d+$/.test(pin)) {
+      result.textContent = '❌ Please enter a valid 6-digit pincode';
+      result.style.color = 'var(--red)';
+      return;
+    }
+    // All India delivery
+    result.textContent = '✓ Delivery available! Estimated 7–10 business days';
+    result.style.color = 'var(--green)';
+  });
+  document.getElementById('pincodeInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('pincodeCheck').click();
+  });
+
+  // Save to recently viewed
+  saveRecentlyViewed(p);
+}
+
+// Recently viewed
+function saveRecentlyViewed(product) {
+  const key = 'specRecentlyViewed';
+  let recent = JSON.parse(localStorage.getItem(key) || '[]');
+  // Remove if already exists
+  recent = recent.filter(r => r.id !== product.id);
+  // Add to front
+  recent.unshift({ id: product.id, name: product.name, price: product.price, image: product.image || '', color1: product.color1, color2: product.color2 });
+  // Keep only 8
+  recent = recent.slice(0, 8);
+  localStorage.setItem(key, JSON.stringify(recent));
+}
+
+function renderRecentlyViewed() {
+  const key = 'specRecentlyViewed';
+  const recent = JSON.parse(localStorage.getItem(key) || '[]');
+  const currentId = new URLSearchParams(window.location.search).get('id');
+  const filtered = recent.filter(r => r.id !== currentId);
+  if (filtered.length === 0) return;
+
+  const section = document.createElement('section');
+  section.className = 'recommended';
+  section.style.background = 'var(--warm-white)';
+  section.innerHTML = `
+    <div class="section-header">
+      <div class="section-eyebrow">Recently Viewed</div>
+      <h2 class="section-title">Continue <em>browsing</em></h2>
+    </div>
+    <div class="rec-grid">${filtered.slice(0, 4).map(p => {
+      const imgHtml = p.image
+        ? `<img src="${p.image}" alt="${p.name}"/>`
+        : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${p.color1||'#8B5E3C'},${p.color2||'#4A5D3E'});"></div>`;
+      return `<a href="product.html?id=${p.id}" class="rec-card">
+        <div class="rec-img">${imgHtml}</div>
+        <div class="rec-info"><div class="rec-name">${p.name}</div><div class="rec-price">₹${p.price.toLocaleString()}</div></div>
+      </a>`;
+    }).join('')}</div>
+  `;
+  // Insert before footer
+  const footer = document.querySelector('.mini-footer');
+  if (footer) footer.parentNode.insertBefore(section, footer);
 }
 
 function renderRecommended(currentProduct) {
