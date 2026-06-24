@@ -75,4 +75,10 @@ export function updateCartBadge() {
   if (cartBtn) {
     cartBtn.textContent = `Cart (${count})`;
   }
+  // Update mobile cart badge
+  const mobileBadge = document.getElementById('mobileCartBadge');
+  if (mobileBadge) {
+    mobileBadge.textContent = count;
+    mobileBadge.style.display = count > 0 ? 'flex' : 'none';
+  }
 }
