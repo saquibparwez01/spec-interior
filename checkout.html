@@ -153,7 +153,7 @@
 <script type="module">
 import { getCart, getCartTotal, getCartCount, clearCart, removeFromCart, updateQty } from './js/cart.js';
 import { initiatePayment, createCODOrder } from './js/checkout.js';
-import { checkStock } from './js/products.js';
+import { checkStock, verifyCartPrices } from './js/products.js';
 import { COUPON_CODES } from './js/firebase-config.js';
 
 const content = document.getElementById('checkoutContent');
@@ -440,6 +440,21 @@ async function handlePlaceOrder() {
   }
 
   btn.disabled = true;
+  btn.textContent = 'Verifying prices...';
+
+  // Verify cart prices from database (prevents price manipulation)
+  let verifiedCart;
+  try {
+    verifiedCart = await verifyCartPrices(cart);
+    // Update local cart with verified prices
+    cart = verifiedCart;
+  } catch (err) {
+    showToast(err.message || 'Could not verify product prices. Please try again.');
+    btn.disabled = false;
+    btn.textContent = `Place Order — ₹${calculateTotals().grandTotal.toLocaleString()}`;
+    return;
+  }
+
   btn.textContent = 'Checking stock...';
 
   // Check stock availability
@@ -456,10 +471,23 @@ async function handlePlaceOrder() {
     console.warn('Stock check failed, proceeding:', err);
   }
 
+  // Recalculate totals with verified prices
+  const verifiedSubtotal = verifiedCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const shipping = verifiedSubtotal >= 2999 ? 0 : 99;
+  let verifiedDiscount = 0;
+  if (appliedCoupon) {
+    const coupon = COUPON_CODES[appliedCoupon];
+    if (coupon.type === 'percent') {
+      verifiedDiscount = Math.round(verifiedSubtotal * coupon.value / 100);
+    } else {
+      verifiedDiscount = coupon.value;
+    }
+  }
+  const verifiedGrandTotal = verifiedSubtotal + shipping - verifiedDiscount;
+
   const customerInfo = { name, email, phone, address, city, state, pincode, notes };
   const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-  const { subtotal, shipping, discount, grandTotal } = calculateTotals();
-  const pricing = { subtotal, shipping, discount, couponCode: appliedCoupon, grandTotal };
+  const pricing = { subtotal: verifiedSubtotal, shipping, discount: verifiedDiscount, couponCode: appliedCoupon, grandTotal: verifiedGrandTotal };
 
   btn.textContent = 'Processing...';
 
@@ -472,7 +500,7 @@ async function handlePlaceOrder() {
     }
 
     // Send email notifications
-    await sendEmailNotifications(order, customerInfo, cart);
+    await sendEmailNotifications(order, customerInfo, verifiedCart);
 
     showSuccess(order, customerInfo, pricing);
   } catch (err) {

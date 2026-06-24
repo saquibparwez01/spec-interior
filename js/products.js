@@ -88,3 +88,27 @@ export async function reduceStock(cartItems) {
     }
   }
 }
+
+/**
+ * Verify cart prices against Firestore (prevents price manipulation)
+ * Returns cart with verified prices from database
+ */
+export async function verifyCartPrices(cartItems) {
+  const verifiedCart = [];
+  for (const item of cartItems) {
+    const ref = doc(db, PRODUCTS_COLLECTION, item.id);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const product = snap.data();
+      verifiedCart.push({
+        ...item,
+        price: product.price, // Use REAL price from database, not localStorage
+        name: product.name    // Use real name too
+      });
+    } else {
+      // Product doesn't exist in database — reject
+      throw new Error(`Product "${item.name}" is no longer available`);
+    }
+  }
+  return verifiedCart;
+}
