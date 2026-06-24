@@ -58,8 +58,8 @@ export function initiatePayment(customerInfo, pricing = null) {
             paymentId: response.razorpay_payment_id,
             notes: customerInfo.notes || ''
           });
-          // Reduce stock
-          await reduceStock(cart);
+          // Reduce stock (non-blocking — admin will verify)
+          reduceStock(cart).catch(() => {});
           clearCart();
           resolve(order);
         } catch (err) {
@@ -119,8 +119,8 @@ export async function createCODOrder(customerInfo, pricing = null) {
     notes: customerInfo.notes || ''
   });
 
-  // Reduce stock
-  await reduceStock(cart);
+  // Reduce stock (non-blocking — admin will verify)
+  reduceStock(cart).catch(() => {});
   clearCart();
   return order;
 }
