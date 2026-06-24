@@ -30,12 +30,8 @@ const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
 const EMAILJS_ORDER_TEMPLATE_ID = "YOUR_EMAILJS_ORDER_TEMPLATE_ID";
 const EMAILJS_ADMIN_TEMPLATE_ID = "YOUR_EMAILJS_ADMIN_TEMPLATE_ID";
 
-// Coupon codes
-const COUPON_CODES = {
-  'LUMERA10': { type: 'percent', value: 10, minOrder: 500, description: '10% off' },
-  'SPEC200': { type: 'flat', value: 200, minOrder: 1500, description: '₹200 off' },
-  'WELCOME15': { type: 'percent', value: 15, minOrder: 1000, description: '15% off for new customers' }
-};
+// Coupon codes (fallback — primary validation is from Firestore 'coupons' collection)
+const COUPON_CODES = {};
 
 export {
   db, auth, app,

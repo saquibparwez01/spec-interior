@@ -155,11 +155,13 @@ import { getCart, getCartTotal, getCartCount, clearCart, removeFromCart, updateQ
 import { initiatePayment, createCODOrder } from './js/checkout.js';
 import { checkStock, verifyCartPrices } from './js/products.js';
 import { COUPON_CODES } from './js/firebase-config.js';
+import { db, collection, getDocs, query, where } from './js/firebase-config.js';
 
 const content = document.getElementById('checkoutContent');
 let cart = getCart();
 
 let appliedCoupon = null;
+let appliedCouponData = null;
 let discountAmount = 0;
 
 function showToast(msg) {
@@ -173,19 +175,18 @@ function calculateTotals() {
   const subtotal = getCartTotal();
   const shipping = subtotal >= 2999 ? 0 : 99;
   discountAmount = 0;
-  if (appliedCoupon) {
-    const coupon = COUPON_CODES[appliedCoupon];
-    if (coupon.type === 'percent') {
-      discountAmount = Math.round(subtotal * coupon.value / 100);
+  if (appliedCoupon && appliedCouponData) {
+    if (appliedCouponData.type === 'percent') {
+      discountAmount = Math.round(subtotal * appliedCouponData.value / 100);
     } else {
-      discountAmount = coupon.value;
+      discountAmount = appliedCouponData.value;
     }
   }
   const grandTotal = subtotal + shipping - discountAmount;
   return { subtotal, shipping, discount: discountAmount, grandTotal };
 }
 
-function applyCoupon() {
+async function applyCoupon() {
   const input = document.getElementById('couponInput');
   const code = input.value.trim().toUpperCase();
   const msgEl = document.getElementById('couponMsg');
@@ -196,11 +197,29 @@ function applyCoupon() {
     return;
   }
 
-  const coupon = COUPON_CODES[code];
+  msgEl.textContent = 'Checking...';
+  msgEl.style.color = 'var(--text-muted)';
+
+  // First check hardcoded fallback, then Firestore
+  let coupon = COUPON_CODES[code] || null;
+
+  // Check Firestore for coupon
+  try {
+    const q = query(collection(db, 'coupons'), where('code', '==', code));
+    const snap = await getDocs(q);
+    if (!snap.empty) {
+      const doc = snap.docs[0].data();
+      coupon = { type: doc.type, value: doc.value, minOrder: doc.minOrder || 0, description: doc.description || '' };
+    }
+  } catch (err) {
+    // If Firestore check fails, fall back to hardcoded
+  }
+
   if (!coupon) {
     msgEl.textContent = 'Invalid coupon code';
     msgEl.style.color = 'var(--red)';
     appliedCoupon = null;
+    appliedCouponData = null;
     updateTotalsUI();
     return;
   }
@@ -210,11 +229,13 @@ function applyCoupon() {
     msgEl.textContent = `Minimum order ₹${coupon.minOrder} required for this coupon`;
     msgEl.style.color = 'var(--red)';
     appliedCoupon = null;
+    appliedCouponData = null;
     updateTotalsUI();
     return;
   }
 
   appliedCoupon = code;
+  appliedCouponData = coupon;
   msgEl.textContent = `✓ "${code}" applied — ${coupon.description}`;
   msgEl.style.color = 'var(--green)';
   updateTotalsUI();
@@ -222,6 +243,7 @@ function applyCoupon() {
 
 function removeCoupon() {
   appliedCoupon = null;
+  appliedCouponData = null;
   discountAmount = 0;
   const msgEl = document.getElementById('couponMsg');
   const input = document.getElementById('couponInput');
@@ -475,12 +497,11 @@ async function handlePlaceOrder() {
   const verifiedSubtotal = verifiedCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const shipping = verifiedSubtotal >= 2999 ? 0 : 99;
   let verifiedDiscount = 0;
-  if (appliedCoupon) {
-    const coupon = COUPON_CODES[appliedCoupon];
-    if (coupon.type === 'percent') {
-      verifiedDiscount = Math.round(verifiedSubtotal * coupon.value / 100);
+  if (appliedCoupon && appliedCouponData) {
+    if (appliedCouponData.type === 'percent') {
+      verifiedDiscount = Math.round(verifiedSubtotal * appliedCouponData.value / 100);
     } else {
-      verifiedDiscount = coupon.value;
+      verifiedDiscount = appliedCouponData.value;
     }
   }
   const verifiedGrandTotal = verifiedSubtotal + shipping - verifiedDiscount;
