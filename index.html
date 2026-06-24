@@ -1501,7 +1501,7 @@
         <div class="cat-info">
           <div class="cat-tag">Trending</div>
           <div class="cat-name">Pendant Lights</div>
-          <div class="cat-count" data-cat="standing,pendant">— designs</div>
+          <div class="cat-count" data-cat="standing,pendant" data-stock="true">— designs</div>
         </div>
       </a>
       <a href="category.html?cat=gifting" class="cat-card" style="background: linear-gradient(135deg, #B8972A, #6B4C38);">
@@ -2254,11 +2254,11 @@
     window.addEventListener('productsLoaded', function(e) {
       allSearchProducts = e.detail;
 
-      // Update category card counts with real data
+      // Update category card counts with real data (only products in stock)
       const products = e.detail;
       document.querySelectorAll('.cat-count[data-cat]').forEach(el => {
         const cats = el.dataset.cat.split(',');
-        const count = products.filter(p => cats.includes(p.category)).length;
+        const count = products.filter(p => cats.includes(p.category) && (p.stock === undefined || p.stock > 0)).length;
         el.textContent = count + ' design' + (count !== 1 ? 's' : '');
       });
 
