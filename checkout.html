@@ -365,31 +365,12 @@ function renderCheckout() {
 
   content.innerHTML = `
     <div class="form-area">
-      ${!currentUser ? `
-      <div style="background:var(--cream);border-radius:12px;padding:20px;margin-bottom:20px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-          <div style="font-size:14px;color:var(--brown);"><strong>Have an account?</strong> Sign in for faster checkout</div>
-          <span id="guestToggleText" style="font-size:13px;color:var(--text-muted);cursor:pointer;" onclick="document.getElementById('checkoutLoginForm').style.display='none'">Continue as guest ↓</span>
-        </div>
-        <div id="checkoutLoginForm">
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <input type="email" id="chkLoginEmail" placeholder="Email" style="flex:1;min-width:150px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;background:white;"/>
-            <input type="password" id="chkLoginPassword" placeholder="Password" style="flex:1;min-width:150px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;background:white;"/>
-            <button id="chkLoginBtn" style="padding:12px 20px;background:var(--terracotta);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;">Sign In</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
-            <span style="font-size:12px;color:var(--text-muted);">No account?</span>
-            <a href="account.html" style="font-size:12px;color:var(--terracotta);text-decoration:none;font-weight:500;">Create one →</a>
-          </div>
-          <p id="chkLoginMsg" style="font-size:12px;margin-top:8px;color:var(--red);"></p>
-        </div>
-      </div>
-      ` : `
+      ${currentUser ? `
       <div style="background:var(--cream);border-radius:12px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
         <div style="width:32px;height:32px;background:var(--terracotta);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:500;">${(currentUser.displayName||currentUser.email||'U')[0].toUpperCase()}</div>
         <div style="font-size:14px;color:var(--brown);">Signed in as <strong>${currentUser.displayName || currentUser.email}</strong></div>
       </div>
-      `}
+      ` : ''}
       <div class="form-section">
         <h2>Delivery Details</h2>
         <div class="form-group"><label>Full Name</label><input type="text" id="custName" placeholder="Your full name" required/></div>
@@ -398,11 +379,11 @@ function renderCheckout() {
           <div class="form-group"><label>Phone</label><input type="tel" id="custPhone" placeholder="10-digit mobile number" required/></div>
         </div>
         <div class="form-group"><label>Address</label><textarea id="custAddress" placeholder="House/Flat No., Street, Landmark" required></textarea></div>
+        <div class="form-group"><label>Pincode</label><input type="text" id="custPincode" placeholder="6-digit pincode — auto-detects city & state" required maxlength="6"/></div>
         <div class="form-row">
           <div class="form-group"><label>City</label><input type="text" id="custCity" placeholder="City" required/></div>
           <div class="form-group"><label>State</label><input type="text" id="custState" placeholder="State" required/></div>
         </div>
-        <div class="form-group"><label>Pincode</label><input type="text" id="custPincode" placeholder="6-digit pincode" required maxlength="6"/></div>
         <div class="form-group"><label>Order Notes (optional)</label><textarea id="custNotes" placeholder="Any special instructions..."></textarea></div>
       </div>
 
@@ -437,6 +418,27 @@ function renderCheckout() {
           </label>
         </div>
       </div>
+
+      ${!currentUser ? `
+      <div style="background:var(--cream);border-radius:12px;padding:20px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+          <div style="font-size:14px;color:var(--brown);"><strong>Have an account?</strong> Sign in for faster checkout</div>
+          <span style="font-size:13px;color:var(--text-muted);cursor:pointer;" onclick="document.getElementById('checkoutLoginForm').style.display='none'">Continue as guest ↓</span>
+        </div>
+        <div id="checkoutLoginForm">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <input type="email" id="chkLoginEmail" placeholder="Email" style="flex:1;min-width:150px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;background:white;"/>
+            <input type="password" id="chkLoginPassword" placeholder="Password" style="flex:1;min-width:150px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;background:white;"/>
+            <button id="chkLoginBtn" style="padding:12px 20px;background:var(--terracotta);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;">Sign In</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+            <span style="font-size:12px;color:var(--text-muted);">No account?</span>
+            <a href="account.html" style="font-size:12px;color:var(--terracotta);text-decoration:none;font-weight:500;">Create one →</a>
+          </div>
+          <p id="chkLoginMsg" style="font-size:12px;margin-top:8px;color:var(--red);"></p>
+        </div>
+      </div>
+      ` : ''}
 
       <button class="place-order-btn" id="placeOrderBtn">Place Order — ₹${grandTotal.toLocaleString()}</button>
     </div>
@@ -535,6 +537,22 @@ function renderCheckout() {
       if (e.key === 'Enter') chkLoginBtn.click();
     });
   }
+
+  // Pincode auto-detect city & state
+  document.getElementById('custPincode').addEventListener('input', async function() {
+    const pin = this.value.trim();
+    if (pin.length === 6 && /^\d{6}$/.test(pin)) {
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        const data = await res.json();
+        if (data[0] && data[0].Status === 'Success' && data[0].PostOffice && data[0].PostOffice.length > 0) {
+          const po = data[0].PostOffice[0];
+          document.getElementById('custCity').value = po.District || po.Name || '';
+          document.getElementById('custState').value = po.State || '';
+        }
+      } catch (e) {}
+    }
+  });
 
   // Place order
   document.getElementById('placeOrderBtn').addEventListener('click', handlePlaceOrder);
