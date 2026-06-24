@@ -1228,16 +1228,43 @@
   <div class="announcement" id="announcementBar">
     <span id="announcementText"></span>
   </div>
-  <script>
-    const announcements = [
-      '🎁 Free shipping on orders above ₹2,999 | Use code <span>LUMERA10</span> for 10% off',
+  <script type="module">
+    import { db, collection, getDocs, query, onSnapshot } from './js/firebase-config.js';
+
+    const defaultAnnouncements = [
+      '🎁 Free shipping on orders above ₹2,999',
       '🏠 Bulk Orders? Get special pricing for cafes, hotels & projects — <span>Contact us</span>',
       '🌿 Handcrafted by Indian artisans | <span>100% natural materials</span>',
       '🚚 Pan-India delivery in 7–10 business days | <span>Easy 7-day returns</span>'
     ];
+
+    let announcements = [...defaultAnnouncements];
     let annIdx = 0;
     const annEl = document.getElementById('announcementText');
-    annEl.innerHTML = announcements[0];
+
+    // Load coupons from Firestore and add to announcements
+    function loadCouponAnnouncements() {
+      try {
+        const q = query(collection(db, 'coupons'));
+        onSnapshot(q, (snap) => {
+          const coupons = snap.docs.map(d => d.data());
+          // Reset announcements
+          announcements = [...defaultAnnouncements];
+          // Add coupon announcements
+          coupons.forEach(c => {
+            const discountText = c.type === 'percent' ? `${c.value}% off` : `₹${c.value} off`;
+            announcements.unshift(`🎁 Use code <span>${c.code}</span> for ${discountText}${c.minOrder ? ` on orders above ₹${c.minOrder.toLocaleString()}` : ''}`);
+          });
+          // Show first one
+          annEl.innerHTML = announcements[0];
+        });
+      } catch (e) {
+        // Fallback to defaults
+        annEl.innerHTML = announcements[0];
+      }
+    }
+
+    loadCouponAnnouncements();
     setInterval(() => { annIdx = (annIdx + 1) % announcements.length; annEl.style.opacity = 0; setTimeout(() => { annEl.innerHTML = announcements[annIdx]; annEl.style.opacity = 1; }, 300); }, 4000);
   </script>
   <style>#announcementText { transition: opacity 0.3s; }</style>
