@@ -634,6 +634,36 @@ function refreshCart() {
 }
 
 renderCheckout();
+loadRelatedProducts();
+
+async function loadRelatedProducts() {
+  if (cart.length === 0) return;
+  try {
+    const { onProductsChange } = await import('./js/products.js');
+    onProductsChange((products) => {
+      const cartIds = cart.map(i => i.id);
+      const related = products.filter(p => !cartIds.includes(p.id)).slice(0, 4);
+      if (related.length === 0) return;
+
+      const container = document.createElement('div');
+      container.style.cssText = 'max-width:1100px;margin:0 auto;padding:24px 24px 60px;';
+      container.innerHTML = `
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--brown);margin-bottom:20px;">You might also like</h3>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+          ${related.map(p => {
+            const img = p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;"/>` : `<div style="width:100%;height:100%;background:linear-gradient(145deg,${p.color1||'#8B5E3C'},${p.color2||'#4A5D3E'});"></div>`;
+            return `<a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit;background:var(--cream);border-radius:12px;overflow:hidden;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+              <div style="aspect-ratio:1;overflow:hidden;">${img}</div>
+              <div style="padding:12px;"><div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--brown);">${p.name}</div><div style="font-size:14px;font-weight:600;color:var(--brown);margin-top:4px;">₹${p.price.toLocaleString()}</div></div>
+            </a>`;
+          }).join('')}
+        </div>
+      `;
+      const checkoutWrap = document.querySelector('.checkout-wrap');
+      if (checkoutWrap) checkoutWrap.parentNode.insertBefore(container, checkoutWrap.nextSibling);
+    });
+  } catch (e) {}
+}
 </script>
 <script>
   // Pause ambient sound on checkout page

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream:#F5F5F0;--warm-white:#FAFAF7;--sand:#EDEAE3;--terracotta:#4A5D3E;--dark:#1A1F16;--brown:#2E3B28;--brown-light:#5A6B52;--gold:#8B9E6B;--text-muted:#7A7E72;--border:rgba(46,59,40,0.12);--green:#3CB371;--red:#E05252; }
+    [data-theme="dark"] { --cream:#1C2118;--warm-white:#141812;--sand:#242A1F;--terracotta:#A3B88A;--dark:#F2F0EB;--brown:#E8E5DE;--brown-light:#C8C4BB;--gold:#C8D9A8;--text-muted:#A8A59C;--border:rgba(200,196,187,0.15); }
+    body { font-family:'DM Sans',sans-serif; background:var(--warm-white); color:var(--dark); min-height:100vh; }
+    nav { position:sticky;top:0;z-index:100;background:rgba(250,250,247,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:72px; }
+    .nav-logo { font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--brown);text-decoration:none; }
+    .nav-logo span { color:var(--terracotta); }
+    [data-theme="dark"] nav { background:rgba(20,24,18,0.95); }
+    [data-theme="dark"] body { background:#141812;color:#F2F0EB; }
+    .container { max-width:700px;margin:60px auto;padding:0 20px; }
+    .header { text-align:center;margin-bottom:40px; }
+    .header h1 { font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:var(--brown);margin-bottom:8px; }
+    .header p { color:var(--text-muted);font-size:15px; }
+    .lookup-form { background:var(--cream);border-radius:16px;padding:32px;margin-bottom:32px; }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px; }
+    .form-group input { width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;background:white;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);outline:none; }
+    [data-theme="dark"] .form-group input { background:#242A1F;color:#F2F0EB;border-color:rgba(255,255,255,0.12); }
+    .lookup-btn { width:100%;padding:16px;background:var(--terracotta);color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;margin-top:8px; }
+    .lookup-btn:hover { background:var(--brown); }
+    .order-card { background:var(--cream);border-radius:14px;padding:20px;margin-bottom:16px;border-left:4px solid var(--terracotta); }
+    .order-card-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:12px; }
+    .order-id { font-weight:600;color:var(--terracotta);font-size:15px; }
+    .order-status { padding:4px 12px;border-radius:50px;font-size:12px;font-weight:500; }
+    .status-Pending { background:#FFF3CD;color:#856404; }
+    .status-Processing { background:#D1ECF1;color:#0C5460; }
+    .status-Shipped { background:#D4EDDA;color:#155724; }
+    .status-Delivered { background:#C8E6C9;color:#1B5E20; }
+    .status-Cancelled { background:#F8D7DA;color:#721C24; }
+    .order-details { font-size:13px;color:var(--text-muted);line-height:1.8; }
+    .order-items { margin-top:10px;font-size:13px; }
+    .order-items span { display:block;padding:2px 0; }
+    .order-total { font-size:16px;font-weight:600;color:var(--brown);margin-top:10px; }
+    .no-orders { text-align:center;padding:40px;color:var(--text-muted); }
+    .error-msg { color:var(--red);font-size:14px;text-align:center;margin-top:12px;display:none; }
+    .mini-footer { background:var(--brown);color:rgba(255,255,255,0.6);text-align:center;padding:32px;font-size:13px;margin-top:80px; }
+    .mini-footer a { color:var(--terracotta);text-decoration:none; }
+    @media(max-width:600px) { nav{padding:0 16px;height:56px;} .nav-logo{font-size:20px;} .container{margin:32px auto;} .header h1{font-size:28px;} }
+  </style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();</script>
+<nav><a href="index.html" class="nav-logo"><img src="logo.png" alt="Logo" style="height:26px;vertical-align:middle;margin-right:6px;"/>Spec <span>Interior</span></a></nav>
+
+<div class="container">
+  <div class="header">
+    <h1>My Orders</h1>
+    <p>Enter your phone number to view your order history</p>
+  </div>
+  <div class="lookup-form">
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="lookupPhone" placeholder="10-digit mobile number" maxlength="10"/>
+    </div>
+    <button class="lookup-btn" id="lookupBtn">View My Orders</button>
+    <p class="error-msg" id="lookupError"></p>
+  </div>
+  <div id="ordersList"></div>
+</div>
+
+<div class="mini-footer"><p>&copy; 2025 Spec Interior. | <a href="index.html">Home</a> | <a href="track.html">Track Order</a></p></div>
+
+<script type="module">
+import { db, collection, getDocs, query, where, orderBy } from './js/firebase-config.js';
+
+document.getElementById('lookupBtn').addEventListener('click', lookupOrders);
+document.getElementById('lookupPhone').addEventListener('keydown', (e) => { if (e.key === 'Enter') lookupOrders(); });
+
+async function lookupOrders() {
+  const phone = document.getElementById('lookupPhone').value.trim();
+  const errorEl = document.getElementById('lookupError');
+  const listEl = document.getElementById('ordersList');
+  errorEl.style.display = 'none';
+  listEl.innerHTML = '';
+
+  if (!phone || phone.length !== 10 || !/^\d+$/.test(phone)) {
+    errorEl.textContent = 'Please enter a valid 10-digit phone number';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  document.getElementById('lookupBtn').textContent = 'Searching...';
+  document.getElementById('lookupBtn').disabled = true;
+
+  try {
+    const q = query(collection(db, 'orders'), where('phone', '==', phone), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      listEl.innerHTML = '<div class="no-orders"><p>No orders found for this phone number.</p><p style="margin-top:8px;"><a href="index.html" style="color:var(--terracotta);">Start shopping →</a></p></div>';
+    } else {
+      const orders = snap.docs.map(d => d.data());
+      listEl.innerHTML = orders.map(o => `
+        <div class="order-card">
+          <div class="order-card-header">
+            <span class="order-id">#${o.orderId || 'N/A'}</span>
+            <span class="order-status status-${o.status}">${o.status}</span>
+          </div>
+          <div class="order-details">
+            <span>📅 ${new Date(o.createdAt).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'})}</span>
+            <span>💳 ${o.payment === 'cod' ? 'Cash on Delivery' : 'Paid Online'}</span>
+          </div>
+          <div class="order-items">
+            ${(o.items||[]).map(i => `<span>• ${i.name} × ${i.qty} — ₹${(i.price*i.qty).toLocaleString()}</span>`).join('')}
+          </div>
+          <div class="order-total">Total: ₹${(o.total||0).toLocaleString()}</div>
+        </div>
+      `).join('');
+    }
+  } catch (e) {
+    errorEl.textContent = 'Something went wrong. Please try again.';
+    errorEl.style.display = 'block';
+  }
+
+  document.getElementById('lookupBtn').textContent = 'View My Orders';
+  document.getElementById('lookupBtn').disabled = false;
+}
+</script>
+<script src="js/ambient.js"></script>
+</body>
+</html>
