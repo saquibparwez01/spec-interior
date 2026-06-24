@@ -216,6 +216,58 @@
       align-items: center;
       gap: 20px;
     }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 22px; height: 2px;
+      background: var(--brown);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--warm-white);
+      padding: 80px 32px 32px;
+      flex-direction: column;
+      gap: 0;
+      animation: slideIn 0.3s ease;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      display: block;
+      padding: 16px 0;
+      font-size: 18px;
+      color: var(--brown);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      font-weight: 400;
+    }
+    .mobile-menu a:hover { color: var(--terracotta); }
+    .mobile-menu .close-menu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: var(--brown);
+      cursor: pointer;
+    }
+    @keyframes slideIn { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+    [data-theme="dark"] .mobile-menu { background: #141812; }
+    [data-theme="dark"] .hamburger span { background: #C8C4BB; }
     .nav-icon {
       width: 22px; height: 22px;
       stroke: var(--brown-light);
@@ -986,6 +1038,7 @@
       .cart-btn { padding: 8px 16px; font-size: 12px; }
       .nav-icon { width: 20px; height: 20px; }
       .nav-right { gap: 12px; }
+      .hamburger { display: flex; }
 
       /* Announcement */
       .announcement { font-size: 11px; padding: 8px 12px; }
@@ -1297,9 +1350,30 @@
       </button>
       <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5" onclick="openSearch()" style="cursor:pointer;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <a href="wishlist.html"><svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>
-      <button class="cart-btn">Cart (0)</button>
+      <button class="cart-btn" onclick="location.href='checkout.html'">Cart (0)</button>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" id="closeMenu">✕</button>
+    <a href="index.html">Home</a>
+    <a href="category.html?cat=lamp">Lamps</a>
+    <a href="category.html?cat=wall">Wall Decor</a>
+    <a href="category.html?cat=standing">Standing Lamp</a>
+    <a href="category.html?cat=gifting">Gifting</a>
+    <a href="category.html?cat=basket">Basket</a>
+    <a href="track.html">Track Order</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+  <script>
+    document.getElementById('hamburgerBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
+    document.getElementById('closeMenu').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+  </script>
 
   <!-- Hero -->
   <section class="hero">
@@ -1730,7 +1804,7 @@
           <li><a href="faqs.html">FAQs</a></li>
           <li><a href="shipping.html">Shipping Policy</a></li>
           <li><a href="returns.html">Returns</a></li>
-          <li><a href="#">Track Order</a></li>
+          <li><a href="track.html">Track Order</a></li>
           <li><a href="privacy.html">Privacy Policy</a></li>
           <li><a href="terms.html">Terms &amp; Conditions</a></li>
         </ul>
@@ -2157,6 +2231,11 @@
           <div style="font-size:14px;font-weight:600;color:#3D2B1F;">₹${p.price.toLocaleString()}</div>
         </a>`;
       }).join('');
+    });
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && this.value.trim()) {
+        window.location.href = 'category.html?search=' + encodeURIComponent(this.value.trim());
+      }
     });
     // Populate search products from Firebase listener
     window.addEventListener('productsLoaded', function(e) { allSearchProducts = e.detail; });

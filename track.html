@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Order — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#4A5D3E"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F5F5F0; --warm-white: #FAFAF7; --sand: #EDEAE3;
+      --terracotta: #4A5D3E; --terracotta-light: #5C7A4A;
+      --dark: #1A1F16; --brown: #2E3B28; --brown-light: #5A6B52;
+      --gold: #8B9E6B; --gold-light: #A3B88A; --text-muted: #7A7E72;
+      --border: rgba(46,59,40,0.12); --green: #3CB371; --red: #E05252;
+    }
+    [data-theme="dark"] {
+      --cream: #1C2118; --warm-white: #141812; --sand: #242A1F;
+      --terracotta: #A3B88A; --terracotta-light: #B8CCA0;
+      --dark: #F2F0EB; --brown: #E8E5DE; --brown-light: #C8C4BB;
+      --gold: #C8D9A8; --gold-light: #D4E6B5; --text-muted: #A8A59C;
+      --border: rgba(200,196,187,0.15);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); min-height: 100vh; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(250,250,247,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--brown); text-decoration: none; }
+    .nav-logo span { color: var(--terracotta); }
+    [data-theme="dark"] nav { background: rgba(20,24,18,0.95); }
+    [data-theme="dark"] body { background: #141812; color: #F2F0EB; }
+
+    .track-container { max-width: 600px; margin: 60px auto; padding: 0 20px; }
+    .track-header { text-align: center; margin-bottom: 40px; }
+    .track-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; color: var(--brown); margin-bottom: 8px; }
+    .track-header p { color: var(--text-muted); font-size: 15px; }
+
+    .track-form { background: var(--cream); border-radius: 16px; padding: 32px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+    .form-group input { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 10px; background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--dark); outline: none; transition: border-color 0.2s; }
+    .form-group input:focus { border-color: var(--terracotta); }
+    [data-theme="dark"] .form-group input { background: #242A1F; color: #F2F0EB; border-color: rgba(255,255,255,0.12); }
+
+    .track-btn { width: 100%; padding: 16px; background: var(--terracotta); color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+    .track-btn:hover { background: var(--brown); }
+
+    .track-result { margin-top: 32px; display: none; }
+    .order-info { background: var(--cream); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+    .order-info-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid var(--border); }
+    .order-info-row:last-child { border-bottom: none; }
+    .order-info-row .label { color: var(--text-muted); }
+    .order-info-row .value { font-weight: 500; color: var(--brown); }
+
+    .track-steps { position: relative; padding-left: 32px; }
+    .track-steps::before { content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+    .track-step { position: relative; padding: 16px 0; }
+    .track-step .dot { position: absolute; left: -32px; top: 18px; width: 24px; height: 24px; border-radius: 50%; background: var(--sand); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .track-step.completed .dot { background: var(--green); border-color: var(--green); color: white; }
+    .track-step.active .dot { background: var(--terracotta); border-color: var(--terracotta); color: white; animation: pulse 1.5s infinite; }
+    .track-step .step-title { font-size: 15px; font-weight: 500; color: var(--brown); }
+    .track-step .step-desc { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .track-step.pending .step-title { color: var(--text-muted); }
+
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(74,93,62,0.3); } 50% { box-shadow: 0 0 0 8px rgba(74,93,62,0); } }
+
+    .error-msg { color: var(--red); font-size: 14px; text-align: center; margin-top: 16px; display: none; }
+    .mini-footer { background: var(--brown); color: rgba(255,255,255,0.6); text-align: center; padding: 32px; font-size: 13px; margin-top: 80px; }
+    .mini-footer a { color: var(--terracotta-light); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; height: 56px; }
+      .nav-logo { font-size: 20px; }
+      .track-container { margin: 32px auto; }
+      .track-header h1 { font-size: 28px; }
+      .track-form { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+<script>
+(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();
+</script>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Logo" style="height:26px;vertical-align:middle;margin-right:6px;"/>Spec <span>Interior</span></a>
+</nav>
+
+<div class="track-container">
+  <div class="track-header">
+    <h1>Track Your Order</h1>
+    <p>Enter your Order ID and phone number to check status</p>
+  </div>
+
+  <div class="track-form">
+    <div class="form-group">
+      <label>Order ID</label>
+      <input type="text" id="trackOrderId" placeholder="e.g. SIXXXXXX"/>
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="trackPhone" placeholder="10-digit mobile number" maxlength="10"/>
+    </div>
+    <button class="track-btn" id="trackBtn">Track Order</button>
+    <p class="error-msg" id="trackError"></p>
+  </div>
+
+  <div class="track-result" id="trackResult">
+    <div class="order-info" id="orderInfo"></div>
+    <h3 style="font-size:16px;color:var(--brown);margin-bottom:16px;">Order Progress</h3>
+    <div class="track-steps" id="trackSteps"></div>
+  </div>
+</div>
+
+<div class="mini-footer">
+  <p>&copy; 2025 Spec Interior. All rights reserved. | <a href="index.html">Back to Home</a></p>
+</div>
+
+<script type="module">
+import { db, collection, getDocs, query, where } from './js/firebase-config.js';
+
+const statuses = ['Pending', 'Processing', 'Shipped', 'Delivered'];
+const statusDescriptions = {
+  'Pending': 'Order received, awaiting confirmation',
+  'Processing': 'Your order is being prepared and packed',
+  'Shipped': 'On the way! Delivery in 3-5 days',
+  'Delivered': 'Successfully delivered'
+};
+
+document.getElementById('trackBtn').addEventListener('click', trackOrder);
+document.getElementById('trackPhone').addEventListener('keydown', (e) => { if (e.key === 'Enter') trackOrder(); });
+
+async function trackOrder() {
+  const orderId = document.getElementById('trackOrderId').value.trim().toUpperCase();
+  const phone = document.getElementById('trackPhone').value.trim();
+  const errorEl = document.getElementById('trackError');
+  const resultEl = document.getElementById('trackResult');
+
+  errorEl.style.display = 'none';
+  resultEl.style.display = 'none';
+
+  if (!orderId || !phone) {
+    errorEl.textContent = 'Please enter both Order ID and Phone number';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  document.getElementById('trackBtn').textContent = 'Searching...';
+  document.getElementById('trackBtn').disabled = true;
+
+  try {
+    const q = query(collection(db, 'orders'), where('orderId', '==', orderId));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      errorEl.textContent = 'Order not found. Please check your Order ID.';
+      errorEl.style.display = 'block';
+      document.getElementById('trackBtn').textContent = 'Track Order';
+      document.getElementById('trackBtn').disabled = false;
+      return;
+    }
+
+    const order = snap.docs[0].data();
+
+    // Verify phone
+    if (order.phone !== phone) {
+      errorEl.textContent = 'Phone number doesn\'t match this order. Please check and try again.';
+      errorEl.style.display = 'block';
+      document.getElementById('trackBtn').textContent = 'Track Order';
+      document.getElementById('trackBtn').disabled = false;
+      return;
+    }
+
+    // Show result
+    const orderDate = new Date(order.createdAt || order.date);
+    document.getElementById('orderInfo').innerHTML = `
+      <div class="order-info-row"><span class="label">Order ID</span><span class="value">#${order.orderId}</span></div>
+      <div class="order-info-row"><span class="label">Date</span><span class="value">${orderDate.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</span></div>
+      <div class="order-info-row"><span class="label">Items</span><span class="value">${(order.items||[]).length} item(s)</span></div>
+      <div class="order-info-row"><span class="label">Total</span><span class="value">₹${(order.total||0).toLocaleString()}</span></div>
+      <div class="order-info-row"><span class="label">Payment</span><span class="value">${order.payment === 'cod' ? 'Cash on Delivery' : 'Paid Online'}</span></div>
+      <div class="order-info-row"><span class="label">Status</span><span class="value" style="color:var(--green);font-weight:600;">${order.status}</span></div>
+    `;
+
+    const currentIdx = statuses.indexOf(order.status);
+    document.getElementById('trackSteps').innerHTML = statuses.map((s, i) => {
+      let cls = 'pending';
+      if (i < currentIdx) cls = 'completed';
+      else if (i === currentIdx) cls = 'active';
+      return `
+        <div class="track-step ${cls}">
+          <div class="dot">${i < currentIdx ? '✓' : i === currentIdx ? '●' : ''}</div>
+          <div class="step-title">${s}</div>
+          <div class="step-desc">${statusDescriptions[s]}</div>
+        </div>
+      `;
+    }).join('');
+
+    if (order.status === 'Cancelled') {
+      document.getElementById('trackSteps').innerHTML = `
+        <div class="track-step active">
+          <div class="dot" style="background:var(--red);border-color:var(--red);">✕</div>
+          <div class="step-title" style="color:var(--red);">Order Cancelled</div>
+          <div class="step-desc">This order has been cancelled. Contact us for help.</div>
+        </div>
+      `;
+    }
+
+    resultEl.style.display = 'block';
+  } catch (err) {
+    errorEl.textContent = 'Something went wrong. Please try again.';
+    errorEl.style.display = 'block';
+  }
+
+  document.getElementById('trackBtn').textContent = 'Track Order';
+  document.getElementById('trackBtn').disabled = false;
+}
+</script>
+<script src="js/ambient.js"></script>
+</body>
+</html>
