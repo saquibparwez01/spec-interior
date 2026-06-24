@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account — Spec Interior</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream:#F5F5F0;--warm-white:#FAFAF7;--sand:#EDEAE3;--terracotta:#4A5D3E;--terracotta-light:#5C7A4A;--dark:#1A1F16;--brown:#2E3B28;--brown-light:#5A6B52;--gold:#8B9E6B;--gold-light:#A3B88A;--text-muted:#7A7E72;--border:rgba(46,59,40,0.12);--green:#3CB371;--red:#E05252; }
+    [data-theme="dark"] { --cream:#1C2118;--warm-white:#141812;--sand:#242A1F;--terracotta:#A3B88A;--terracotta-light:#B8CCA0;--dark:#F2F0EB;--brown:#E8E5DE;--brown-light:#C8C4BB;--gold:#C8D9A8;--text-muted:#A8A59C;--border:rgba(200,196,187,0.15); }
+    body { font-family:'DM Sans',sans-serif;background:var(--warm-white);color:var(--dark);min-height:100vh; }
+    nav { position:sticky;top:0;z-index:100;background:rgba(250,250,247,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:72px; }
+    .nav-logo { font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--brown);text-decoration:none; }
+    .nav-logo span { color:var(--terracotta); }
+    [data-theme="dark"] nav { background:rgba(20,24,18,0.95); }
+    [data-theme="dark"] body { background:#141812;color:#F2F0EB; }
+
+    .container { max-width:600px;margin:60px auto;padding:0 20px; }
+
+    /* Auth Forms */
+    .auth-card { background:var(--cream);border-radius:20px;padding:40px 32px;text-align:center; }
+    .auth-card h1 { font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:var(--brown);margin-bottom:8px; }
+    .auth-card p { color:var(--text-muted);font-size:14px;margin-bottom:28px; }
+    .auth-tabs { display:flex;background:var(--sand);border-radius:10px;padding:4px;margin-bottom:24px; }
+    .auth-tab { flex:1;padding:12px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--text-muted);cursor:pointer;border-radius:8px;transition:all 0.2s; }
+    .auth-tab.active { background:white;color:var(--brown);box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    [data-theme="dark"] .auth-tab.active { background:#2A3024;color:#F2F0EB; }
+    .form-group { margin-bottom:16px;text-align:left; }
+    .form-group label { display:block;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px; }
+    .form-group input { width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;background:white;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color 0.2s; }
+    .form-group input:focus { border-color:var(--terracotta); }
+    [data-theme="dark"] .form-group input { background:#242A1F;color:#F2F0EB;border-color:rgba(255,255,255,0.12); }
+    .auth-btn { width:100%;padding:16px;background:var(--terracotta);color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.2s;margin-top:8px; }
+    .auth-btn:hover { background:var(--brown); }
+    .auth-btn:disabled { opacity:0.5;cursor:not-allowed; }
+    .auth-msg { font-size:13px;margin-top:12px;min-height:20px; }
+    .auth-divider { display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text-muted);font-size:13px; }
+    .auth-divider::before,.auth-divider::after { content:'';flex:1;height:1px;background:var(--border); }
+    .google-btn { width:100%;padding:14px;background:white;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--brown);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.2s; }
+    .google-btn:hover { background:var(--sand); }
+    [data-theme="dark"] .google-btn { background:#242A1F;border-color:rgba(255,255,255,0.12);color:#F2F0EB; }
+
+    /* Dashboard */
+    .dashboard { display:none; }
+    .dashboard.active { display:block; }
+    .dash-header { display:flex;align-items:center;gap:16px;margin-bottom:32px; }
+    .dash-avatar { width:56px;height:56px;background:var(--terracotta);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:22px;font-weight:500; }
+    .dash-name { font-size:20px;font-weight:500;color:var(--brown); }
+    .dash-email { font-size:13px;color:var(--text-muted); }
+    .dash-section { background:var(--cream);border-radius:14px;padding:24px;margin-bottom:20px; }
+    .dash-section h3 { font-size:16px;color:var(--brown);margin-bottom:16px; }
+    .dash-link { display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--brown);text-decoration:none;cursor:pointer; }
+    .dash-link:last-child { border-bottom:none; }
+    .dash-link:hover { color:var(--terracotta); }
+    .logout-btn { width:100%;padding:14px;background:transparent;border:1.5px solid var(--red);color:var(--red);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s; }
+    .logout-btn:hover { background:var(--red);color:white; }
+
+    .order-card { padding:16px 0;border-bottom:1px solid var(--border); }
+    .order-card:last-child { border-bottom:none; }
+    .order-card-top { display:flex;justify-content:space-between;align-items:center;margin-bottom:6px; }
+    .order-card-id { font-weight:600;color:var(--terracotta);font-size:14px; }
+    .order-card-status { padding:3px 10px;border-radius:50px;font-size:11px;font-weight:500;background:var(--sand);color:var(--brown); }
+    .order-card-details { font-size:13px;color:var(--text-muted); }
+
+    .mini-footer { background:var(--brown);color:rgba(255,255,255,0.6);text-align:center;padding:32px;font-size:13px;margin-top:80px; }
+    .mini-footer a { color:var(--gold-light);text-decoration:none; }
+    @media(max-width:600px) { nav{padding:0 16px;height:56px;} .nav-logo{font-size:20px;} .container{margin:32px auto;} .auth-card{padding:28px 20px;} }
+  </style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('specTheme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(!s&&d))document.documentElement.setAttribute('data-theme','dark');})();</script>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Logo" style="height:26px;vertical-align:middle;margin-right:6px;"/>Spec <span>Interior</span></a>
+  <a href="index.html" style="font-size:13px;color:var(--text-muted);text-decoration:none;">← Back to Shop</a>
+</nav>
+
+<div class="container">
+  <!-- AUTH FORMS -->
+  <div class="auth-card" id="authSection">
+    <h1>Welcome</h1>
+    <p>Sign in to track orders, save addresses, and checkout faster</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginForm">
+      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password"/></div>
+      <button class="auth-btn" id="loginBtn">Sign In</button>
+    </div>
+
+    <!-- Register Form -->
+    <div id="registerForm" style="display:none;">
+      <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your full name"/></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="regPhone" placeholder="10-digit mobile" maxlength="10"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Min 6 characters"/></div>
+      <button class="auth-btn" id="registerBtn">Create Account</button>
+    </div>
+
+    <p class="auth-msg" id="authMsg"></p>
+
+    <div class="auth-divider">or</div>
+    <button class="google-btn" id="googleBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </button>
+  </div>
+
+  <!-- DASHBOARD (shown when logged in) -->
+  <div class="dashboard" id="dashSection">
+    <div class="dash-header">
+      <div class="dash-avatar" id="dashAvatar">S</div>
+      <div>
+        <div class="dash-name" id="dashName">User</div>
+        <div class="dash-email" id="dashEmail">email@example.com</div>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <h3>Quick Links</h3>
+      <a href="track.html" class="dash-link"><span>📦 Track Order</span><span>→</span></a>
+      <a href="wishlist.html" class="dash-link"><span>♥ My Wishlist</span><span>→</span></a>
+      <a href="checkout.html" class="dash-link"><span>🛒 Go to Checkout</span><span>→</span></a>
+    </div>
+
+    <div class="dash-section">
+      <h3>Recent Orders</h3>
+      <div id="dashOrders"><p style="color:var(--text-muted);font-size:14px;">Loading...</p></div>
+    </div>
+
+    <div class="dash-section">
+      <h3>Saved Address</h3>
+      <div id="dashAddress"><p style="color:var(--text-muted);font-size:14px;">No saved address yet. It will be saved after your first order.</p></div>
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">Sign Out</button>
+  </div>
+</div>
+
+<div class="mini-footer"><p>&copy; 2025 Spec Interior. | <a href="index.html">Home</a> | <a href="category.html">Shop</a></p></div>
+
+<script type="module">
+import { auth, db, collection, getDocs, query, where, orderBy, doc, setDoc, getDoc, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from './js/firebase-config.js';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const authSection = document.getElementById('authSection');
+const dashSection = document.getElementById('dashSection');
+const authMsg = document.getElementById('authMsg');
+
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  authMsg.textContent = '';
+}
+window.switchTab = switchTab;
+
+// Auth state
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    authSection.style.display = 'none';
+    dashSection.classList.add('active');
+    document.getElementById('dashAvatar').textContent = (user.displayName || user.email || 'U')[0].toUpperCase();
+    document.getElementById('dashName').textContent = user.displayName || 'User';
+    document.getElementById('dashEmail').textContent = user.email;
+
+    // Save user profile to localStorage for checkout auto-fill
+    const profile = await loadUserProfile(user.uid);
+    if (profile) {
+      localStorage.setItem('specUserProfile', JSON.stringify(profile));
+    }
+
+    // Load orders
+    loadUserOrders(user.email);
+  } else {
+    authSection.style.display = 'block';
+    dashSection.classList.remove('active');
+  }
+});
+
+// Login
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  authMsg.textContent = '';
+  if (!email || !password) { authMsg.textContent = 'Please fill all fields'; authMsg.style.color = 'var(--red)'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    authMsg.textContent = 'Invalid email or password';
+    authMsg.style.color = 'var(--red)';
+  }
+});
+
+// Register
+document.getElementById('registerBtn').addEventListener('click', async () => {
+  const name = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  authMsg.textContent = '';
+
+  if (!name || !phone || !email || !password) { authMsg.textContent = 'Please fill all fields'; authMsg.style.color = 'var(--red)'; return; }
+  if (password.length < 6) { authMsg.textContent = 'Password must be at least 6 characters'; authMsg.style.color = 'var(--red)'; return; }
+
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: name });
+    // Save profile to Firestore
+    await setDoc(doc(db, 'customers', cred.user.uid), {
+      name, phone, email,
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem('specUserProfile', JSON.stringify({ name, phone, email }));
+  } catch (e) {
+    if (e.code === 'auth/email-already-in-use') authMsg.textContent = 'Email already registered. Try signing in.';
+    else authMsg.textContent = e.message;
+    authMsg.style.color = 'var(--red)';
+  }
+});
+
+// Google Sign In
+document.getElementById('googleBtn').addEventListener('click', async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    // Save to customers collection if new
+    const userDoc = await getDoc(doc(db, 'customers', result.user.uid));
+    if (!userDoc.exists()) {
+      await setDoc(doc(db, 'customers', result.user.uid), {
+        name: result.user.displayName || '',
+        email: result.user.email,
+        phone: '',
+        createdAt: new Date().toISOString()
+      });
+    }
+  } catch (e) {
+    authMsg.textContent = 'Google sign-in failed';
+    authMsg.style.color = 'var(--red)';
+  }
+});
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await signOut(auth);
+  localStorage.removeItem('specUserProfile');
+});
+
+// Load user profile from Firestore
+async function loadUserProfile(uid) {
+  try {
+    const snap = await getDoc(doc(db, 'customers', uid));
+    if (snap.exists()) {
+      const data = snap.data();
+      // Show saved address
+      if (data.address) {
+        document.getElementById('dashAddress').innerHTML = `<p style="font-size:14px;color:var(--brown);line-height:1.6;">${data.address}</p>`;
+      }
+      return data;
+    }
+  } catch (e) {}
+  return null;
+}
+
+// Load user's orders
+async function loadUserOrders(email) {
+  try {
+    const q = query(collection(db, 'orders'), where('email', '==', email), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      document.getElementById('dashOrders').innerHTML = '<p style="color:var(--text-muted);font-size:14px;">No orders yet. <a href="index.html" style="color:var(--terracotta);">Start shopping →</a></p>';
+      return;
+    }
+    const orders = snap.docs.map(d => d.data());
+    document.getElementById('dashOrders').innerHTML = orders.slice(0, 5).map(o => `
+      <div class="order-card">
+        <div class="order-card-top">
+          <span class="order-card-id">#${o.orderId || 'N/A'}</span>
+          <span class="order-card-status">${o.status}</span>
+        </div>
+        <div class="order-card-details">
+          ${new Date(o.createdAt).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'})} • ${(o.items||[]).length} item(s) • ₹${(o.total||0).toLocaleString()}
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    document.getElementById('dashOrders').innerHTML = '<p style="color:var(--text-muted);font-size:14px;">Could not load orders.</p>';
+  }
+}
+
+// Enter key support
+document.getElementById('loginPassword').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('loginBtn').click(); });
+document.getElementById('regPassword').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('registerBtn').click(); });
+</script>
+<script src="js/ambient.js"></script>
+</body>
+</html>

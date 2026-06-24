@@ -155,7 +155,7 @@ import { getCart, getCartTotal, getCartCount, clearCart, removeFromCart, updateQ
 import { initiatePayment, createCODOrder } from './js/checkout.js';
 import { checkStock, verifyCartPrices } from './js/products.js';
 import { COUPON_CODES } from './js/firebase-config.js';
-import { db, collection, getDocs, query, where } from './js/firebase-config.js';
+import { db, collection, getDocs, query, where, auth, onAuthStateChanged, doc, updateDoc, setDoc, getDoc } from './js/firebase-config.js';
 
 const content = document.getElementById('checkoutContent');
 let cart = getCart();
@@ -163,6 +163,46 @@ let cart = getCart();
 let appliedCoupon = null;
 let appliedCouponData = null;
 let discountAmount = 0;
+let currentUser = null;
+
+// Check if user is logged in
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  if (user && cart.length > 0) {
+    // Auto-fill from saved profile
+    autoFillFromProfile();
+  }
+});
+
+async function autoFillFromProfile() {
+  // Check localStorage first (faster)
+  const cached = localStorage.getItem('specUserProfile');
+  if (cached) {
+    const profile = JSON.parse(cached);
+    fillForm(profile);
+    return;
+  }
+  // Fall back to Firestore
+  if (currentUser) {
+    try {
+      const snap = await getDoc(doc(db, 'customers', currentUser.uid));
+      if (snap.exists()) fillForm(snap.data());
+    } catch (e) {}
+  }
+}
+
+function fillForm(profile) {
+  setTimeout(() => {
+    const nameEl = document.getElementById('custName');
+    if (nameEl && profile.name) nameEl.value = profile.name;
+    if (profile.email) document.getElementById('custEmail').value = profile.email;
+    if (profile.phone) document.getElementById('custPhone').value = profile.phone;
+    if (profile.address) document.getElementById('custAddress').value = profile.address;
+    if (profile.city) document.getElementById('custCity').value = profile.city;
+    if (profile.state) document.getElementById('custState').value = profile.state;
+    if (profile.pincode) document.getElementById('custPincode').value = profile.pincode;
+  }, 100);
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -325,6 +365,22 @@ function renderCheckout() {
 
   content.innerHTML = `
     <div class="form-area">
+      ${!currentUser ? `
+      <div style="background:var(--cream);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:14px;color:var(--brown);">
+          <strong>Have an account?</strong> Sign in for faster checkout
+        </div>
+        <div style="display:flex;gap:10px;">
+          <a href="account.html" style="padding:10px 20px;background:var(--terracotta);color:white;border-radius:8px;font-size:13px;font-weight:500;text-decoration:none;">Sign In</a>
+          <span style="padding:10px 0;font-size:13px;color:var(--text-muted);">or continue as guest ↓</span>
+        </div>
+      </div>
+      ` : `
+      <div style="background:var(--cream);border-radius:12px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <div style="width:32px;height:32px;background:var(--terracotta);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:500;">${(currentUser.displayName||currentUser.email||'U')[0].toUpperCase()}</div>
+        <div style="font-size:14px;color:var(--brown);">Logged in as <strong>${currentUser.displayName || currentUser.email}</strong></div>
+      </div>
+      `}
       <div class="form-section">
         <h2>Delivery Details</h2>
         <div class="form-group"><label>Full Name</label><input type="text" id="custName" placeholder="Your full name" required/></div>
@@ -541,6 +597,22 @@ async function handlePlaceOrder() {
 
     // Send email notifications
     await sendEmailNotifications(order, customerInfo, verifiedCart);
+
+    // Save address to profile for auto-fill next time
+    if (currentUser) {
+      try {
+        await setDoc(doc(db, 'customers', currentUser.uid), {
+          name: customerInfo.name,
+          email: customerInfo.email,
+          phone: customerInfo.phone,
+          address: customerInfo.address,
+          city: customerInfo.city,
+          state: customerInfo.state,
+          pincode: customerInfo.pincode
+        }, { merge: true });
+        localStorage.setItem('specUserProfile', JSON.stringify(customerInfo));
+      } catch (e) {}
+    }
 
     showSuccess(order, customerInfo, pricing);
   } catch (err) {
