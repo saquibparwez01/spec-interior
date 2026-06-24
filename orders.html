@@ -70,15 +70,38 @@
 <div class="mini-footer"><p>&copy; 2025 Spec Interior. | <a href="index.html">Home</a> | <a href="track.html">Track Order</a></p></div>
 
 <script type="module">
-import { db, collection, getDocs, query, where, orderBy } from './js/firebase-config.js';
+import { db, auth, collection, getDocs, query, where, onAuthStateChanged } from './js/firebase-config.js';
+
+const lookupForm = document.querySelector('.lookup-form');
+const listEl = document.getElementById('ordersList');
+const errorEl = document.getElementById('lookupError');
+
+// Check if user is logged in — auto-load their orders
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Hide the lookup form and auto-load
+    document.querySelector('.header p').textContent = 'Your order history';
+    lookupForm.style.display = 'none';
+    loadOrdersByEmail(user.email);
+  }
+});
 
 document.getElementById('lookupBtn').addEventListener('click', lookupOrders);
 document.getElementById('lookupPhone').addEventListener('keydown', (e) => { if (e.key === 'Enter') lookupOrders(); });
 
+async function loadOrdersByEmail(email) {
+  listEl.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">Loading orders...</p>';
+  try {
+    const q = query(collection(db, 'orders'), where('email', '==', email));
+    const snap = await getDocs(q);
+    renderOrders(snap);
+  } catch (e) {
+    listEl.innerHTML = '<div class="no-orders"><p>Could not load orders. Please try again.</p></div>';
+  }
+}
+
 async function lookupOrders() {
   const phone = document.getElementById('lookupPhone').value.trim();
-  const errorEl = document.getElementById('lookupError');
-  const listEl = document.getElementById('ordersList');
   errorEl.style.display = 'none';
   listEl.innerHTML = '';
 
@@ -92,30 +115,9 @@ async function lookupOrders() {
   document.getElementById('lookupBtn').disabled = true;
 
   try {
-    const q = query(collection(db, 'orders'), where('phone', '==', phone), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'orders'), where('phone', '==', phone));
     const snap = await getDocs(q);
-
-    if (snap.empty) {
-      listEl.innerHTML = '<div class="no-orders"><p>No orders found for this phone number.</p><p style="margin-top:8px;"><a href="index.html" style="color:var(--terracotta);">Start shopping →</a></p></div>';
-    } else {
-      const orders = snap.docs.map(d => d.data());
-      listEl.innerHTML = orders.map(o => `
-        <div class="order-card">
-          <div class="order-card-header">
-            <span class="order-id">#${o.orderId || 'N/A'}</span>
-            <span class="order-status status-${o.status}">${o.status}</span>
-          </div>
-          <div class="order-details">
-            <span>📅 ${new Date(o.createdAt).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'})}</span>
-            <span>💳 ${o.payment === 'cod' ? 'Cash on Delivery' : 'Paid Online'}</span>
-          </div>
-          <div class="order-items">
-            ${(o.items||[]).map(i => `<span>• ${i.name} × ${i.qty} — ₹${(i.price*i.qty).toLocaleString()}</span>`).join('')}
-          </div>
-          <div class="order-total">Total: ₹${(o.total||0).toLocaleString()}</div>
-        </div>
-      `).join('');
-    }
+    renderOrders(snap);
   } catch (e) {
     errorEl.textContent = 'Something went wrong. Please try again.';
     errorEl.style.display = 'block';
@@ -123,6 +125,31 @@ async function lookupOrders() {
 
   document.getElementById('lookupBtn').textContent = 'View My Orders';
   document.getElementById('lookupBtn').disabled = false;
+}
+
+function renderOrders(snap) {
+  if (snap.empty) {
+    listEl.innerHTML = '<div class="no-orders"><p>No orders found.</p><p style="margin-top:8px;"><a href="index.html" style="color:var(--terracotta);">Start shopping →</a></p></div>';
+    return;
+  }
+  // Sort by date (newest first)
+  const orders = snap.docs.map(d => d.data()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  listEl.innerHTML = orders.map(o => `
+    <div class="order-card">
+      <div class="order-card-header">
+        <span class="order-id">#${o.orderId || 'N/A'}</span>
+        <span class="order-status status-${o.status}">${o.status}</span>
+      </div>
+      <div class="order-details">
+        <span>📅 ${new Date(o.createdAt).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'})}</span>
+        <span> • 💳 ${o.payment === 'cod' ? 'Cash on Delivery' : 'Paid Online'}</span>
+      </div>
+      <div class="order-items">
+        ${(o.items||[]).map(i => `<span>• ${i.name} × ${i.qty} — ₹${(i.price*i.qty).toLocaleString()}</span>`).join('')}
+      </div>
+      <div class="order-total">Total: ₹${(o.total||0).toLocaleString()}</div>
+    </div>
+  `).join('');
 }
 </script>
 <script src="js/ambient.js"></script>
