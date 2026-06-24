@@ -1479,13 +1479,13 @@
       <h2 class="section-title">Curated for every <em>corner</em></h2>
       <p class="section-sub">From statement pendants to delicate wall hangings — find the piece that speaks to your space.</p>
     </div>
-    <div class="cat-grid stagger-children">
+    <div class="cat-grid stagger-children" id="catGrid">
       <a href="category.html?cat=lamp" class="cat-card" style="background: linear-gradient(135deg, #8B5E3C, #C4714A);">
         <div class="cat-overlay"></div>
         <div class="cat-info">
           <div class="cat-tag">Bestseller</div>
           <div class="cat-name">Cane &amp; Tin<br/>Lamps</div>
-          <div class="cat-count">48 designs</div>
+          <div class="cat-count" data-cat="lamp">— designs</div>
         </div>
       </a>
       <a href="category.html?cat=wall" class="cat-card" style="background: linear-gradient(135deg, #C4927A, #E8DDD0);">
@@ -1493,7 +1493,7 @@
         <div class="cat-info">
           <div class="cat-tag">New</div>
           <div class="cat-name">Wall Hangings</div>
-          <div class="cat-count">32 designs</div>
+          <div class="cat-count" data-cat="wall">— designs</div>
         </div>
       </a>
       <a href="category.html?cat=standing" class="cat-card" style="background: linear-gradient(135deg, #3D2B1F, #6B4C38);">
@@ -1501,23 +1501,23 @@
         <div class="cat-info">
           <div class="cat-tag">Trending</div>
           <div class="cat-name">Pendant Lights</div>
-          <div class="cat-count">24 designs</div>
+          <div class="cat-count" data-cat="standing,pendant">— designs</div>
         </div>
       </a>
       <a href="category.html?cat=gifting" class="cat-card" style="background: linear-gradient(135deg, #B8972A, #6B4C38);">
         <div class="cat-overlay"></div>
         <div class="cat-info">
           <div class="cat-tag">Gift Ready</div>
-          <div class="cat-name">Macramé Decor</div>
-          <div class="cat-count">19 designs</div>
+          <div class="cat-name">Gifting Sets</div>
+          <div class="cat-count" data-cat="gifting">— designs</div>
         </div>
       </a>
-      <a href="category.html?cat=lamp" class="cat-card" style="background: linear-gradient(135deg, #C4714A, #3D2B1F);">
+      <a href="category.html?cat=basket" class="cat-card" style="background: linear-gradient(135deg, #C4714A, #3D2B1F);">
         <div class="cat-overlay"></div>
         <div class="cat-info">
           <div class="cat-tag">Popular</div>
-          <div class="cat-name">Table Lamps</div>
-          <div class="cat-count">15 designs</div>
+          <div class="cat-name">Baskets</div>
+          <div class="cat-count" data-cat="basket">— designs</div>
         </div>
       </a>
     </div>
@@ -2251,7 +2251,39 @@
       }
     });
     // Populate search products from Firebase listener
-    window.addEventListener('productsLoaded', function(e) { allSearchProducts = e.detail; });
+    window.addEventListener('productsLoaded', function(e) {
+      allSearchProducts = e.detail;
+
+      // Update category card counts with real data
+      const products = e.detail;
+      document.querySelectorAll('.cat-count[data-cat]').forEach(el => {
+        const cats = el.dataset.cat.split(',');
+        const count = products.filter(p => cats.includes(p.category)).length;
+        el.textContent = count + ' design' + (count !== 1 ? 's' : '');
+      });
+
+      // Update category card backgrounds with first product image from each category
+      const catCards = document.querySelectorAll('#catGrid .cat-card');
+      catCards.forEach(card => {
+        const href = card.getAttribute('href');
+        const catMatch = href.match(/cat=(\w+)/);
+        if (catMatch) {
+          const cat = catMatch[1];
+          const catProduct = products.find(p => p.category === cat && p.image);
+          if (catProduct && catProduct.image) {
+            card.style.background = 'none';
+            const existingImg = card.querySelector('.cat-img');
+            if (!existingImg) {
+              const img = document.createElement('img');
+              img.className = 'cat-img';
+              img.src = catProduct.image;
+              img.alt = cat;
+              card.insertBefore(img, card.firstChild);
+            }
+          }
+        }
+      });
+    });
 
     // Recently Viewed on homepage
     (function() {
