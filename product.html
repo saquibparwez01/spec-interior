@@ -409,7 +409,7 @@ function renderProduct(p) {
         <span style="font-size:14px;color:var(--brown);font-weight:500;display:block;margin-bottom:10px;">Size:</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sizeSelector">
           ${p.sizes.map((s, i) => `
-            <button class="size-btn ${i === 0 ? 'active' : ''}" data-price="${s.price}" data-original="${s.originalPrice || ''}" data-label="${s.label}" style="padding:12px 20px;border:1.5px solid ${i === 0 ? 'var(--brown)' : 'var(--border)'};border-radius:50px;background:${i === 0 ? 'var(--brown)' : 'transparent'};font-family:'DM Sans',sans-serif;font-size:13px;color:${i === 0 ? 'white' : 'var(--brown)'};cursor:pointer;transition:all 0.2s;font-weight:500;">
+            <button class="size-btn ${i === 0 ? 'active' : ''}" data-price="${s.price}" data-original="${s.originalPrice || p.originalPrice || ''}" data-label="${s.label}" style="padding:12px 20px;border:1.5px solid ${i === 0 ? 'var(--brown)' : 'var(--border)'};border-radius:50px;background:${i === 0 ? 'var(--brown)' : 'transparent'};font-family:'DM Sans',sans-serif;font-size:13px;color:${i === 0 ? 'white' : 'var(--brown)'};cursor:pointer;transition:all 0.2s;font-weight:500;">
               ${s.label}
             </button>
           `).join('')}
@@ -498,11 +498,6 @@ function renderProduct(p) {
     if (firstBtn) { 
       selectedPrice = parseInt(firstBtn.dataset.price); 
       selectedSize = firstBtn.dataset.label;
-      // Update price display for first size
-      document.querySelector('.current-price').textContent = '₹' + selectedPrice.toLocaleString();
-      const origPrice = firstBtn.dataset.original;
-      const origEl = document.querySelector('.original-price');
-      if (origPrice && origEl) origEl.textContent = '₹' + parseInt(origPrice).toLocaleString();
     }
     sizeSelector.querySelectorAll('.size-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -518,13 +513,27 @@ function renderProduct(p) {
         btn.classList.add('active');
         selectedPrice = parseInt(btn.dataset.price);
         selectedSize = btn.dataset.label;
+        // Update price display
         document.querySelector('.current-price').textContent = '₹' + selectedPrice.toLocaleString();
         // Update original price
         const origPrice = btn.dataset.original;
         const origEl = document.querySelector('.original-price');
         if (origEl) {
-          if (origPrice) { origEl.textContent = '₹' + parseInt(origPrice).toLocaleString(); origEl.style.display = ''; }
-          else { origEl.style.display = 'none'; }
+          if (origPrice && parseInt(origPrice) > selectedPrice) { 
+            origEl.textContent = '₹' + parseInt(origPrice).toLocaleString(); 
+            origEl.style.display = ''; 
+            // Update discount badge
+            const discBadge = document.querySelector('.discount-badge');
+            if (discBadge) {
+              const disc = Math.round((1 - selectedPrice / parseInt(origPrice)) * 100);
+              discBadge.textContent = disc + '% OFF';
+              discBadge.style.display = '';
+            }
+          } else { 
+            origEl.style.display = 'none'; 
+            const discBadge = document.querySelector('.discount-badge');
+            if (discBadge) discBadge.style.display = 'none';
+          }
         }
       });
     });
