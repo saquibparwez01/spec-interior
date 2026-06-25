@@ -387,6 +387,10 @@
       </div>
     </div>
 
+    <div class="form-group"><label>Additional Images <span style="font-weight:300;opacity:0.6">(upload multiple)</span></label>
+      <input type="file" id="pExtraImages" accept="image/*" multiple style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:13px;"/>
+      <div id="extraImagesPreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"></div>
+    </div>
     <div class="form-group"><label>Product Name</label><input type="text" id="pName" placeholder="e.g. Rustic Cane Pendant Lamp"/></div>
     <div class="form-row">
       <div class="form-group"><label>Category</label>
@@ -421,10 +425,6 @@
     </div>
     <div class="form-group"><label>Product Description <span style="font-weight:300;opacity:0.6">(optional — overrides category default)</span></label><textarea id="pDescription" placeholder="Write a unique description for this product..." style="width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;min-height:70px;resize:vertical;outline:none;"></textarea></div>
     <div class="form-group"><label>Highlights <span style="font-weight:300;opacity:0.6">(comma separated — overrides category default)</span></label><input type="text" id="pHighlights" placeholder="e.g. Hand-woven cane, Warm LED compatible, Creates shadow patterns"/></div>
-    <div class="form-group"><label>Additional Images <span style="font-weight:300;opacity:0.6">(upload multiple)</span></label>
-      <input type="file" id="pExtraImages" accept="image/*" multiple style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:13px;"/>
-      <div id="extraImagesPreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"></div>
-    </div>
     <div class="modal-actions">
       <button class="modal-close-btn" onclick="closeProductModal()">Cancel</button>
       <button class="modal-save" onclick="saveProduct()">Save Product</button>
