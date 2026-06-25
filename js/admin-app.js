@@ -334,7 +334,7 @@ window.openEditProduct = function(id) {
   document.getElementById('pHeight').value = p.height || '';
   document.getElementById('pWidth').value = p.width || '';
   document.getElementById('pWeight').value = p.weight || '';
-  document.getElementById('pSizes').value = (p.sizes || []).map(s => `${s.label}:${s.price}`).join('\n');
+  document.getElementById('pSizes').value = (p.sizes || []).map(s => s.originalPrice ? `${s.label}:${s.price}:${s.originalPrice}` : `${s.label}:${s.price}`).join('\n');
   document.getElementById('pExtraImages').value = '';
   document.getElementById('extraImagesPreview').innerHTML = (p.images || []).map(img => `<img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/>`).join('');
   pendingImageFile = null;
@@ -460,7 +460,13 @@ window.saveProduct = async function() {
     if (!raw) return null;
     return raw.split('\n').map(line => {
       const parts = line.split(':');
-      if (parts.length >= 2) return { label: parts[0].trim(), price: parseInt(parts[1].trim()) || 0 };
+      if (parts.length >= 2) {
+        return { 
+          label: parts[0].trim(), 
+          price: parseInt(parts[1].trim()) || 0,
+          originalPrice: parts[2] ? parseInt(parts[2].trim()) || null : null
+        };
+      }
       return null;
     }).filter(s => s && s.label && s.price > 0);
   }
