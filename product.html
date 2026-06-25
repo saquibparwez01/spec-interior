@@ -81,8 +81,10 @@
     .action-buttons { display: flex; gap: 12px; margin-bottom: 32px; }
     .btn-add-cart { flex: 1; padding: 16px 32px; background: var(--terracotta); color: white; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; }
     .btn-add-cart:hover { background: var(--brown); transform: translateY(-2px); }
-    .btn-buy-now { flex: 1; padding: 16px 32px; background: var(--brown); color: white; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; }
-    .btn-buy-now:hover { background: var(--dark); transform: translateY(-2px); }
+    .btn-buy-now { flex: 1; padding: 16px 32px; background: var(--sand); color: var(--brown); border: 1.5px solid var(--border); border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+    .btn-buy-now:hover { background: var(--brown); color: white; border-color: var(--brown); transform: translateY(-2px); }
+    [data-theme="dark"] .btn-buy-now { background: #242A1F; color: #F2F0EB; border-color: rgba(255,255,255,0.15); }
+    [data-theme="dark"] .btn-buy-now:hover { background: #A3B88A; color: #141812; border-color: #A3B88A; }
 
     .trust-badges { display: flex; gap: 20px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid var(--border); }
     .trust-badge-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
@@ -408,8 +410,11 @@ function renderProduct(p) {
       <div style="margin-bottom:20px;">
         <span style="font-size:14px;color:var(--brown);font-weight:500;display:block;margin-bottom:10px;">Size:</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sizeSelector">
-          ${p.sizes.map((s, i) => `
-            <button class="size-btn ${i === 0 ? 'active' : ''}" data-price="${s.price}" data-original="${s.originalPrice || p.originalPrice || ''}" data-label="${s.label}" style="padding:12px 20px;border:1.5px solid ${i === 0 ? 'var(--brown)' : 'var(--border)'};border-radius:50px;background:${i === 0 ? 'var(--brown)' : 'transparent'};font-family:'DM Sans',sans-serif;font-size:13px;color:${i === 0 ? 'white' : 'var(--brown)'};cursor:pointer;transition:all 0.2s;font-weight:500;">
+          <button class="size-btn active" data-price="${p.price}" data-original="${p.originalPrice || ''}" data-label="Default" style="padding:12px 20px;border:1.5px solid var(--terracotta);border-radius:50px;background:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:13px;color:white;cursor:pointer;transition:all 0.2s;font-weight:500;">
+            Default
+          </button>
+          ${p.sizes.map((s) => `
+            <button class="size-btn" data-price="${s.price}" data-original="${s.originalPrice || p.originalPrice || ''}" data-label="${s.label}" style="padding:12px 20px;border:1.5px solid var(--border);border-radius:50px;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--brown);cursor:pointer;transition:all 0.2s;font-weight:500;">
               ${s.label}
             </button>
           `).join('')}
@@ -507,8 +512,8 @@ function renderProduct(p) {
           b.style.color = 'var(--brown)';
           b.classList.remove('active'); 
         });
-        btn.style.borderColor = 'var(--brown)';
-        btn.style.background = 'var(--brown)';
+        btn.style.borderColor = 'var(--terracotta)';
+        btn.style.background = 'var(--terracotta)';
         btn.style.color = 'white';
         btn.classList.add('active');
         selectedPrice = parseInt(btn.dataset.price);
