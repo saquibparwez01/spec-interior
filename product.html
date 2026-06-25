@@ -403,6 +403,18 @@ function renderProduct(p) {
         <span style="display:flex;align-items:center;gap:4px;">🔥 <strong style="color:var(--brown);">${Math.floor(Math.random() * 80 + 50)}</strong> people bought this</span>
         <span style="display:flex;align-items:center;gap:4px;">👁️ <strong style="color:var(--brown);">${Math.floor(Math.random() * 15 + 5)}</strong> viewing right now</span>
       </div>
+      ${(p.sizes && p.sizes.length > 0) ? `
+      <div style="margin-bottom:20px;">
+        <span style="font-size:14px;color:var(--brown);font-weight:500;display:block;margin-bottom:10px;">Size:</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sizeSelector">
+          ${p.sizes.map((s, i) => `
+            <button class="size-btn ${i === 0 ? 'active' : ''}" data-price="${s.price}" data-label="${s.label}" style="padding:10px 18px;border:1.5px solid ${i === 0 ? 'var(--terracotta)' : 'var(--border)'};border-radius:8px;background:${i === 0 ? 'rgba(74,93,62,0.08)' : 'transparent'};font-family:'DM Sans',sans-serif;font-size:13px;color:var(--brown);cursor:pointer;transition:all 0.2s;">
+              ${s.label} — ₹${s.price.toLocaleString()}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+      ` : ''}
       <div class="qty-row">
         <span style="font-size:14px;color:var(--brown);font-weight:500;">Quantity:</span>
         <div class="qty-control">
@@ -476,9 +488,30 @@ function renderProduct(p) {
     }
   });
 
+  // Size selector
+  let selectedPrice = p.price;
+  let selectedSize = '';
+  const sizeSelector = document.getElementById('sizeSelector');
+  if (sizeSelector) {
+    const firstBtn = sizeSelector.querySelector('.size-btn');
+    if (firstBtn) { selectedPrice = parseInt(firstBtn.dataset.price); selectedSize = firstBtn.dataset.label; }
+    sizeSelector.querySelectorAll('.size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeSelector.querySelectorAll('.size-btn').forEach(b => { b.style.borderColor = 'var(--border)'; b.style.background = 'transparent'; b.classList.remove('active'); });
+        btn.style.borderColor = 'var(--terracotta)';
+        btn.style.background = 'rgba(74,93,62,0.08)';
+        btn.classList.add('active');
+        selectedPrice = parseInt(btn.dataset.price);
+        selectedSize = btn.dataset.label;
+        document.querySelector('.current-price').textContent = '₹' + selectedPrice.toLocaleString();
+      });
+    });
+  }
+
   // Add to cart
   document.getElementById('addToCartBtn').addEventListener('click', () => {
-    addToCart({ id: p.id, name: p.name, price: p.price, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    const cartName = selectedSize ? `${p.name} (${selectedSize})` : p.name;
+    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/\s+/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
     const btn = document.getElementById('addToCartBtn');
     btn.textContent = '✓ Added!';
     btn.style.background = 'var(--gold)';
@@ -487,7 +520,8 @@ function renderProduct(p) {
 
   // Buy now
   document.getElementById('buyNowBtn').addEventListener('click', () => {
-    addToCart({ id: p.id, name: p.name, price: p.price, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    const cartName = selectedSize ? `${p.name} (${selectedSize})` : p.name;
+    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/\s+/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
     window.location.href = 'checkout.html';
   });
 

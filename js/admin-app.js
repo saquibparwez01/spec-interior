@@ -303,6 +303,7 @@ window.openAddProduct = function() {
   document.getElementById('pHeight').value = '';
   document.getElementById('pWidth').value = '';
   document.getElementById('pWeight').value = '';
+  document.getElementById('pSizes').value = '';
   document.getElementById('pExtraImages').value = '';
   document.getElementById('extraImagesPreview').innerHTML = '';
   pendingImageFile = null;
@@ -333,6 +334,7 @@ window.openEditProduct = function(id) {
   document.getElementById('pHeight').value = p.height || '';
   document.getElementById('pWidth').value = p.width || '';
   document.getElementById('pWeight').value = p.weight || '';
+  document.getElementById('pSizes').value = (p.sizes || []).map(s => `${s.label}:${s.price}`).join('\n');
   document.getElementById('pExtraImages').value = '';
   document.getElementById('extraImagesPreview').innerHTML = (p.images || []).map(img => `<img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/>`).join('');
   pendingImageFile = null;
@@ -449,8 +451,19 @@ window.saveProduct = async function() {
     highlights: highlightsArr.length > 0 ? highlightsArr : null,
     height: document.getElementById('pHeight').value.trim() || null,
     width: document.getElementById('pWidth').value.trim() || null,
-    weight: document.getElementById('pWeight').value.trim() || null
+    weight: document.getElementById('pWeight').value.trim() || null,
+    sizes: parseSizes()
   };
+
+  function parseSizes() {
+    const raw = document.getElementById('pSizes').value.trim();
+    if (!raw) return null;
+    return raw.split('\n').map(line => {
+      const parts = line.split(':');
+      if (parts.length >= 2) return { label: parts[0].trim(), price: parseInt(parts[1].trim()) || 0 };
+      return null;
+    }).filter(s => s && s.label && s.price > 0);
+  }
 
   try {
     if (editId) {
