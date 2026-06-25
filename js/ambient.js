@@ -6,9 +6,8 @@
   const audio = document.createElement('audio');
   audio.id = 'ambientAudio';
   audio.loop = true;
-  audio.preload = 'auto';
+  audio.preload = 'none';
   audio.volume = 0.3;
-  audio.src = 'ambient.mp3';
   document.body.appendChild(audio);
 
   // Create floating toggle button
@@ -39,6 +38,9 @@
   }
 
   function playSound() {
+    if (!audio.src || !audio.src.includes('ambient.mp3')) {
+      audio.src = 'ambient.mp3';
+    }
     audio.volume = 0.3;
     audio.play().then(function() {
       isPlaying = true;
@@ -87,7 +89,10 @@
   const savedState = localStorage.getItem(SOUND_KEY);
   if (savedState === 'playing') {
     toggle.style.display = 'flex';
-    // Try to play immediately
+    // Try to play immediately (lazy load audio)
+    if (!audio.src || !audio.src.includes('ambient.mp3')) {
+      audio.src = 'ambient.mp3';
+    }
     audio.play().then(function() {
       isPlaying = true;
       updateIcon();
