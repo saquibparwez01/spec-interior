@@ -267,6 +267,10 @@
         <table><thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead>
         <tbody id="recentOrdersBody"></tbody></table>
       </div>
+      <div class="table-wrap" style="margin-top:20px;">
+        <div class="table-header"><h3>⚠️ Stock Alerts</h3></div>
+        <div id="lowStockAlerts" style="padding:12px;"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
+      </div>
     </div>
 
     <!-- ORDERS TAB -->
@@ -275,6 +279,7 @@
         <div class="table-header">
           <h3>All Orders</h3>
           <div style="display:flex;gap:10px;align-items:center;">
+            <button class="topbar-btn btn-ghost" onclick="exportOrdersCSV()" style="font-size:12px;">📥 Export CSV</button>
             <select class="status-select" id="orderStatusFilter" onchange="renderOrders()">
               <option value="all">All Status</option>
               <option value="Pending">Pending</option>
@@ -418,6 +423,11 @@
     <div class="form-row">
       <div class="form-group"><label>Stock Quantity</label><input type="number" id="pStock" placeholder="10"/></div>
       <div class="form-group"><label>Rating (1–5)</label><input type="number" id="pRating" placeholder="5" min="1" max="5"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Height (cm)</label><input type="text" id="pHeight" placeholder="e.g. 35"/></div>
+      <div class="form-group"><label>Width (cm)</label><input type="text" id="pWidth" placeholder="e.g. 25"/></div>
+      <div class="form-group"><label>Weight (kg)</label><input type="text" id="pWeight" placeholder="e.g. 1.2"/></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>Fallback Color 1 <span style="font-weight:300;opacity:0.6">(if no image)</span></label><input type="color" id="pColor1" value="#8B5E3C"/></div>

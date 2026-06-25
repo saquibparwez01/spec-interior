@@ -186,6 +186,21 @@ window.loadDashboard = function() {
       <td style="color:var(--muted);">${new Date(o.createdAt||o.date).toLocaleDateString('en-IN')}</td>
     </tr>
   `).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px;">No orders yet</td></tr>';
+
+  // Low stock alerts
+  const lowStock = products.filter(p => (p.stock || 0) <= 3 && (p.stock || 0) > 0);
+  const outOfStock = products.filter(p => (p.stock || 0) === 0);
+  const alertEl = document.getElementById('lowStockAlerts');
+  if (alertEl) {
+    if (lowStock.length === 0 && outOfStock.length === 0) {
+      alertEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px;">✓ All products have healthy stock levels</p>';
+    } else {
+      alertEl.innerHTML = [
+        ...outOfStock.map(p => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(224,82,82,0.08);border-radius:8px;margin-bottom:6px;"><span style="font-size:13px;color:var(--text);">${esc(p.name)}</span><span style="font-size:11px;color:var(--red);font-weight:600;">OUT OF STOCK</span></div>`),
+        ...lowStock.map(p => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(224,160,48,0.08);border-radius:8px;margin-bottom:6px;"><span style="font-size:13px;color:var(--text);">${esc(p.name)}</span><span style="font-size:11px;color:#E0A030;font-weight:600;">Only ${p.stock} left</span></div>`)
+      ].join('');
+    }
+  }
 };
 
 // ─── ORDERS ──────────────────────────────────────────
@@ -285,6 +300,9 @@ window.openAddProduct = function() {
   document.getElementById('pColor2').value = '#C4714A';
   document.getElementById('pDescription').value = '';
   document.getElementById('pHighlights').value = '';
+  document.getElementById('pHeight').value = '';
+  document.getElementById('pWidth').value = '';
+  document.getElementById('pWeight').value = '';
   document.getElementById('pExtraImages').value = '';
   document.getElementById('extraImagesPreview').innerHTML = '';
   pendingImageFile = null;
@@ -312,6 +330,9 @@ window.openEditProduct = function(id) {
   document.getElementById('pColor2').value = p.color2 || '#C4714A';
   document.getElementById('pDescription').value = p.description || '';
   document.getElementById('pHighlights').value = (p.highlights || []).join(', ');
+  document.getElementById('pHeight').value = p.height || '';
+  document.getElementById('pWidth').value = p.width || '';
+  document.getElementById('pWeight').value = p.weight || '';
   document.getElementById('pExtraImages').value = '';
   document.getElementById('extraImagesPreview').innerHTML = (p.images || []).map(img => `<img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/>`).join('');
   pendingImageFile = null;
@@ -425,7 +446,10 @@ window.saveProduct = async function() {
     image: imageUrl,
     images: allImages,
     description: descriptionVal || null,
-    highlights: highlightsArr.length > 0 ? highlightsArr : null
+    highlights: highlightsArr.length > 0 ? highlightsArr : null,
+    height: document.getElementById('pHeight').value.trim() || null,
+    width: document.getElementById('pWidth').value.trim() || null,
+    weight: document.getElementById('pWeight').value.trim() || null
   };
 
   try {
@@ -693,4 +717,33 @@ window.deleteOrder = async function(id) {
     await deleteDoc(doc(db, 'orders', id));
     showToast('Order deleted');
   } catch (e) { showToast('Error: ' + e.message, true); }
+};
+
+// ─── EXPORT ORDERS CSV ───────────────────────────────
+window.exportOrdersCSV = function() {
+  if (ordersCache.length === 0) { showToast('No orders to export', true); return; }
+
+  const headers = ['Order ID', 'Date', 'Customer', 'Phone', 'Email', 'Items', 'Total', 'Payment', 'Status', 'Address'];
+  const rows = ordersCache.map(o => [
+    o.orderId || o.id.slice(0,8),
+    new Date(o.createdAt || o.date).toLocaleDateString('en-IN'),
+    `"${(o.customer||'').replace(/"/g,'""')}"`,
+    o.phone || '',
+    o.email || '',
+    `"${(o.items||[]).map(i => i.name + ' x' + i.qty).join('; ')}"`,
+    o.total || 0,
+    o.payment || '',
+    o.status || '',
+    `"${(o.address||'').replace(/"/g,'""')}"`
+  ]);
+
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `spec-interior-orders-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Orders exported!');
 };

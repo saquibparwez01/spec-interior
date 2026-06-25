@@ -389,6 +389,20 @@ function renderProduct(p) {
         <h3>Highlights</h3>
         <ul>${features.map(f => `<li>${f}</li>`).join('')}</ul>
       </div>
+      ${(p.height || p.width || p.weight) ? `
+      <div style="margin-bottom:24px;padding:16px;background:var(--cream);border-radius:10px;">
+        <h3 style="font-size:13px;font-weight:500;color:var(--brown);margin-bottom:10px;letter-spacing:0.04em;">Dimensions</h3>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);">
+          ${p.height ? `<span>📐 Height: <strong style="color:var(--brown);">${p.height} cm</strong></span>` : ''}
+          ${p.width ? `<span>↔️ Width: <strong style="color:var(--brown);">${p.width} cm</strong></span>` : ''}
+          ${p.weight ? `<span>⚖️ Weight: <strong style="color:var(--brown);">${p.weight} kg</strong></span>` : ''}
+        </div>
+      </div>
+      ` : ''}
+      <div style="display:flex;gap:16px;margin-bottom:20px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:4px;">🔥 <strong style="color:var(--brown);">${Math.floor(Math.random() * 80 + 50)}</strong> people bought this</span>
+        <span style="display:flex;align-items:center;gap:4px;">👁️ <strong style="color:var(--brown);">${Math.floor(Math.random() * 15 + 5)}</strong> viewing right now</span>
+      </div>
       <div class="qty-row">
         <span style="font-size:14px;color:var(--brown);font-weight:500;">Quantity:</span>
         <div class="qty-control">
@@ -404,6 +418,18 @@ function renderProduct(p) {
         <button class="btn-buy-now" id="buyNowBtn" ${p.stock === 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>Buy Now</button>
         <button id="wishlistBtn" style="width:52px;height:52px;border:1.5px solid var(--border);border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" title="Add to Wishlist">
           <svg viewBox="0 0 24 24" width="22" height="22" stroke="var(--terracotta)" stroke-width="1.5" fill="${isInWishlist(p.id) ? 'var(--terracotta)' : 'none'}"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </div>
+      ${p.stock === 0 ? `
+      <div style="margin-top:16px;padding:16px;background:var(--cream);border-radius:10px;border-left:3px solid var(--terracotta);">
+        <p style="font-size:14px;color:var(--brown);margin-bottom:10px;font-weight:500;">🔔 Notify me when back in stock</p>
+        <div style="display:flex;gap:8px;">
+          <input type="email" id="notifyEmail" placeholder="Your email" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--warm-white);color:var(--dark);outline:none;"/>
+          <button id="notifyBtn" style="padding:10px 16px;background:var(--terracotta);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;">Notify Me</button>
+        </div>
+        <p id="notifyMsg" style="font-size:12px;margin-top:6px;"></p>
+      </div>
+      ` : ''}
         </button>
       </div>
       <div class="trust-badges">
@@ -476,6 +502,21 @@ function renderProduct(p) {
       svg.setAttribute('fill', 'var(--terracotta)');
     }
   });
+
+  // Back-in-stock notification
+  const notifyBtn = document.getElementById('notifyBtn');
+  if (notifyBtn) {
+    notifyBtn.addEventListener('click', async () => {
+      const email = document.getElementById('notifyEmail').value.trim();
+      const msg = document.getElementById('notifyMsg');
+      if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email'; msg.style.color = 'var(--red)'; return; }
+      try {
+        await addDoc(collection(db, 'notifications'), { productId: p.id, productName: p.name, email, type: 'back-in-stock', createdAt: new Date().toISOString() });
+        msg.textContent = '✓ We\'ll notify you when this is back in stock!'; msg.style.color = 'var(--green)';
+        notifyBtn.disabled = true; notifyBtn.textContent = 'Subscribed';
+      } catch (e) { msg.textContent = 'Failed. Please try again.'; msg.style.color = 'var(--red)'; }
+    });
+  }
 
   // Share
   const shareUrl = window.location.href;
