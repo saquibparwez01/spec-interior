@@ -304,6 +304,7 @@ window.openAddProduct = function() {
   document.getElementById('pWidth').value = '';
   document.getElementById('pWeight').value = '';
   document.getElementById('pSizes').value = '';
+  document.getElementById('sizeVariantsContainer').innerHTML = '';
   document.getElementById('pExtraImages').value = '';
   document.getElementById('extraImagesPreview').innerHTML = '';
   pendingImageFile = null;
@@ -335,6 +336,9 @@ window.openEditProduct = function(id) {
   document.getElementById('pWidth').value = p.width || '';
   document.getElementById('pWeight').value = p.weight || '';
   document.getElementById('pSizes').value = (p.sizes || []).map(s => s.originalPrice ? `${s.label}:${s.price}:${s.originalPrice}` : `${s.label}:${s.price}`).join('\n');
+  // Populate size variant rows
+  document.getElementById('sizeVariantsContainer').innerHTML = '';
+  (p.sizes || []).forEach(s => addSizeRow(s.label, s.price, s.originalPrice));
   document.getElementById('pExtraImages').value = '';
   document.getElementById('extraImagesPreview').innerHTML = (p.images || []).map(img => `<img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/>`).join('');
   pendingImageFile = null;
@@ -392,6 +396,21 @@ function resetImageUpload() {
   document.getElementById('uploadPlaceholder').style.display = 'block';
   document.getElementById('imgUploadArea').classList.remove('has-image');
 }
+
+// Add size variant row
+window.addSizeRow = function(label = '', price = '', original = '') {
+  const container = document.getElementById('sizeVariantsContainer');
+  const row = document.createElement('div');
+  row.className = 'size-variant-row';
+  row.style.cssText = 'display:flex;gap:8px;align-items:center;';
+  row.innerHTML = `
+    <input class="sv-label" type="text" placeholder="Size (e.g. 12&quot;D x 10&quot;H)" value="${label}" style="flex:2;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;"/>
+    <input class="sv-price" type="number" placeholder="Sale ₹" value="${price}" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;"/>
+    <input class="sv-original" type="number" placeholder="MRP ₹" value="${original || ''}" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;"/>
+    <button type="button" onclick="this.parentElement.remove()" style="width:32px;height:32px;border:none;background:rgba(224,82,82,0.1);color:var(--red);border-radius:50%;cursor:pointer;font-size:16px;flex-shrink:0;">✕</button>
+  `;
+  container.appendChild(row);
+};
 
 window.saveProduct = async function() {
   const name = document.getElementById('pName').value.trim();
@@ -456,19 +475,16 @@ window.saveProduct = async function() {
   };
 
   function parseSizes() {
-    const raw = document.getElementById('pSizes').value.trim();
-    if (!raw) return null;
-    return raw.split('\n').map(line => {
-      const parts = line.split(':');
-      if (parts.length >= 2) {
-        return { 
-          label: parts[0].trim(), 
-          price: parseInt(parts[1].trim()) || 0,
-          originalPrice: parts[2] ? parseInt(parts[2].trim()) || null : null
-        };
-      }
-      return null;
-    }).filter(s => s && s.label && s.price > 0);
+    const rows = document.querySelectorAll('.size-variant-row');
+    if (rows.length === 0) return null;
+    const sizes = [];
+    rows.forEach(row => {
+      const label = row.querySelector('.sv-label').value.trim();
+      const price = parseInt(row.querySelector('.sv-price').value) || 0;
+      const original = parseInt(row.querySelector('.sv-original').value) || null;
+      if (label && price > 0) sizes.push({ label, price, originalPrice: original });
+    });
+    return sizes.length > 0 ? sizes : null;
   }
 
   try {
