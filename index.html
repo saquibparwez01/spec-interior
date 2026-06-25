@@ -505,29 +505,35 @@
       display: flex;
       gap: 14px;
       overflow-x: auto;
-      mask-image: linear-gradient(to right, black 92%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to right, black 92%, transparent 100%);
       -webkit-overflow-scrolling: touch;
       padding-bottom: 8px;
       scrollbar-width: none;
     }
     .cat-grid::-webkit-scrollbar { display: none; }
 
+    @media (max-width: 860px) {
+      .cat-grid {
+        mask-image: linear-gradient(to right, black 85%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+      }
+    }
+
     .scroll-dots {
       display: none;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 16px;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 14px;
+      padding-right: 4px;
     }
     .scroll-dots .dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--border);
+      background: rgba(255,255,255,0.2);
       transition: all 0.3s;
     }
     .scroll-dots .dot.active {
-      width: 20px;
+      width: 16px;
       border-radius: 3px;
       background: var(--terracotta);
     }
