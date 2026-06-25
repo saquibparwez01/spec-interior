@@ -230,8 +230,10 @@ const categoryConfig = {
 
 // Get category from URL
 const params = new URLSearchParams(window.location.search);
-const cat = params.get('cat') || 'lamp';
-const config = categoryConfig[cat] || categoryConfig.lamp;
+const cat = params.get('cat') || '';
+const searchQuery = params.get('search') || '';
+const isSearch = searchQuery.length > 0;
+const config = categoryConfig[cat] || (isSearch ? { title: `Search: <em>${searchQuery}</em>`, description: `Showing results for "${searchQuery}"`, icon: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>', color: '#4A5D3E', bgPattern: 'radial-gradient(circle at 50% 50%, rgba(74,93,62,0.08) 0%, transparent 50%)', features: ['Handcrafted', 'Eco-friendly', 'Natural materials', 'Made in India'] } : categoryConfig.lamp);
 
 // Set page title
 document.title = `${config.title.replace(/<[^>]+>/g, '')} — Spec Interior`;
@@ -329,7 +331,12 @@ document.getElementById('sortSelect').addEventListener('change', () => renderGri
 
 // Listen for products from Firebase
 onProductsChange((products) => {
-  allProducts = products.filter(p => p.category === cat);
+  if (isSearch) {
+    const q = searchQuery.toLowerCase();
+    allProducts = products.filter(p => p.name.toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q));
+  } else {
+    allProducts = products.filter(p => p.category === cat);
+  }
   renderGrid(allProducts);
 });
 </script>
