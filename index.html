@@ -499,12 +499,36 @@
     .categories {
       padding: 100px 80px;
       background: var(--warm-white);
+      position: relative;
     }
+    .categories::after {
+      content: '→';
+      position: absolute;
+      right: 40px;
+      bottom: 50%;
+      transform: translateY(50%);
+      width: 36px;
+      height: 36px;
+      background: var(--terracotta);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      pointer-events: none;
+      opacity: 0.8;
+      animation: bounceRight 1.5s ease infinite;
+    }
+    @keyframes bounceRight { 0%,100%{ transform:translateY(50%) translateX(0); } 50%{ transform:translateY(50%) translateX(5px); } }
 
     .cat-grid {
       display: flex;
       gap: 14px;
       overflow-x: auto;
+      mask-image: linear-gradient(to right, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
       -webkit-overflow-scrolling: touch;
       padding-bottom: 8px;
       scrollbar-width: none;
