@@ -744,7 +744,7 @@
     /* ── RECENTLY VIEWED / REC GRID ── */
     .rec-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 16px;
     }
     .rec-card {
@@ -764,6 +764,7 @@
 
     @media (max-width: 860px) {
       .rec-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      #recentlyViewedSection { padding: 40px 16px !important; }
     }
 
     /* ── STORY SECTION ── */
@@ -1797,12 +1798,12 @@
   </section>
 
   <!-- Recently Viewed -->
-  <section class="recommended reveal" id="recentlyViewedSection" style="display:none;background:var(--warm-white);">
+  <section class="recommended reveal" id="recentlyViewedSection" style="display:none;background:var(--warm-white);padding:60px 80px;">
     <div class="section-header">
       <div class="section-eyebrow">Recently Viewed</div>
       <h2 class="section-title">Continue <em>browsing</em></h2>
     </div>
-    <div class="rec-grid" id="recentlyViewedGrid"></div>
+    <div class="rec-grid" id="recentlyViewedGrid" style="max-width:100%;"></div>
   </section>
 
   <!-- Newsletter -->
