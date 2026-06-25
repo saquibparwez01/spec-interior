@@ -513,6 +513,29 @@
     }
     .cat-grid::-webkit-scrollbar { display: none; }
 
+    .scroll-dots {
+      display: none;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .scroll-dots .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+    .scroll-dots .dot.active {
+      width: 20px;
+      border-radius: 3px;
+      background: var(--terracotta);
+    }
+
+    @media (max-width: 860px) {
+      .scroll-dots { display: flex; }
+    }
+
     .cat-card {
       position: relative;
       border-radius: 12px;
@@ -1420,6 +1443,33 @@
   <script>
     document.getElementById('hamburgerBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
     document.getElementById('closeMenu').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+
+    // Scroll dots for category cards
+    (function() {
+      const grid = document.getElementById('catGrid');
+      const dotsContainer = document.getElementById('catDots');
+      if (!grid || !dotsContainer) return;
+
+      const cards = grid.querySelectorAll('.cat-card');
+      const totalCards = cards.length;
+
+      // Create dots
+      for (let i = 0; i < totalCards; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dotsContainer.appendChild(dot);
+      }
+
+      // Track scroll
+      grid.addEventListener('scroll', () => {
+        const scrollLeft = grid.scrollLeft;
+        const cardWidth = cards[0].offsetWidth + 14; // card width + gap
+        const activeIndex = Math.round(scrollLeft / cardWidth);
+        dotsContainer.querySelectorAll('.dot').forEach((dot, i) => {
+          dot.classList.toggle('active', i === activeIndex);
+        });
+      });
+    })();
   </script>
 
   <!-- Hero -->
@@ -1572,6 +1622,7 @@
         </div>
       </a>
     </div>
+    <div class="scroll-dots" id="catDots"></div>
   </section>
 
   <!-- Products -->
