@@ -387,7 +387,7 @@ function renderProduct(p) {
           '<span style="color:#3CB371;font-size:13px;font-weight:500;">● In Stock</span>'}
       </div>
       <div style="display:flex;gap:16px;margin-bottom:16px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;">
-        <span style="display:flex;align-items:center;gap:4px;">🔥 <strong style="color:var(--brown);">${Math.floor(Math.random() * 31 + 20)}</strong> people bought this</span>
+        <span style="display:flex;align-items:center;gap:4px;">🔥 <strong style="color:var(--brown);">${p.bought || Math.floor(Math.random() * 31 + 20)}</strong> people bought this</span>
         <span style="display:flex;align-items:center;gap:4px;">👁️ <strong style="color:var(--brown);">${Math.floor(Math.random() * 22 + 4)}</strong> viewing right now</span>
       </div>
       ${(p.sizes && p.sizes.length > 0) ? `

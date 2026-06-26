@@ -296,6 +296,7 @@ window.openAddProduct = function() {
   document.getElementById('pGst').value = '5';
   document.getElementById('pStock').value = '';
   document.getElementById('pRating').value = '5';
+  document.getElementById('pBought').value = '';
   document.getElementById('pColor1').value = '#8B5E3C';
   document.getElementById('pColor2').value = '#C4714A';
   document.getElementById('pDescription').value = '';
@@ -328,6 +329,7 @@ window.openEditProduct = function(id) {
   document.getElementById('pGst').value = p.gstRate || 5;
   document.getElementById('pStock').value = p.stock;
   document.getElementById('pRating').value = p.rating;
+  document.getElementById('pBought').value = p.bought || '';
   document.getElementById('pColor1').value = p.color1 || '#8B5E3C';
   document.getElementById('pColor2').value = p.color2 || '#C4714A';
   document.getElementById('pDescription').value = p.description || '';
@@ -458,6 +460,7 @@ window.saveProduct = async function() {
     price, originalPrice: original,
     badge: document.getElementById('pBadge').value,
     rating: parseInt(document.getElementById('pRating').value) || 5,
+    bought: parseInt(document.getElementById('pBought').value) || null,
     reviews: editId ? (productsCache.find(p=>p.id===editId)?.reviews || 0) : 0,
     color1: document.getElementById('pColor1').value,
     color2: document.getElementById('pColor2').value,
