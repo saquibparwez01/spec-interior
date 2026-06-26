@@ -395,8 +395,8 @@ function renderProduct(p) {
       <div style="margin-bottom:20px;">
         <span style="font-size:14px;color:var(--brown);font-weight:500;display:block;margin-bottom:10px;">Size:</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sizeSelector">
-          <button class="size-btn active" data-price="${p.price}" data-original="${p.originalPrice || ''}" data-label="${p.height && p.width ? p.height+' inch H x '+p.width+' inch D' : 'Standard'}" style="padding:12px 20px;border:1.5px solid var(--terracotta);border-radius:50px;background:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:13px;color:white;cursor:pointer;transition:all 0.2s;font-weight:500;">
-            ${p.height && p.width ? p.height+' inch H x '+p.width+' inch D' : 'Standard'}
+          <button class="size-btn active" data-price="${p.price}" data-original="${p.originalPrice || ''}" data-label="${p.height && p.width ? p.height+'&quot;H x '+p.width+'&quot;D' : 'Standard'}" style="padding:12px 20px;border:1.5px solid var(--terracotta);border-radius:50px;background:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:13px;color:white;cursor:pointer;transition:all 0.2s;font-weight:500;">
+            ${p.height && p.width ? p.height+'"H x '+p.width+'"D' : 'Standard'}
           </button>
           ${p.sizes.map((s) => `
             <button class="size-btn" data-price="${s.price}" data-original="${s.originalPrice || p.originalPrice || ''}" data-label="${s.label}" style="padding:12px 20px;border:1.5px solid var(--border);border-radius:50px;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--brown);cursor:pointer;transition:all 0.2s;font-weight:500;">
