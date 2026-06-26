@@ -263,25 +263,31 @@ window.closeLightbox = function() {
   document.getElementById('imageLightbox').style.display = 'none';
 };
 
-// Image slider dot tracking
+// Image slider dot tracking + thumbnail sync
 function initSliderDots() {
   const slider = document.getElementById('imageSlider');
   const dots = document.querySelectorAll('.img-dot');
+  const thumbs = document.querySelectorAll('.thumb-item');
   if (!slider || dots.length === 0) return;
+
+  // Scroll tracking — update dots and thumbnail highlights
   slider.addEventListener('scroll', () => {
     const idx = Math.round(slider.scrollLeft / slider.offsetWidth);
     dots.forEach((dot, i) => {
       dot.style.width = i === idx ? '16px' : '6px';
       dot.style.background = i === idx ? 'var(--terracotta)' : 'var(--border)';
     });
-    // Update lightbox image to current slide
-    const imgs = slider.querySelectorAll('img');
-    if (imgs[idx]) {
-      window.openLightbox = function() {
-        document.getElementById('lightboxImg').src = imgs[idx].src;
-        document.getElementById('imageLightbox').style.display = 'flex';
-      };
-    }
+    thumbs.forEach((thumb, i) => {
+      thumb.style.borderColor = i === idx ? 'var(--terracotta)' : 'transparent';
+    });
+  });
+
+  // Thumbnail click — scroll slider to that image
+  thumbs.forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      const idx = parseInt(thumb.dataset.index);
+      slider.scrollTo({ left: idx * slider.offsetWidth, behavior: 'smooth' });
+    });
   });
 }
 
@@ -398,6 +404,16 @@ function renderProduct(p) {
           </button>
         </div>
       </div>
+      ${(p.images && p.images.length > 1) ? `
+      <div style="display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding:4px 0;scrollbar-width:none;" id="thumbGallery">
+        ${p.images.map((img, i) => `
+          <div class="thumb-item" data-index="${i}" style="width:64px;height:64px;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid ${i===0?'var(--terracotta)':'transparent'};flex-shrink:0;transition:border-color 0.2s;">
+            <img src="${img}" style="width:100%;height:100%;object-fit:cover;"/>
+          </div>
+        `).join('')}
+      </div>
+      <style>#thumbGallery::-webkit-scrollbar{display:none;}</style>
+      ` : ''}
     </div>
     <div class="product-meta">
       <div class="category-label">${catLabel}</div>
