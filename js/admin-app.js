@@ -430,7 +430,7 @@ window.saveProduct = async function() {
   let imageUrl = '';
   const editId = document.getElementById('editProductId').value;
 
-  // Upload image to Cloudinary if new file selected
+  // Upload image to R2 if new file selected
   if (pendingImageFile) {
     imageUrl = await uploadImageToCloud(pendingImageFile);
   } else if (editId) {

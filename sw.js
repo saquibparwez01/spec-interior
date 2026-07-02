@@ -1,5 +1,5 @@
 // Service Worker for Spec Interior PWA
-const CACHE_NAME = 'spec-interior-v3';
+const CACHE_NAME = 'spec-interior-v4';
 const urlsToCache = [
   '/',
   '/index.html',
