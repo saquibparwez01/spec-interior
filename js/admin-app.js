@@ -21,13 +21,16 @@ async function uploadImageToCloud(file) {
   if (file.size > 5 * 1024 * 1024) { showToast('Image too large. Max 5MB.', true); return ''; }
   const formData = new FormData();
   formData.append('file', file);
+  formData.append('token', 'spec-interior-2025-secure');
   try {
     const res = await fetch('https://spec-images.saquibparwez18.workers.dev', {
       method: 'POST',
-      headers: { 'X-Auth-Token': 'spec-interior-2025-secure' },
       body: formData
     });
-    if (!res.ok) throw new Error('Upload failed');
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || 'Upload failed');
+    }
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     return data.url;
