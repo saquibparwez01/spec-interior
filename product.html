@@ -607,7 +607,7 @@ function renderProduct(p) {
   // Add to cart
   document.getElementById('addToCartBtn').addEventListener('click', () => {
     const cartName = selectedSize ? `${p.name} (${selectedSize})` : p.name;
-    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/\s+/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/[^a-zA-Z0-9]/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
     const btn = document.getElementById('addToCartBtn');
     btn.textContent = '✓ Added!';
     btn.style.background = 'var(--gold)';
@@ -617,7 +617,7 @@ function renderProduct(p) {
   // Buy now
   document.getElementById('buyNowBtn').addEventListener('click', () => {
     const cartName = selectedSize ? `${p.name} (${selectedSize})` : p.name;
-    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/\s+/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/[^a-zA-Z0-9]/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
     window.location.href = 'checkout.html';
   });
 

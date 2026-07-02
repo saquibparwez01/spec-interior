@@ -315,6 +315,7 @@ window.openAddProduct = function() {
   document.getElementById('extraImagesPreview').innerHTML = '';
   pendingImageFile = null;
   pendingExtraFiles = [];
+  window._imageRemoved = false;
   resetImageUpload();
   autoFillHsn();
   document.getElementById('productModal').classList.add('open');
@@ -379,6 +380,7 @@ window.handleImageUpload = function(event) {
 window.removeImage = function(e) {
   e.stopPropagation(); e.preventDefault();
   pendingImageFile = null;
+  window._imageRemoved = true;
   resetImageUpload();
 };
 
@@ -436,6 +438,9 @@ window.saveProduct = async function() {
   // Upload image to R2 if new file selected
   if (pendingImageFile) {
     imageUrl = await uploadImageToCloud(pendingImageFile);
+  } else if (window._imageRemoved) {
+    imageUrl = '';
+    window._imageRemoved = false;
   } else if (editId) {
     const existing = productsCache.find(p => p.id === editId);
     imageUrl = existing?.image || '';
