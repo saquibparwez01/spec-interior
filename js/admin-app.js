@@ -349,7 +349,8 @@ window.openEditProduct = function(id) {
   document.getElementById('sizeVariantsContainer').innerHTML = '';
   (p.sizes || []).forEach(s => addSizeRow(s.label, s.price, s.originalPrice));
   document.getElementById('pExtraImages').value = '';
-  document.getElementById('extraImagesPreview').innerHTML = (p.images || []).map((img, i) => `<div style="position:relative;display:inline-block;"><img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/><button type="button" onclick="removeExtraImage(this, ${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:rgba(224,82,82,0.9);color:white;border:none;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button></div>`).join('');
+  const extraImgs = (p.images || []).filter(img => img !== p.image);
+  document.getElementById('extraImagesPreview').innerHTML = extraImgs.map((img, i) => `<div style="position:relative;display:inline-block;"><img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/><button type="button" onclick="removeExtraImage(this, ${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:rgba(224,82,82,0.9);color:white;border:none;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button></div>`).join('');
   pendingImageFile = null;
   pendingExtraFiles = [];
   window._removedExtraIndexes = [];
@@ -463,7 +464,9 @@ window.saveProduct = async function() {
       if (url) extraImageUrls.push(url);
     }
   } else if (editId) {
-    extraImageUrls = (productsCache.find(p => p.id === editId)?.images || []).filter((_, i) => !(window._removedExtraIndexes || []).includes(i));
+    const existingProduct = productsCache.find(p => p.id === editId);
+    const allExisting = (existingProduct?.images || []).filter(img => img !== existingProduct?.image);
+    extraImageUrls = allExisting.filter((_, i) => !(window._removedExtraIndexes || []).includes(i));
   }
   window._removedExtraIndexes = [];
 
