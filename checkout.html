@@ -461,13 +461,13 @@ function renderCheckout() {
           <div class="summary-details">
             <div class="summary-name">${item.name}</div>
             <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
-              <button class="qty-dec-btn" data-id="${item.id}" style="width:26px;height:26px;border:1px solid var(--border);border-radius:50%;background:transparent;color:var(--brown);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+              <button class="qty-dec-btn" data-id="${encodeURIComponent(item.id)}" style="width:26px;height:26px;border:1px solid var(--border);border-radius:50%;background:transparent;color:var(--brown);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
               <span style="font-size:14px;font-weight:500;color:var(--brown);min-width:20px;text-align:center;">${item.qty}</span>
-              <button class="qty-inc-btn" data-id="${item.id}" style="width:26px;height:26px;border:1px solid var(--border);border-radius:50%;background:transparent;color:var(--brown);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+              <button class="qty-inc-btn" data-id="${encodeURIComponent(item.id)}" style="width:26px;height:26px;border:1px solid var(--border);border-radius:50%;background:transparent;color:var(--brown);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
             </div>
           </div>
           <div class="summary-price">₹${(item.price * item.qty).toLocaleString()}</div>
-          <button class="remove-item-btn" data-id="${item.id}" title="Remove item" style="background:none;border:none;color:var(--red);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='rgba(224,82,82,0.1)'" onmouseout="this.style.background='none'">✕</button>
+          <button class="remove-item-btn" data-id="${encodeURIComponent(item.id)}" title="Remove item" style="background:none;border:none;color:var(--red);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='rgba(224,82,82,0.1)'" onmouseout="this.style.background='none'">✕</button>
         </div>
       `).join('')}
       <div class="summary-totals" id="summaryTotals">
@@ -490,7 +490,7 @@ function renderCheckout() {
   // Remove item from cart
   document.querySelectorAll('.remove-item-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id = btn.dataset.id;
+      const id = decodeURIComponent(btn.dataset.id);
       removeFromCart(id);
       refreshCart();
     });
@@ -499,7 +499,7 @@ function renderCheckout() {
   // Quantity increase/decrease
   document.querySelectorAll('.qty-inc-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id = btn.dataset.id;
+      const id = decodeURIComponent(btn.dataset.id);
       const item = cart.find(i => i.id === id);
       if (item && item.qty < 10) { updateQty(id, item.qty + 1); refreshCart(); }
       else if (item && item.qty >= 10) { showToast('Maximum 10 per item'); }
@@ -507,7 +507,7 @@ function renderCheckout() {
   });
   document.querySelectorAll('.qty-dec-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id = btn.dataset.id;
+      const id = decodeURIComponent(btn.dataset.id);
       const item = cart.find(i => i.id === id);
       if (item && item.qty > 1) { updateQty(id, item.qty - 1); refreshCart(); }
       else if (item && item.qty === 1) { removeFromCart(id); refreshCart(); }
