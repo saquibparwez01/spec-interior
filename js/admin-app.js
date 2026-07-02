@@ -316,6 +316,7 @@ window.openAddProduct = function() {
   pendingImageFile = null;
   pendingExtraFiles = [];
   window._imageRemoved = false;
+  window._removedExtraIndexes = [];
   resetImageUpload();
   autoFillHsn();
   document.getElementById('productModal').classList.add('open');
@@ -348,9 +349,10 @@ window.openEditProduct = function(id) {
   document.getElementById('sizeVariantsContainer').innerHTML = '';
   (p.sizes || []).forEach(s => addSizeRow(s.label, s.price, s.originalPrice));
   document.getElementById('pExtraImages').value = '';
-  document.getElementById('extraImagesPreview').innerHTML = (p.images || []).map(img => `<img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/>`).join('');
+  document.getElementById('extraImagesPreview').innerHTML = (p.images || []).map((img, i) => `<div style="position:relative;display:inline-block;"><img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;"/><button type="button" onclick="removeExtraImage(this, ${i})" style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:rgba(224,82,82,0.9);color:white;border:none;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button></div>`).join('');
   pendingImageFile = null;
   pendingExtraFiles = [];
+  window._removedExtraIndexes = [];
   if (p.image) {
     document.getElementById('imgPreview').src = p.image;
     document.getElementById('imgPreviewWrap').style.display = 'block';
@@ -382,6 +384,13 @@ window.removeImage = function(e) {
   pendingImageFile = null;
   window._imageRemoved = true;
   resetImageUpload();
+};
+
+// Remove individual extra image (existing images during edit)
+window._removedExtraIndexes = [];
+window.removeExtraImage = function(btn, index) {
+  window._removedExtraIndexes.push(index);
+  btn.parentElement.remove();
 };
 
 // Extra images handler
@@ -454,8 +463,9 @@ window.saveProduct = async function() {
       if (url) extraImageUrls.push(url);
     }
   } else if (editId) {
-    extraImageUrls = productsCache.find(p => p.id === editId)?.images || [];
+    extraImageUrls = (productsCache.find(p => p.id === editId)?.images || []).filter((_, i) => !(window._removedExtraIndexes || []).includes(i));
   }
+  window._removedExtraIndexes = [];
 
   // Build images array (main + extras)
   const allImages = imageUrl ? [imageUrl, ...extraImageUrls] : extraImageUrls;
