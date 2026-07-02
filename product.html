@@ -451,12 +451,12 @@ function renderProduct(p) {
       <div style="margin-bottom:20px;">
         <span style="font-size:14px;color:var(--brown);font-weight:500;display:block;margin-bottom:10px;">Size:</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sizeSelector">
-          <button class="size-btn active" data-price="${p.price}" data-original="${p.originalPrice || ''}" data-label="${p.height && p.width ? p.height+' inch H x '+p.width+' inch D' : 'Standard'}" style="padding:12px 20px;border:1.5px solid var(--terracotta);border-radius:50px;background:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:13px;color:white;cursor:pointer;transition:all 0.2s;font-weight:500;">
-            ${p.height && p.width ? p.height+' inch H x '+p.width+' inch D' : 'Standard'}
+          <button class="size-btn active" data-price="${p.price}" data-original="${p.originalPrice || ''}" data-label="${p.height && p.width ? String(p.height).replace(/"/g,'') + ' inch H x ' + String(p.width).replace(/"/g,'') + ' inch D' : 'Standard'}" style="padding:12px 20px;border:1.5px solid var(--terracotta);border-radius:50px;background:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:13px;color:white;cursor:pointer;transition:all 0.2s;font-weight:500;">
+            ${p.height && p.width ? String(p.height).replace(/"/g,'') + ' inch H x ' + String(p.width).replace(/"/g,'') + ' inch D' : 'Standard'}
           </button>
           ${p.sizes.map((s) => `
-            <button class="size-btn" data-price="${s.price}" data-original="${s.originalPrice || p.originalPrice || ''}" data-label="${s.label}" style="padding:12px 20px;border:1.5px solid var(--border);border-radius:50px;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--brown);cursor:pointer;transition:all 0.2s;font-weight:500;">
-              ${s.label}
+            <button class="size-btn" data-price="${s.price}" data-original="${s.originalPrice || p.originalPrice || ''}" data-label="${s.label.replace(/"/g,' inch')}" style="padding:12px 20px;border:1.5px solid var(--border);border-radius:50px;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--brown);cursor:pointer;transition:all 0.2s;font-weight:500;">
+              ${s.label.replace(/"/g,' inch')}
             </button>
           `).join('')}
         </div>
@@ -531,8 +531,8 @@ function renderProduct(p) {
         <div style="margin-top:20px;padding:16px;background:var(--cream);border-radius:10px;">
           <h3 style="font-size:13px;font-weight:500;color:var(--brown);margin-bottom:10px;letter-spacing:0.04em;">Dimensions</h3>
           <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);">
-            ${p.height ? `<span>H: <strong style="color:var(--brown);">${p.height} inch</strong></span>` : ''}
-            ${p.width ? `<span>W: <strong style="color:var(--brown);">${p.width} inch</strong></span>` : ''}
+            ${p.height ? `<span>H: <strong style="color:var(--brown);">${String(p.height).replace(/"/g,'')} inch</strong></span>` : ''}
+            ${p.width ? `<span>W: <strong style="color:var(--brown);">${String(p.width).replace(/"/g,'')} inch</strong></span>` : ''}
             ${p.weight ? `<span>Wt: <strong style="color:var(--brown);">${p.weight} kg</strong></span>` : ''}
           </div>
         </div>

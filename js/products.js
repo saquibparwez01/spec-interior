@@ -141,7 +141,7 @@ export async function verifyCartPrices(cartItems) {
         );
         if (matchedSize) {
           verifiedPrice = matchedSize.price;
-          verifiedName = `${product.name} (${matchedSize.label})`;
+          verifiedName = `${product.name} (${matchedSize.label.replace(/"/g,' inch')})`;
         }
         // If no match in sizes array, it's the default/standard size — use base price
       } else if (variantSuffix && !product.sizes) {
