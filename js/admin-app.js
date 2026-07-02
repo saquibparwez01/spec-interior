@@ -2,8 +2,7 @@
 import {
   db, collection, addDoc, getDocs, doc, updateDoc, deleteDoc,
   query, orderBy, onSnapshot,
-  auth, onAuthStateChanged,
-  CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET
+  auth, onAuthStateChanged
 } from './firebase-config.js';
 
 // ─── XSS PROTECTION ─────────────────────────────────
@@ -16,19 +15,22 @@ function esc(str) {
 let productsCache = [];
 let ordersCache = [];
 
-// ─── CLOUDINARY UPLOAD ──────────────────────────────
+// ─── R2 IMAGE UPLOAD ────────────────────────────────
 async function uploadImageToCloud(file) {
   if (!file) return '';
   if (file.size > 5 * 1024 * 1024) { showToast('Image too large. Max 5MB.', true); return ''; }
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-  formData.append('folder', 'spec-interior/products');
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+    const res = await fetch('https://spec-images.saquibparwez18.workers.dev', {
+      method: 'POST',
+      headers: { 'X-Auth-Token': 'spec-interior-2025-secure' },
+      body: formData
+    });
     if (!res.ok) throw new Error('Upload failed');
     const data = await res.json();
-    return data.secure_url;
+    if (data.error) throw new Error(data.error);
+    return data.url;
   } catch (e) {
     showToast('Image upload failed: ' + e.message, true);
     return '';
