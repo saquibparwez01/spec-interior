@@ -55,8 +55,8 @@ export function onProductsChange(callback) {
 
 /**
  * Extract the base Firestore product ID from a cart item ID.
- * Size variant items have IDs like "abc123-12inchDx10inchH",
- * but the Firestore doc ID is just "abc123".
+ * Size variant items have IDs like "abc12345678901234567-size0",
+ * but the Firestore doc ID is just "abc12345678901234567".
  * Firestore IDs are 20-char alphanumeric, so we split on first '-' after 20 chars.
  */
 function getBaseProductId(cartItemId) {
@@ -64,19 +64,24 @@ function getBaseProductId(cartItemId) {
   if (cartItemId && cartItemId.length > 20 && cartItemId[20] === '-') {
     return cartItemId.substring(0, 20);
   }
-  // Also handle IDs that contain a dash (variant suffix)
-  // Try looking up the full ID first; if it doesn't exist, strip suffix
   return cartItemId;
 }
 
 /**
- * Get the size variant suffix from a cart item ID (empty string if no variant)
+ * Get the size variant index from a cart item ID (-1 if no variant / default)
+ * Format: productId-size0, productId-size1, etc.
+ * Also handles legacy format: productId-labeltext
  */
-function getSizeVariantSuffix(cartItemId) {
+function getSizeVariantIndex(cartItemId) {
   if (cartItemId && cartItemId.length > 20 && cartItemId[20] === '-') {
-    return cartItemId.substring(21);
+    const suffix = cartItemId.substring(21);
+    // New format: size0, size1, size2...
+    const match = suffix.match(/^size(\d+)$/);
+    if (match) return parseInt(match[1]);
+    // Legacy format: alphanumeric label text — return -1 (will use base price)
+    return -1;
   }
-  return '';
+  return -1;
 }
 
 /**
@@ -126,29 +131,19 @@ export async function verifyCartPrices(cartItems) {
   const verifiedCart = [];
   for (const item of cartItems) {
     const baseId = getBaseProductId(item.id);
-    const variantSuffix = getSizeVariantSuffix(item.id);
+    const sizeIdx = getSizeVariantIndex(item.id);
     const ref = doc(db, PRODUCTS_COLLECTION, baseId);
     const snap = await getDoc(ref);
     if (snap.exists()) {
       const product = snap.data();
       let verifiedPrice = product.price;
-      let verifiedName = product.name;
+      let verifiedName = item.name || product.name;
 
-      // If this is a size variant, find the matching variant price
-      if (variantSuffix && product.sizes && product.sizes.length > 0) {
-        const matchedSize = product.sizes.find(s => 
-          s.label.replace(/[^a-zA-Z0-9]/g, '') === variantSuffix
-        );
-        if (matchedSize) {
-          verifiedPrice = matchedSize.price;
-          verifiedName = `${product.name} (${matchedSize.label.replace(/"/g,' inch')})`;
-        }
-        // If no match in sizes array, it's the default/standard size — use base price
-      } else if (variantSuffix && !product.sizes) {
-        // Variant suffix exists but product has no sizes — use base price
-        // This covers the "Standard" size which uses the product's main price
-        verifiedPrice = product.price;
+      // If this is a size variant with valid index, get price from sizes array
+      if (sizeIdx >= 0 && product.sizes && product.sizes[sizeIdx]) {
+        verifiedPrice = product.sizes[sizeIdx].price;
       }
+      // For default size or legacy format, use base product price
 
       verifiedCart.push({
         ...item,
@@ -156,7 +151,7 @@ export async function verifyCartPrices(cartItems) {
         name: verifiedName
       });
     } else {
-      // Try without treating as variant (full ID might be the doc ID)
+      // Try full ID as document ID (non-variant product)
       const directRef = doc(db, PRODUCTS_COLLECTION, item.id);
       const directSnap = await getDoc(directRef);
       if (directSnap.exists()) {
@@ -164,7 +159,7 @@ export async function verifyCartPrices(cartItems) {
         verifiedCart.push({
           ...item,
           price: product.price,
-          name: product.name
+          name: item.name || product.name
         });
       } else {
         throw new Error(`Product "${item.name}" is no longer available`);

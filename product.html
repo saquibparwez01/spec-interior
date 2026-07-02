@@ -451,13 +451,8 @@ function renderProduct(p) {
       <div style="margin-bottom:20px;">
         <span style="font-size:14px;color:var(--brown);font-weight:500;display:block;margin-bottom:10px;">Size:</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sizeSelector">
-          <button class="size-btn active" data-price="${p.price}" data-original="${p.originalPrice || ''}" data-label="${p.height && p.width ? String(p.height).replace(/["\u0022]/g,'').trim() + ' inch H x ' + String(p.width).replace(/["\u0022]/g,'').trim() + ' inch D' : 'Standard'}" style="padding:12px 20px;border:1.5px solid var(--terracotta);border-radius:50px;background:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:13px;color:white;cursor:pointer;transition:all 0.2s;font-weight:500;">
-            ${p.height && p.width ? String(p.height).replace(/["\u0022]/g,'').trim() + ' inch H x ' + String(p.width).replace(/["\u0022]/g,'').trim() + ' inch D' : 'Standard'}
-          </button>
-          ${p.sizes.map((s) => {
-            const cleanLabel = s.label.replace(/["]/g, ' inch').replace(/\s+/g,' ').trim();
-            return '<button class="size-btn" data-price="' + s.price + '" data-original="' + (s.originalPrice || p.originalPrice || '') + '" data-label="' + cleanLabel + '" style="padding:12px 20px;border:1.5px solid var(--border);border-radius:50px;background:transparent;font-family:DM Sans,sans-serif;font-size:13px;color:var(--brown);cursor:pointer;transition:all 0.2s;font-weight:500;">' + cleanLabel + '</button>';
-          }).join('')}
+          <button class="size-btn active" data-price="${p.price}" data-original="${p.originalPrice || ''}" data-idx="default" style="padding:12px 20px;border:1.5px solid var(--terracotta);border-radius:50px;background:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:13px;color:white;cursor:pointer;transition:all 0.2s;font-weight:500;">${(function(){ var h=String(p.height||'').replace(/"/g,''); var w=String(p.width||'').replace(/"/g,''); return h&&w ? h+' inch H x '+w+' inch D' : 'Standard'; })()}</button>
+          ${p.sizes.map((s, idx) => '<button class="size-btn" data-price="' + s.price + '" data-original="' + (s.originalPrice || p.originalPrice || '') + '" data-idx="' + idx + '" style="padding:12px 20px;border:1.5px solid var(--border);border-radius:50px;background:transparent;font-family:DM Sans,sans-serif;font-size:13px;color:var(--brown);cursor:pointer;transition:all 0.2s;font-weight:500;">' + s.label.replace(/"/g, ' inch').replace(/\s+/g,' ').trim() + '</button>').join('')}
         </div>
       </div>
       ` : ''}
@@ -530,9 +525,9 @@ function renderProduct(p) {
         <div style="margin-top:20px;padding:16px;background:var(--cream);border-radius:10px;">
           <h3 style="font-size:13px;font-weight:500;color:var(--brown);margin-bottom:10px;letter-spacing:0.04em;">Dimensions</h3>
           <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);">
-            ${p.height ? `<span>H: <strong style="color:var(--brown);">${String(p.height).replace(/"/g,'')} inch</strong></span>` : ''}
-            ${p.width ? `<span>W: <strong style="color:var(--brown);">${String(p.width).replace(/"/g,'')} inch</strong></span>` : ''}
-            ${p.weight ? `<span>Wt: <strong style="color:var(--brown);">${p.weight} kg</strong></span>` : ''}
+            ${p.height ? '<span>H: <strong style="color:var(--brown);">' + String(p.height).replace(/"/g,'') + ' inch</strong></span>' : ''}
+            ${p.width ? '<span>W: <strong style="color:var(--brown);">' + String(p.width).replace(/"/g,'') + ' inch</strong></span>' : ''}
+            ${p.weight ? '<span>Wt: <strong style="color:var(--brown);">' + p.weight + ' kg</strong></span>' : ''}
           </div>
         </div>
         ` : ''}
@@ -555,13 +550,15 @@ function renderProduct(p) {
 
   // Size selector
   let selectedPrice = p.price;
-  let selectedSize = '';
+  let selectedIdx = 'default';
+  let selectedDisplayLabel = '';
   const sizeSelector = document.getElementById('sizeSelector');
   if (sizeSelector) {
     const firstBtn = sizeSelector.querySelector('.size-btn');
     if (firstBtn) { 
       selectedPrice = parseInt(firstBtn.dataset.price); 
-      selectedSize = firstBtn.dataset.label;
+      selectedIdx = firstBtn.dataset.idx;
+      selectedDisplayLabel = firstBtn.textContent.trim();
     }
     sizeSelector.querySelectorAll('.size-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -576,7 +573,8 @@ function renderProduct(p) {
         btn.style.color = 'white';
         btn.classList.add('active');
         selectedPrice = parseInt(btn.dataset.price);
-        selectedSize = btn.dataset.label;
+        selectedIdx = btn.dataset.idx;
+        selectedDisplayLabel = btn.textContent.trim();
         // Update price display
         document.querySelector('.current-price').textContent = '₹' + selectedPrice.toLocaleString();
         // Update original price
@@ -605,8 +603,9 @@ function renderProduct(p) {
 
   // Add to cart
   document.getElementById('addToCartBtn').addEventListener('click', () => {
-    const cartName = selectedSize ? `${p.name} (${selectedSize})` : p.name;
-    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/[^a-zA-Z0-9]/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    const cartId = selectedIdx !== 'default' ? p.id + '-size' + selectedIdx : p.id;
+    const cartName = selectedDisplayLabel && selectedIdx !== 'default' ? p.name + ' (' + selectedDisplayLabel + ')' : p.name;
+    addToCart({ id: cartId, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
     const btn = document.getElementById('addToCartBtn');
     btn.textContent = '✓ Added!';
     btn.style.background = 'var(--gold)';
@@ -615,8 +614,9 @@ function renderProduct(p) {
 
   // Buy now
   document.getElementById('buyNowBtn').addEventListener('click', () => {
-    const cartName = selectedSize ? `${p.name} (${selectedSize})` : p.name;
-    addToCart({ id: selectedSize ? p.id + '-' + selectedSize.replace(/[^a-zA-Z0-9]/g,'') : p.id, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
+    const cartId = selectedIdx !== 'default' ? p.id + '-size' + selectedIdx : p.id;
+    const cartName = selectedDisplayLabel && selectedIdx !== 'default' ? p.name + ' (' + selectedDisplayLabel + ')' : p.name;
+    addToCart({ id: cartId, name: cartName, price: selectedPrice, image: p.image || '', color1: p.color1, color2: p.color2 }, qty);
     window.location.href = 'checkout.html';
   });
 
